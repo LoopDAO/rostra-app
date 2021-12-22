@@ -1,4 +1,33 @@
 {
-  "title": "Rostra 工会",
-  "description": "Rostra 是矮人的工会，在矮人的土地上已经有很长时间了。他们被称为工会的强大力量和能力，他们也被称为工会的知识。"
+  "title": "Rostra",
+  "description": "Tokenize your learning and research",
+  "mission": "Rostra 致力于构建去中心化的教育和研究体系，促进知识开放和创新。",
+  "action": {
+    "gotoapp": "开始尝试"
+  },
+  "problems": {
+    "edu": {
+      "title": "当前教育系统的问题",
+      "admittance": {
+        "title": "准入机制",
+        "description": "用分数这个单一维度来衡量一个人是否可以获得好的教育资源。"
+      },
+      "system": {
+        "title": "教育体系",
+        "description": "教育理念过时，把人当做流水线产品来对待，所有人学习进度保持一致，无法做到个性化教学\n知识体系更新慢，没有跟上时代变化"
+      },
+      "evaluation": {
+        "title": "能力评估体系",
+        "description": "证书颁发机构权力中心化\n证书是单一和片面的，不能立体的展现个人能力和个性"
+      },
+      "autonomy": {
+        "title": "治理机制",
+        "description": "对于最关注自己未来的学生，他们反而没有治理权"
+      },
+      "reward": {
+        "title": "奖励机制",
+        "description": "学生要提前付出几年的高额学费，无法在学习的同时将知识及时应用到相关领域，毕业后甚至很难找到合适的工作"
+      }
+    }
+  }
 }
