@@ -179,10 +179,90 @@ export default function IndexPage() {
           <Heading as="h2" fontSize="lg">
             {t("changes.title")}
           </Heading>
+          <Stack>
+            <Text as="h2" fontSize="s">
+              {t("changes.edu.title")}
+            </Text>
+            <UnorderedList>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target1")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target2")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target3")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target4")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target5")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target6")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target7")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.target8")}
+                </Text>
+              </ListItem>
+            </UnorderedList>
+            <Text as="h2" fontSize="s">
+              {t("changes.research.title")}
+            </Text>
+            <UnorderedList>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.target1")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.target2")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.target3")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.target4")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.target5")}
+                </Text>
+              </ListItem>
+            </UnorderedList>
+          </Stack>
+          {/* <Heading as="h2" fontSize="lg">
+            {t("changes.title")}
+          </Heading>
           <Stack spacing="6">
             <Stack>
               {/* Use HTML to wrap new line */}
-              <Text
+              {/* <Text
                 as="p"
                 fontSize="xs"
                 whiteSpace="pre-wrap"
@@ -195,7 +275,7 @@ export default function IndexPage() {
                 dangerouslySetInnerHTML={{ __html: t("changes.research") }}
               />
             </Stack>
-          </Stack>
+          </Stack> */} 
 
           {/* How */}
           <Heading as="h2" fontSize="lg">
