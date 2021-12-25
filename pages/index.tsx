@@ -89,42 +89,42 @@ export default function IndexPage() {
           </Heading>
           <Stack spacing="6">
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.edu.admittance.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.edu.admittance.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.edu.system.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.edu.system.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.edu.evaluation.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.edu.evaluation.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.edu.autonomy.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.edu.autonomy.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.edu.reward.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.edu.reward.description")}
               </Text>
             </Stack>
@@ -134,42 +134,42 @@ export default function IndexPage() {
           </Heading>
           <Stack spacing="6">
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.research.ownership.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.research.ownership.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.research.reward.title")}
               </Text>
-              <NewLineText as="p" fontSize="sm">
+              <NewLineText as="p" fontSize="xs">
                 {t("problems.research.reward.description")}
               </NewLineText>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.research.creative.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.research.creative.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.research.rating.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.research.rating.description")}
               </Text>
             </Stack>
             <Stack>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="md">
                 {t("problems.research.funding.title")}
               </Text>
-              <Text as="p" fontSize="sm">
+              <Text as="p" fontSize="xs">
                 {t("problems.research.funding.description")}
               </Text>
             </Stack>
@@ -184,13 +184,13 @@ export default function IndexPage() {
               {/* Use HTML to wrap new line */}
               <Text
                 as="p"
-                fontSize="sm"
+                fontSize="xs"
                 whiteSpace="pre-wrap"
                 dangerouslySetInnerHTML={{ __html: t("changes.edu") }}
               />
               <Text
                 as="p"
-                fontSize="sm"
+                fontSize="xs"
                 whiteSpace="pre-wrap"
                 dangerouslySetInnerHTML={{ __html: t("changes.research") }}
               />
@@ -213,22 +213,22 @@ export default function IndexPage() {
             {t("contribute.title")}
           </Heading>
           <Stack>
-            <Text as="p" fontSize="sm">
+            <Text as="p" fontSize="xs">
               {t("contribute.detail.title")}
             </Text>
             <UnorderedList>
               <ListItem>
-                <Text as="p" fontSize="sm">
+                <Text as="p" fontSize="xs">
                   {t("contribute.detail.period")}
                 </Text>
               </ListItem>
               <ListItem>
-                <Text as="p" fontSize="sm">
+                <Text as="p" fontSize="xs">
                   {t("contribute.detail.task")}
                 </Text>
               </ListItem>
               <ListItem>
-                <Text as="p" fontSize="sm">
+                <Text as="p" fontSize="xs">
                   {t("contribute.detail.evaluation")}
                 </Text>
               </ListItem>

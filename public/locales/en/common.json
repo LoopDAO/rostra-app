@@ -20,22 +20,44 @@
       "evaluation": {
         "title": "Competency Assessment System",
         "description": "Centralization of power of the certification authority\n Certificate is only one-sided, can not show individual ability and character stereoscopically"
-
       },
       "autonomy": {
         "title": "Governance Mechanism",
-        "description": "For those students who are most concerned about their future, on the contrary，they have no right to govern"
+        "description": "For those students who are most concerned about their future, on the contrary, they have no right to govern"
       },
       "reward": {
         "title": "Reward Mechanism",
         "description": "Students have to pay high tuition fees in advance for several years, while cannot apply what they learned to related area, even hard to find suitable job safter graduation"
       }
+    },
+    "research": {
+      "title": "Problems of the existing scientific research system",
+      "ownership": {
+        "title": "Ownership",
+        "description": "Some People’s scientific research/first byline does not belong to them, or even can not be publicly accessed"
+      },
+      "reward": {
+        "title": "Reward System",
+        "description": "After the publication of scientific research papers, the interests are monopolized by the publishing group\nAfter the scientific research achievement forms the product, the enterprise has obtained the maximum benefit, but the scientific research personnel has not obtained with the contribution matching reward"
+      },
+      "creative": {
+        "title": "Innovation promotion mechanism",
+        "description": "Many valuable research results are not open, which affects the speed of knowledge transformation into products and hinders the progress of society to some extent"
+      },
+      "rating": {
+        "title": "Value evaluation",
+        "description": "Centralization of scientific research achievements rating system\nUnder the current grading system, papers can only be published in a limited number of journals"
+      },
+      "funding": {
+        "title": "Funding distribution",
+        "description": "The power to distribute research funding is centralized, even by a few people who do not understand the latest social developments"
+      }
     }
   },
   "changes": {
     "title": "What Can Rostra Bring to Change",
-    "edu": "Education: \nPromote equitable access to knowledge\nPromote social diversity, encourage and support self-exploration\nMake personalized education truly viable\nMake learners acquire the lastest knowledge in time \nDecentralize the authority of certificate issuance and form a decentralized capability evaluation system\n Learn to earn",
-    "research": "Research: \nEstablish reasonable ownership mechanisms， so as to let individuals have the ownership of their own scientific research\nChange the reward mechanism of scientific research\nForm a decentralized system of value discovery and evaluation\nSpeed up the transformation process of scientific research achievements\nPromote the open access to scientific research"
+    "edu": "Education: \nPromote equitable access to knowledge\nPromote social diversity, encourage and support self-exploration\nMake personalized education truly viable\nMake learners acquire the lastest knowledge in time \nDecentralize the authority of certificate issuance and form a decentralized capability evaluation system\nLearn to earn",
+    "research": "Research: \nEstablish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research\nChange the reward mechanism of scientific research\nForm a decentralized system of value discovery and evaluation\nSpeed up the transformation process of scientific research achievements\nPromote the open access to scientific research"
   },
   "how": {
     "title": "How to achieve?",
@@ -44,9 +66,9 @@
   "contribute": {
     "title": "How to contribute?",
     "detail": {
-      "title": "Use Open Source + Dao goverence to promote the plan of project，establishing「Rostra Contributor Union」:",
-      "period": "Two weeks as a Sprint",
-      "task": "Each Sprint open signing up and picking up tasks",
+      "title": "Create \"Rostra Contributor Guild\". Using Open Source and Dao governance to advance the project:",
+      "period": "Two weeks Sprint",
+      "task": "Each Sprint opens for signing up and task assignments",
       "evaluation": "Peer assessment of contribution every week, to obtain points, for future rewards distribution"
     },
     "discord": "Join discord. Get the apply way:",
@@ -59,5 +81,12 @@
     "twitter": "Twitter",
     "discord": "Discord",
     "github": "GitHub"
+  },
+  "link": {
+    "discord": "https://discord.gg/c6BfH8JQn6",
+    "github": "https://github.com/rebase-network/rostra-contracts",
+    "mirror": "https://mirror.xyz/0x22Acb9bb4A79b462B55049ba972608545C50e6fC/5vWc8a1eLCPXLqHILz9YCesNUmn89z0T5r19eOAsuMs",
+    "notion": "https://rostra.notion.site/Home-09350cf7c57e4f77a5872eb80819724a",
+    "twitter": "https://twitter.com/rostra_xyz"
   }
 }
