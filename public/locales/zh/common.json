@@ -1,4 +1,62 @@
 {
-  "title": "Rostra 工会",
-  "description": "Rostra 是矮人的工会，在矮人的土地上已经有很长时间了。他们被称为工会的强大力量和能力，他们也被称为工会的知识。"
+  "title": "Rostra",
+  "description": "Tokenize your learning and research",
+  "mission": "Rostra 致力于构建去中心化的教育和研究体系，促进知识开放和创新。",
+  "action": {
+    "gotoapp": "开始尝试"
+  },
+  "problems": {
+    "title": "Problems",
+    "edu": {
+      "title": "当前教育系统的问题",
+      "admittance": {
+        "title": "准入机制",
+        "description": "用分数这个单一维度来衡量一个人是否可以获得好的教育资源。"
+      },
+      "system": {
+        "title": "教育体系",
+        "description": "教育理念过时，把人当做流水线产品来对待，所有人学习进度保持一致，无法做到个性化教学\n知识体系更新慢，没有跟上时代变化"
+      },
+      "evaluation": {
+        "title": "能力评估体系",
+        "description": "证书颁发机构权力中心化\n证书是单一和片面的，不能立体的展现个人能力和个性"
+      },
+      "autonomy": {
+        "title": "治理机制",
+        "description": "对于最关注自己未来的学生，他们反而没有治理权"
+      },
+      "reward": {
+        "title": "奖励机制",
+        "description": "学生要提前付出几年的高额学费，无法在学习的同时将知识及时应用到相关领域，毕业后甚至很难找到合适的工作"
+      }
+    }
+  },
+  "changes": {
+    "title": "Rostra 想要带来哪些改变",
+    "edu": "教育：\n促进公平获取知识的权利\n促进社会多样化，鼓励和支持个体的探索\n让个性化教育真正可行\n让学习者及时获取最新的知识\n将证书发放权力去中心化，形成去中心化的能力评估体系\n可以 Learn to earn",
+    "research": "科研：\n建立合理的所有权机制，让个人拥有自己的科研成果\n改变科研成果的奖励机制\n形成去中心化的价值发现和评价体系\n加快科研成果的转化流程\n促进科研成果的开放获取"
+  },
+  "how": {
+    "title": "如何实现？",
+    "description": "Open Source + 区块链\nRostra 选择利用开源软件和区块链技术探索出一套新的治理模式，引导教育和科研的变革。"
+  },
+  "contribute": {
+    "title": "How to contribute？",
+    "detail": {
+      "title": "项目的推进计划采用开源项目+DAO治理的方式进行，成立「Rostra 贡献者公会」:",
+      "period": "按照两周一个 Sprint 为周期",
+      "task": "每个 Sprint 开放报名和认领任务",
+      "evaluation": "每周进行贡献互评，获取积分，用于未来的奖励分发"
+    },
+    "discord": "加入 discord 获取申请方式:",
+    "notion": "Rostra 信息集散地:"
+  },
+  "members": "DAO 成员",
+  "media": {
+    "about": "About",
+    "docs": "Docs",
+    "twitter": "Twitter",
+    "discord": "Discord",
+    "github": "GitHub"
+  }
 }
