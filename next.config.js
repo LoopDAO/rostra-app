@@ -6,6 +6,4 @@ const config = withPlausibleProxy()({
   reactStrictMode: true,
 })
 
-console.log('next config ->', config)
-
 module.exports = config
