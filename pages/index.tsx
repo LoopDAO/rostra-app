@@ -1,19 +1,48 @@
 import {
+  Divider,
+  Link,
+  List,
+  ListItem,
+  TextProps,
+  UnorderedList,
+} from "@chakra-ui/react"
+import {
   Container,
   Stack,
   Heading,
   Text,
   HStack,
   StackDivider,
-  Box,
   LinkBox,
   LinkOverlay,
   Button,
-  Spacer,
 } from "@chakra-ui/react"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+
+const NewLineText = ({
+  text,
+  children,
+  ...rest
+}: TextProps & { text?: string | null; children?: string }) => {
+  const hasTextOrChildren = !!text || !!children
+  if (!hasTextOrChildren) return null
+  const contents = (text ?? children)!.split("\n")
+
+  if (contents.length > 1) {
+    return (
+      <>
+        {contents.map((content) => (
+          <Text {...rest} key={content}>
+            {content}
+          </Text>
+        ))}
+      </>
+    )
+  }
+  return <Text {...rest}>{children}</Text>
+}
 
 export default function IndexPage() {
   const { t } = useTranslation()
@@ -100,6 +129,51 @@ export default function IndexPage() {
               </Text>
             </Stack>
           </Stack>
+          <Heading as="h2" fontSize="lg">
+            {t("problems.research.title")}
+          </Heading>
+          <Stack spacing="6">
+            <Stack>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.ownership.title")}
+              </Text>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.ownership.description")}
+              </Text>
+            </Stack>
+            <Stack>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.reward.title")}
+              </Text>
+              <NewLineText as="p" fontSize="sm">
+                {t("problems.research.reward.description")}
+              </NewLineText>
+            </Stack>
+            <Stack>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.creative.title")}
+              </Text>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.creative.description")}
+              </Text>
+            </Stack>
+            <Stack>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.rating.title")}
+              </Text>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.rating.description")}
+              </Text>
+            </Stack>
+            <Stack>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.funding.title")}
+              </Text>
+              <Text as="p" fontSize="sm">
+                {t("problems.research.funding.description")}
+              </Text>
+            </Stack>
+          </Stack>
 
           {/* Changes */}
           <Heading as="h2" fontSize="lg">
@@ -122,8 +196,85 @@ export default function IndexPage() {
               />
             </Stack>
           </Stack>
+
+          {/* How */}
+          <Heading as="h2" fontSize="lg">
+            {t("how.title")}
+          </Heading>
+          <Text
+            as="p"
+            fontSize="sm"
+            whiteSpace="pre-wrap"
+            dangerouslySetInnerHTML={{ __html: t("how.description") }}
+          />
+
+          {/* Contribute */}
+          <Heading as="h2" fontSize="lg">
+            {t("contribute.title")}
+          </Heading>
+          <Stack>
+            <Text as="p" fontSize="sm">
+              {t("contribute.detail.title")}
+            </Text>
+            <UnorderedList>
+              <ListItem>
+                <Text as="p" fontSize="sm">
+                  {t("contribute.detail.period")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="sm">
+                  {t("contribute.detail.task")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="sm">
+                  {t("contribute.detail.evaluation")}
+                </Text>
+              </ListItem>
+            </UnorderedList>
+          </Stack>
+          <Text as="p" fontSize="sm" color="gray.500">
+            {t("contribute.discord")}{" "}
+            <Link href={t("link.discord")}>{t("link.discord")}</Link>
+          </Text>
+          <Stack color="yellow.200">
+            <Text as="p" fontSize="sm">
+              {t("contribute.notion")}
+            </Text>
+            <Link href={t("link.notion")}>
+              <Text as="p" fontSize="sm">
+                {t("link.notion")}
+              </Text>
+            </Link>
+          </Stack>
+          <Divider />
+          <Stack>
+            <Text as="p" fontSize="sm" color="gray.300">
+              {t("media.about")}:{" "}
+              <Link href={t("link.mirror")}>{t("link.mirror")}</Link>
+            </Text>
+
+            <Text as="p" fontSize="sm" color="yellow.200">
+              {t("media.docs")}:{" "}
+              <Link href={t("link.notion")}>{t("link.notion")}</Link>
+            </Text>
+
+            <Text as="p" fontSize="sm" color="blue.200">
+              {t("media.twitter")}:{" "}
+              <Link href={t("link.twitter")}>{t("link.twitter")}</Link>
+            </Text>
+
+            <Text as="p" fontSize="sm" color="gray.500">
+              {t("media.discord")}:{" "}
+              <Link href={t("link.discord")}>{t("link.discord")}</Link>
+            </Text>
+            <Text as="p" fontSize="sm" color="white">
+              {t("media.github")}:{" "}
+              <Link href={t("link.github")}>{t("link.github")}</Link>
+            </Text>
+          </Stack>
         </Stack>
-        {/* TODO: Rest of home content */}
       </Stack>
     </Container>
   )

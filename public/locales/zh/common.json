@@ -29,6 +29,29 @@
         "title": "奖励机制",
         "description": "学生要提前付出几年的高额学费，无法在学习的同时将知识及时应用到相关领域，毕业后甚至很难找到合适的工作"
       }
+    },
+    "research": {
+      "title": "当前科研系统的问题",
+      "ownership": {
+        "title": "所有权机制",
+        "description": "部分人的科研成果/第一署名不属于自己，甚至无法公开访问"
+      },
+      "reward": {
+        "title": "奖励机制",
+        "description": "科研论文发表后，利益被出版集团垄断\n科研成果形成产品后，企业获得了最大的利益，而科研人员没有获得与贡献相匹配的报酬"
+      },
+      "creative": {
+        "title": "创新促进机制",
+        "description": "很多有价值的研究成果不公开，影响了知识转换为产品的创新速度，一定程度上阻碍了社会的进步"
+      },
+      "rating": {
+        "title": "评级体系",
+        "description": "科研成果评级体系中心化\n现有的评级体系，论文只能发表在一些有限的期刊上"
+      },
+      "funding": {
+        "title": "资金分配",
+        "description": "科研资金的发放权力中心化，甚至是由几个无法理解当前社会最新进展的人来决定"
+      }
     }
   },
   "changes": {
@@ -58,5 +81,12 @@
     "twitter": "Twitter",
     "discord": "Discord",
     "github": "GitHub"
+  },
+  "link": {
+    "discord": "https://discord.gg/c6BfH8JQn6",
+    "github": "https://github.com/rebase-network/rostra-contracts",
+    "mirror": "https://mirror.xyz/0x22Acb9bb4A79b462B55049ba972608545C50e6fC/5vWc8a1eLCPXLqHILz9YCesNUmn89z0T5r19eOAsuMs",
+    "notion": "https://rostra.notion.site/Home-09350cf7c57e4f77a5872eb80819724a",
+    "twitter": "https://twitter.com/rostra_xyz"
   }
 }
