@@ -1,4 +1,64 @@
 {
   "title": "Rostra",
-  "description": "Tokenize your learning and research"
+  "description": "Tokenize your learning and research",
+  "mission": "Rostra is dedicted to build a decentralized education and research system, so as to promoto the open access and innovation of knowledge.",
+  "action": {
+    "gotoapp": "Begin to Try"
+  },
+  "problems": {
+    "title": "Problems",
+    "edu": {
+      "title": "The problems of the current education system",
+      "admittance": {
+        "title": "Access Mechanism",
+        "description": "Use score as the single dimension to measure whether a person can obtain good education resources"
+      },
+      "system": {
+        "title": "Education System",
+        "description": "The idea of education is outdated. People are treated as line products, everyone is learning at the same pace, diversified and individualized education cannot be provided \n The knowledge system is updating slow, while not keeping up with the change of times"
+      },
+      "evaluation": {
+        "title": "Competency Assessment System",
+        "description": "Centralization of power of the certification authority\n Certificate is only one-sided, can not show individual ability and character stereoscopically"
+        
+      },
+      "autonomy": {
+        "title": "Governance Mechanism",
+        "description": "For those students who are most concerned about their future, on the contrary，they have no right to govern"
+      },
+      "reward": {
+        "title": "Reward Mechanism",
+        "description": "Students have to pay high tuition fees in advance for several years, while cannot apply what they learned to related area, even hard to find suitable job safter graduation"
+      }
+    }
+  },
+  "changes": {
+    "title": "What Can Rostra Bring to Change",
+    "edu": "Education：\nPromote equitable access to knowledge\nPromote social diversity, encourage and support self-exploration\nMake personalized education truly viable\nMake learners acquire the lastest knowledge in time \nDecentralize the authority of certificate issuance and form a decentralized capability evaluation system\n Learn to earn",
+    "research": "Research：\nEstablish reasonable ownership mechanisms， so as to let individuals have the ownership of their own scientific research\nChange the reward mechanism of scientific research\nForm a decentralized system of value discovery and evaluation\nSpeed up the transformation process of scientific research achievements\nPromote the open access to scientific research"
+  },
+  "how": {
+    "title": "How to achieve？",
+    "description": "Open Source + Block Chain\nRostra will ultilize open source softwares and block chain technology to provide a new model of knowledge governance, thus to lead the innovation of education and research"
+  },
+  "contribute": {
+    "title": "How to contribute？",
+    "detail": {
+      "title": "Use Open Source + Dao goverence to promote the plan of project，establishing「Rostra Contributor Union」:",
+      "period": "Two weeks as a Sprint",
+      "task": "Each Sprint open signing up and picking up tasks",
+      "evaluation": "Peer assessment of contribution every week, to obtain points, for future rewards distribution"
+    },
+    "discord": "Join discord. Get the apply way:",
+    "notion": "Rostra Information Distribution Center:"
+  },
+  "members": "Members of DAO",
+  "media": {
+    "about": "About",
+    "docs": "Docs",
+    "twitter": "Twitter",
+    "discord": "Discord",
+    "github": "GitHub"
+  }
 }
+
