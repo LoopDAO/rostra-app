@@ -58,22 +58,22 @@
     "title": "Rostra 想要带来哪些改变",
     "edu": {
       "title": "教育",
-      "target1":"促进公平获取知识的权利",
-      "target2":"促进社会多样化",
-      "target3":"鼓励和支持个体的探索",
-      "target4": "让个性化教育真正可行",
-      "target5": "让学习者及时获取最新的知识",
-      "target6": "将证书发放权力去中心化",
-      "target7": "形成去中心化的能力评估体系",
-      "target8": "可以 Learn to earn"
+      "knowledge":"促进公平获取知识的权利",
+      "diversity":"促进社会多样化",
+      "exploration":"鼓励和支持个体的探索",
+      "personalized": "让个性化教育真正可行",
+      "acquire": "让学习者及时获取最新的知识",
+      "decentralize": "将证书发放权力去中心化",
+      "evaluation": "形成去中心化的能力评估体系",
+      "earn": "可以 Learn to earn"
     },
     "research": {
       "title": "科研",
-      "target1":"建立合理的所有权机制",
-      "target2":"让个人拥有自己的科研成果",
-      "target3":"改变科研成果的奖励机制",
-      "target4": "形成去中心化的价值发现和评价体系",
-      "target5": "促进科研成果的开放获取"
+      "ownership":"建立合理的所有权机制",
+      "reward":"让个人拥有自己的科研成果",
+      "evaluation":"改变科研成果的奖励机制",
+      "achievements": "形成去中心化的价值发现和评价体系",
+      "access": "促进科研成果的开放获取"
     }
   },
   "how": {

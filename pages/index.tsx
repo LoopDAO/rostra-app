@@ -186,42 +186,42 @@ export default function IndexPage() {
             <UnorderedList>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target1")}
+                  {t("changes.edu.knowledge")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target2")}
+                  {t("changes.edu.diversity")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target3")}
+                  {t("changes.edu.exploration")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target4")}
+                  {t("changes.edu.personalized")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target5")}
+                  {t("changes.edu.acquire")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target6")}
+                  {t("changes.edu.decentralize")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target7")}
+                  {t("changes.edu.evaluation")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.edu.target8")}
+                  {t("changes.edu.earn")}
                 </Text>
               </ListItem>
             </UnorderedList>
@@ -231,51 +231,31 @@ export default function IndexPage() {
             <UnorderedList>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.research.target1")}
+                  {t("changes.research.ownership")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.research.target2")}
+                  {t("changes.research.reward")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.research.target3")}
+                  {t("changes.research.evaluation")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.research.target4")}
+                  {t("changes.research.achievements")}
                 </Text>
               </ListItem>
               <ListItem>
                 <Text as="p" fontSize="xs">
-                  {t("changes.research.target5")}
+                  {t("changes.research.access")}
                 </Text>
               </ListItem>
             </UnorderedList>
           </Stack>
-          {/* <Heading as="h2" fontSize="lg">
-            {t("changes.title")}
-          </Heading>
-          <Stack spacing="6">
-            <Stack>
-              {/* Use HTML to wrap new line */}
-              {/* <Text
-                as="p"
-                fontSize="xs"
-                whiteSpace="pre-wrap"
-                dangerouslySetInnerHTML={{ __html: t("changes.edu") }}
-              />
-              <Text
-                as="p"
-                fontSize="xs"
-                whiteSpace="pre-wrap"
-                dangerouslySetInnerHTML={{ __html: t("changes.research") }}
-              />
-            </Stack>
-          </Stack> */} 
 
           {/* How */}
           <Heading as="h2" fontSize="lg">

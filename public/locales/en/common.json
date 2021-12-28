@@ -58,22 +58,22 @@
     "title": "What Can Rostra Bring to Change",
     "edu": {
       "title": "Education",
-      "target1":"Promote equitable access to knowledge",
-      "target2":"Promote social diversity",
-      "target3":"encourage and support self-exploration",
-      "target4": "Make personalized education truly viable",
-      "target5": "Make learners acquire the lastest knowledge in time",
-      "target6": "Decentralize the authority of certificate issuance",
-      "target7": "Form a decentralized capability evaluation system",
-      "target8": "Learn to earn"
+      "knowledge":"Promote equitable access to knowledge",
+      "diversity":"Promote social diversity",
+      "exploration":"encourage and support self-exploration",
+      "personalized": "Make personalized education truly viable",
+      "acquire": "Make learners acquire the lastest knowledge in time",
+      "decentralize": "Decentralize the authority of certificate issuance",
+      "evaluation": "Form a decentralized capability evaluation system",
+      "earn": "Learn to earn"
     },
     "research": {
       "title": "Research",
-      "target1":"Establish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research",
-      "target2":"Change the reward mechanism of scientific research",
-      "target3":"Form a decentralized system of value discovery and evaluation",
-      "target4": "peed up the transformation process of scientific research achievements",
-      "target5": "Promote the open access to scientific research"
+      "ownership":"Establish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research",
+      "reward":"Change the reward mechanism of scientific research",
+      "evaluation":"Form a decentralized system of value discovery and evaluation",
+      "achievements": "peed up the transformation process of scientific research achievements",
+      "access": "Promote the open access to scientific research"
     }  
   },
   "how": {
