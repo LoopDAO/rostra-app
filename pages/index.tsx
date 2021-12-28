@@ -179,22 +179,82 @@ export default function IndexPage() {
           <Heading as="h2" fontSize="lg">
             {t("changes.title")}
           </Heading>
-          <Stack spacing="6">
-            <Stack>
-              {/* Use HTML to wrap new line */}
-              <Text
-                as="p"
-                fontSize="xs"
-                whiteSpace="pre-wrap"
-                dangerouslySetInnerHTML={{ __html: t("changes.edu") }}
-              />
-              <Text
-                as="p"
-                fontSize="xs"
-                whiteSpace="pre-wrap"
-                dangerouslySetInnerHTML={{ __html: t("changes.research") }}
-              />
-            </Stack>
+          <Stack>
+            <Text as="h2" fontSize="s">
+              {t("changes.edu.title")}
+            </Text>
+            <UnorderedList>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.knowledge")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.diversity")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.exploration")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.personalized")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.acquire")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.decentralize")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.evaluation")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.edu.earn")}
+                </Text>
+              </ListItem>
+            </UnorderedList>
+            <Text as="h2" fontSize="s">
+              {t("changes.research.title")}
+            </Text>
+            <UnorderedList>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.ownership")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.reward")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.evaluation")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.achievements")}
+                </Text>
+              </ListItem>
+              <ListItem>
+                <Text as="p" fontSize="xs">
+                  {t("changes.research.access")}
+                </Text>
+              </ListItem>
+            </UnorderedList>
           </Stack>
 
           {/* How */}

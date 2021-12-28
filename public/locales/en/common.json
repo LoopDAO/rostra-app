@@ -56,8 +56,25 @@
   },
   "changes": {
     "title": "What Can Rostra Bring to Change",
-    "edu": "Education: \nPromote equitable access to knowledge\nPromote social diversity, encourage and support self-exploration\nMake personalized education truly viable\nMake learners acquire the lastest knowledge in time \nDecentralize the authority of certificate issuance and form a decentralized capability evaluation system\nLearn to earn",
-    "research": "Research: \nEstablish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research\nChange the reward mechanism of scientific research\nForm a decentralized system of value discovery and evaluation\nSpeed up the transformation process of scientific research achievements\nPromote the open access to scientific research"
+    "edu": {
+      "title": "Education",
+      "knowledge":"Promote equitable access to knowledge",
+      "diversity":"Promote social diversity",
+      "exploration":"encourage and support self-exploration",
+      "personalized": "Make personalized education truly viable",
+      "acquire": "Make learners acquire the lastest knowledge in time",
+      "decentralize": "Decentralize the authority of certificate issuance",
+      "evaluation": "Form a decentralized capability evaluation system",
+      "earn": "Learn to earn"
+    },
+    "research": {
+      "title": "Research",
+      "ownership":"Establish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research",
+      "reward":"Change the reward mechanism of scientific research",
+      "evaluation":"Form a decentralized system of value discovery and evaluation",
+      "achievements": "peed up the transformation process of scientific research achievements",
+      "access": "Promote the open access to scientific research"
+    }  
   },
   "how": {
     "title": "How to achieve?",
