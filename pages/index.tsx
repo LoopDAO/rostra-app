@@ -20,7 +20,7 @@ import {
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import Web3 from "web3"
+import { ethers } from "ethers"
 
 const NewLineText = ({
   text,
@@ -48,7 +48,7 @@ const NewLineText = ({
 declare global {
   interface Window {
     ethereum:any;
-    web3: any;
+    ethers: any;
   }
 }
 
@@ -56,10 +56,16 @@ export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (window.ethereum?.isMetaMask) {
-      window.web3 = new Web3(window.ethereum);
-      window.web3.eth.getAccounts().then((address: string) => console.log(address));
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        "any"
+      );
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      let userAddress = await signer.getAddress();
+      console.log(userAddress);
     } else {
       alert('请先下载Chrome应用商店内下载MetaMask!');
     }
