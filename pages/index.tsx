@@ -20,6 +20,7 @@ import {
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import Web3 from "web3"
 
 const NewLineText = ({
   text,
@@ -44,9 +45,25 @@ const NewLineText = ({
   return <Text {...rest}>{children}</Text>
 }
 
+declare global {
+  interface Window {
+    ethereum:any;
+    web3: any;
+  }
+}
+
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
+
+  const handleSubmit = () => {
+    if (window.ethereum?.isMetaMask) {
+      window.web3 = new Web3(window.ethereum);
+      window.web3.eth.getAccounts().then((address: string) => console.log(address));
+    } else {
+      alert('请先下载Chrome应用商店内下载MetaMask!');
+    }
+  };
 
   return (
     <Container>
@@ -76,7 +93,7 @@ export default function IndexPage() {
           <Heading as="h4" fontSize="sm">
             {t("mission")}
           </Heading>
-          <Button width="md">{t("action.gotoapp")}</Button>
+          <Button width="md" onClick={() => handleSubmit()}>{t("action.gotoapp")}</Button>
         </Stack>
 
         {/* Problems */}
