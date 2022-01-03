@@ -20,7 +20,9 @@ import {
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { ethers } from "ethers"
+import { useWeb3React } from "@web3-react/core"
+import { InjectedConnector } from "@web3-react/injected-connector";
+
 
 const NewLineText = ({
   text,
@@ -45,31 +47,14 @@ const NewLineText = ({
   return <Text {...rest}>{children}</Text>
 }
 
-declare global {
-  interface Window {
-    ethereum:any;
-    ethers: any;
-  }
-}
-
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
-
-  const handleSubmit = async () => {
-    if (window.ethereum?.isMetaMask) {
-      const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        "any"
-      );
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      let userAddress = await signer.getAddress();
-      console.log(userAddress);
-    } else {
-      alert('请先下载Chrome应用商店内下载MetaMask!');
-    }
-  };
+  const web3React = useWeb3React();
+  web3React.activate(new InjectedConnector({
+    supportedChainIds: [1, 3, 4, 5, 42]
+  }));
+  console.log(web3React.account)
 
   return (
     <Container>
@@ -99,7 +84,7 @@ export default function IndexPage() {
           <Heading as="h4" fontSize="sm">
             {t("mission")}
           </Heading>
-          <Button width="md" onClick={() => handleSubmit()}>{t("action.gotoapp")}</Button>
+          <Button width="md">{t("action.gotoapp")}</Button>
         </Stack>
 
         {/* Problems */}
