@@ -21,7 +21,8 @@ import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useWeb3React } from "@web3-react/core"
-import { InjectedConnector } from "@web3-react/injected-connector";
+import { injected } from "../connector"
+import { useEffect } from "react"
 
 
 const NewLineText = ({
@@ -50,11 +51,21 @@ const NewLineText = ({
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
-  const web3React = useWeb3React();
-  web3React.activate(new InjectedConnector({
-    supportedChainIds: [1, 3, 4, 5, 42]
-  }));
-  console.log(web3React.account)
+  const { activate, account } = useWeb3React();
+
+  useEffect(() => {
+    console.log(account);
+  })
+  
+  const handleClick = () => {
+    if (window.ethereum?.isMetaMask) {
+      activate(injected, undefined, true).catch((err) => {
+        console.log(err)
+      })
+    } else {
+      alert('请先下载Chrome应用商店内下载MetaMask!');
+    }
+  }
 
   return (
     <Container>
@@ -84,7 +95,7 @@ export default function IndexPage() {
           <Heading as="h4" fontSize="sm">
             {t("mission")}
           </Heading>
-          <Button width="md">{t("action.gotoapp")}</Button>
+          <Button width="md" onClick={() => handleClick()}>{t("action.gotoapp")}</Button>
         </Stack>
 
         {/* Problems */}
