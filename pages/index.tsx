@@ -22,8 +22,7 @@ import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "../connector"
-import { useEffect } from "react"
-
+import { Web3Provider } from "@ethersproject/providers/lib/web3-provider"
 
 const NewLineText = ({
   text,
@@ -48,23 +47,16 @@ const NewLineText = ({
   return <Text {...rest}>{children}</Text>
 }
 
-declare global {
-  interface Window {
-    ethereum:any;
-  }
-}
+type WindowType = Window & typeof globalThis & { ethereum: Web3Provider["provider"] }
 
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
-  const { activate, account } = useWeb3React();
-
-  useEffect(() => {
-    console.log(account);
-  })
+  const { activate } = useWeb3React();
 
   const handleClick = () => {
-    if (window.ethereum?.isMetaMask) {
+    const { ethereum } = window as WindowType
+    if (ethereum && ethereum.isMetaMask) {
       activate(injected, undefined, true).catch((err) => {
         console.log(err)
       })
