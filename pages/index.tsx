@@ -20,6 +20,9 @@ import {
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useWeb3React } from "@web3-react/core"
+import { injected } from "../connector"
+import { Web3Provider } from "@ethersproject/providers/lib/web3-provider"
 
 const NewLineText = ({
   text,
@@ -44,9 +47,23 @@ const NewLineText = ({
   return <Text {...rest}>{children}</Text>
 }
 
+type WindowType = Window & typeof globalThis & { ethereum: Web3Provider["provider"] }
+
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
+  const { activate } = useWeb3React();
+
+  const handleClick = () => {
+    const { ethereum } = window as WindowType
+    if (ethereum && ethereum.isMetaMask) {
+      activate(injected, undefined, true).catch((err) => {
+        console.log(err)
+      })
+    } else {
+      alert('请先下载Chrome应用商店内下载MetaMask!');
+    }
+  }
 
   return (
     <Container>
@@ -76,7 +93,7 @@ export default function IndexPage() {
           <Heading as="h4" fontSize="sm">
             {t("mission")}
           </Heading>
-          <Button width="md">{t("action.gotoapp")}</Button>
+          <Button width="md" onClick={() => handleClick()}>{t("action.gotoapp")}</Button>
         </Stack>
 
         {/* Problems */}

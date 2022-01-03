@@ -5,6 +5,9 @@ import { appWithTranslation } from "next-i18next"
 import { useTranslation } from "next-i18next"
 import { AppProps } from "next/app"
 import PlausibleProvider from "next-plausible"
+import { Web3ReactProvider } from "@web3-react/core"
+import { Web3Provider } from "@ethersproject/providers"
+import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
 
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
@@ -44,14 +47,18 @@ function SEO() {
     </Head>
   )
 }
+const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
+  new Web3Provider(provider)
 
 const App = ({ Component, pageProps }: AppProps) => (
   <>
     <SEO />
     <Plausible>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </Web3ReactProvider>
     </Plausible>
   </>
 )
