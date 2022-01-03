@@ -48,6 +48,12 @@ const NewLineText = ({
   return <Text {...rest}>{children}</Text>
 }
 
+declare global {
+  interface Window {
+    ethereum:any;
+  }
+}
+
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
@@ -56,7 +62,7 @@ export default function IndexPage() {
   useEffect(() => {
     console.log(account);
   })
-  
+
   const handleClick = () => {
     if (window.ethereum?.isMetaMask) {
       activate(injected, undefined, true).catch((err) => {
