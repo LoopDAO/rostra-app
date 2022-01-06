@@ -1,19 +1,23 @@
 import React, { ReactNode } from "react"
 import Head from "next/head"
-import { ChakraProvider } from "@chakra-ui/react"
 import { appWithTranslation } from "next-i18next"
 import { useTranslation } from "next-i18next"
 import { AppProps } from "next/app"
 import PlausibleProvider from "next-plausible"
+import { ThemeProvider } from "next-themes"
 import { Web3ReactProvider } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
-import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
+import type {
+  ExternalProvider,
+  JsonRpcFetchFunc,
+} from "@ethersproject/providers"
 
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
 import "@fontsource/source-code-pro/600.css"
 
-import { theme } from "../theme"
+import { darkTheme } from "stitches.config"
+import { globalStyles } from "@styles/global"
 
 const Plausible = ({ children }: { children: ReactNode }) => {
   const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
@@ -50,17 +54,25 @@ function SEO() {
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)
 
-const App = ({ Component, pageProps }: AppProps) => (
-  <>
-    <SEO />
-    <Plausible>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </Web3ReactProvider>
-    </Plausible>
-  </>
-)
+const App = ({ Component, pageProps }: AppProps) => {
+  globalStyles()
+
+  return (
+    <>
+      <SEO />
+      <Plausible>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <ThemeProvider
+            attribute="class"
+            value={{ light: "light-theme", dark: darkTheme.className }}
+            defaultTheme="system"
+          >
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </Web3ReactProvider>
+      </Plausible>
+    </>
+  )
+}
 
 export default appWithTranslation(App)
