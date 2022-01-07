@@ -11,10 +11,11 @@ import { Container } from "@components/Container"
 import { ThemeToggle } from "@components/ThemeToggle"
 import { Flex } from "@components/Flex"
 import { Heading } from "@components/Heading"
-import { UnorderedList } from "@components/UnorderedList"
+import { OrderedList } from "@components/OrderedList"
 import { ListItem } from "@components/ListItem"
 import { Link } from "@components/Link"
 import { Separator } from "@components/Separator"
+import { List } from "@components/List"
 
 import { injected } from "../connector"
 
@@ -141,7 +142,7 @@ export default function IndexPage() {
           <Heading as="h2">{t("changes.title")}</Heading>
           <Flex>
             <Text as="h2">{t("changes.edu.title")}</Text>
-            <UnorderedList>
+            <List>
               <ListItem>
                 <Text as="p">{t("changes.edu.knowledge")}</Text>
               </ListItem>
@@ -166,9 +167,9 @@ export default function IndexPage() {
               <ListItem>
                 <Text as="p">{t("changes.edu.earn")}</Text>
               </ListItem>
-            </UnorderedList>
+            </List>
             <Text as="h2">{t("changes.research.title")}</Text>
-            <UnorderedList>
+            <List>
               <ListItem>
                 <Text as="p">{t("changes.research.ownership")}</Text>
               </ListItem>
@@ -184,7 +185,7 @@ export default function IndexPage() {
               <ListItem>
                 <Text as="p">{t("changes.research.access")}</Text>
               </ListItem>
-            </UnorderedList>
+            </List>
           </Flex>
 
           {/* How */}
@@ -199,7 +200,7 @@ export default function IndexPage() {
           <Heading as="h2">{t("contribute.title")}</Heading>
           <Flex>
             <Text as="p">{t("contribute.detail.title")}</Text>
-            <UnorderedList>
+            <OrderedList>
               <ListItem>
                 <Text as="p">{t("contribute.detail.period")}</Text>
               </ListItem>
@@ -209,7 +210,7 @@ export default function IndexPage() {
               <ListItem>
                 <Text as="p">{t("contribute.detail.evaluation")}</Text>
               </ListItem>
-            </UnorderedList>
+            </OrderedList>
           </Flex>
           <Text as="p" color="gray.500">
             {t("contribute.discord")}{" "}
