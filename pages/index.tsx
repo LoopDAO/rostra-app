@@ -2,7 +2,7 @@ import { ComponentProps } from "react"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useWeb3React } from "@web3-react/core"
+import { useRouter } from 'next/router'
 import { Web3Provider } from "@ethersproject/providers"
 
 import { Button } from "@components/Button"
@@ -16,8 +16,6 @@ import { ListItem } from "@components/ListItem"
 import { Link } from "@components/Link"
 import { Separator } from "@components/Separator"
 import { List } from "@components/List"
-
-import { injected } from "../connector"
 
 type NewLineTextProps = ComponentProps<typeof Text> & {
   text?: string | null
@@ -48,14 +46,12 @@ type WindowType = Window & typeof globalThis & { ethereum: Web3Provider }
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
-  const { activate } = useWeb3React()
+  const router = useRouter();
 
   const handleClick = () => {
     const { ethereum } = window as WindowType
     if (ethereum) {
-      activate(injected, undefined, true).catch((err) => {
-        console.log(err)
-      })
+      router.push('/guild')
     } else {
       alert("请先下载Chrome应用商店内下载MetaMask!")
     }
