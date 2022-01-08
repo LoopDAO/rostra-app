@@ -8,13 +8,11 @@ export type GuildListType = {
   wallet_address: string,
   signature: string,
   members: {
-    nfts: [
-      {
-        name: string,
-        baseURI: string
-      }
-    ],
-    guilds: []
+    nfts: Array<{
+      name: string,
+      baseURI: string
+    }>,
+    guilds: Array<string>
   }
 }
 
@@ -28,8 +26,8 @@ const header: {[key: string]: string} = {
   'Content-Type': 'application/json'
 };
 
-export function addGuild(): Promise<GuildType> {
-  return post('/rostra/guild/add', header);
+export function addGuild(newGuild: GuildListType): Promise<string> {
+  return post('/rostra/guild/add', newGuild, header);
 }
 
 export function getGuild(): Promise<GuildType> {
@@ -37,6 +35,6 @@ export function getGuild(): Promise<GuildType> {
 }
 
 export function getGuildByAddress(address: string): Promise<GuildType> {
-  return get('http://localhost:5000/rostra/guild/get/' + address, header);
+  return get('/rostra/guild/get/' + address, header);
 }
 
