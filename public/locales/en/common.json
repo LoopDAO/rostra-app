@@ -109,6 +109,15 @@
   "guild": {
     "create": "Create a resarch guild",
     "list": "Guild List",
-    "guilds": "My guilds"
+    "guilds": "My guilds",
+    "info": "Basic Info",
+    "name": "Name",
+    "desc": "Description",
+    "creator": "Creator",
+    "nft": "NFTs",
+    "guild": "guilds",
+    "confirm": "Confirm",
+    "requirement": "Requirement",
+    "requirementInfo": "You can add whitelist for joining the guild, addresses that hold specified NFTs or members in specified guilds."
   }
 }
