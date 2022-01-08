@@ -36,7 +36,7 @@ export function getGuild(): Promise<GuildType> {
   return get('/rostra/guild/get', header);
 }
 
-export function getGuildByAddress(address: string, header: {[key: string]: string} = {}): Promise<GuildType> {
-  return get('/rostra/guild/get/' + address, header);
+export function getGuildByAddress(address: string): Promise<GuildType> {
+  return get('http://localhost:5000/rostra/guild/get/' + address, header);
 }
 
