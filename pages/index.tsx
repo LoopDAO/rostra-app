@@ -2,7 +2,7 @@ import { ComponentProps } from "react"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router"
 import { Web3Provider } from "@ethersproject/providers"
 
 import { Button } from "@components/Button"
@@ -46,12 +46,12 @@ type WindowType = Window & typeof globalThis & { ethereum: Web3Provider }
 export default function IndexPage() {
   const { t } = useTranslation()
   const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
-  const router = useRouter();
+  const router = useRouter()
 
   const handleClick = () => {
     const { ethereum } = window as WindowType
     if (ethereum) {
-      router.push('/guild')
+      router.push("/guild")
     } else {
       alert("请先下载Chrome应用商店内下载MetaMask!")
     }
