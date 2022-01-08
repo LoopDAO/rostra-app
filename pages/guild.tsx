@@ -6,6 +6,7 @@ import { injected } from "../connector"
 import { Button } from '@components/Button';
 import { Flex } from '@components/Flex';
 import { Box } from '@components/Box';
+import { Heading } from "@components/Heading"
 import GuildInfo from './guildInfo';
 import { Checkbox, CheckboxIndicator } from '@components/Checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
@@ -38,9 +39,9 @@ export default function GuildPage() {
   return (
     <>
       <Flex>
-        <div>{t("title")}</div>
+        <Heading>{t("title")}</Heading>
         <Button onClick={() => setPageContent('createGuildPage')}>
-          {t("Create a resarch guild")}
+          {t("guild.create")}
         </Button>
         <Avatar>
           <AvatarImage
@@ -52,14 +53,14 @@ export default function GuildPage() {
       </Flex>
       {pageContent == 'guildListPage' && <Box>
         <Flex>
-          <Box>{t("Guild List")}</Box> 
+          <Box>{t("guild.list")}</Box> 
           <Checkbox defaultChecked id="c1">
           <CheckboxIndicator>
             <CheckIcon />
           </CheckboxIndicator>
           </Checkbox>
           <Label css={{ paddingLeft: 15 }} htmlFor="c1">
-            {t('My guilds')}
+            {t('guilds')}
           </Label>
         </Flex>
         {guildsList && guildsList?.map((guild) => (
@@ -71,7 +72,7 @@ export default function GuildPage() {
       </Box>}
       {pageContent == 'createGuildPage' && <Box>
         <Flex>
-          <Box>{t("Create a guild")}</Box> 
+          <Box>{t("guild.create")}</Box> 
         </Flex>
       </Box>}
     </>

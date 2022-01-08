@@ -105,5 +105,10 @@
     "mirror": "https://mirror.xyz/0x22Acb9bb4A79b462B55049ba972608545C50e6fC/5vWc8a1eLCPXLqHILz9YCesNUmn89z0T5r19eOAsuMs",
     "notion": "https://rostra.notion.site",
     "twitter": "https://twitter.com/rostra_xyz"
+  },
+  "guild": {
+    "create": "创建一个科研公会",
+    "list": "公会列表",
+    "guilds": "我的公会"
   }
 }
