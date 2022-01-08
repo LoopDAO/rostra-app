@@ -1,7 +1,6 @@
 import React from "react"
 import { Text } from "./Text"
 import { VariantProps, CSS } from "../stitches.config"
-import merge from "lodash.merge"
 
 const DEFAULT_TAG = "h1"
 
@@ -44,7 +43,7 @@ export const Heading = React.forwardRef<
       size={textSize[size]}
       css={{
         fontVariantNumeric: "proportional-nums",
-        ...merge(textCss[size], props.css),
+        // ...merge(textCss[size], props.css),
       }}
     />
   )
