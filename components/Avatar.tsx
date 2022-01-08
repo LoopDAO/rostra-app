@@ -1,9 +1,8 @@
-import React from 'react';
-import { styled } from '@stitches/react';
+import { styled } from 'stitches.config';
 import { violet, blackA } from '@radix-ui/colors';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 
-const StyledAvatar = styled(AvatarPrimitive.Root, {
+export const Avatar = styled(AvatarPrimitive.Root, {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -16,14 +15,14 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
   backgroundColor: blackA.blackA3,
 });
 
-const StyledImage = styled(AvatarPrimitive.Image, {
+export const AvatarImage = styled(AvatarPrimitive.Image, {
   width: '100%',
   height: '100%',
   objectFit: 'cover',
   borderRadius: 'inherit',
 });
 
-const StyledFallback = styled(AvatarPrimitive.Fallback, {
+export const AvatarFallback = styled(AvatarPrimitive.Fallback, {
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -35,8 +34,3 @@ const StyledFallback = styled(AvatarPrimitive.Fallback, {
   lineHeight: 1,
   fontWeight: 500,
 });
-
-// Exports
-export const Avatar = StyledAvatar;
-export const AvatarImage = StyledImage;
-export const AvatarFallback = StyledFallback;
