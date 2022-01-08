@@ -16,4 +16,5 @@ module.exports = {
       // 'ru',
     ],
   },
+  react: { useSuspense: false }
 };
