@@ -7,6 +7,10 @@ import { Button } from '@components/Button';
 import { Flex } from '@components/Flex';
 import { Box } from '@components/Box';
 import GuildInfo from './guildInfo';
+import { Checkbox, CheckboxIndicator } from '@components/Checkbox';
+import { CheckIcon } from '@radix-ui/react-icons';
+import { Label } from '@components/Label';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/Avatar';
 
 
 export default function GuildPage() {
@@ -14,7 +18,8 @@ export default function GuildPage() {
   const { activate, account } = useWeb3React();
   const [guildsList, setGuildsList] = useState<Array<GuildListType>>();
   const [pageContent, setPageContent] = useState<string>("guildListPage");
-  
+  const [checked, setChecked] = useState('indeterminate');
+
   useEffect(() => {
     activate(injected, undefined, true).catch((err) => {
       console.log(err)
@@ -37,12 +42,25 @@ export default function GuildPage() {
         <Button onClick={() => setPageContent('createGuildPage')}>
           {t("Create a resarch guild")}
         </Button>
-        <Box>{t("Personal")}</Box> 
+        <Avatar>
+          <AvatarImage
+            src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+            alt="Pedro Duarte"
+          />
+          <AvatarFallback delayMs={600}>JD</AvatarFallback>
+        </Avatar>
       </Flex>
       {pageContent == 'guildListPage' && <Box>
         <Flex>
           <Box>{t("Guild List")}</Box> 
-          {/* <Checkbox>My guilds</Checkbox> */}
+          <Checkbox defaultChecked id="c1">
+          <CheckboxIndicator>
+            <CheckIcon />
+          </CheckboxIndicator>
+          </Checkbox>
+          <Label css={{ paddingLeft: 15 }} htmlFor="c1">
+            {t('My guilds')}
+          </Label>
         </Flex>
         {guildsList && guildsList?.map((guild) => (
           <Box key={guild.name}>
