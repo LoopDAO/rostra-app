@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
 import { getGuild, GuildListType } from "../api/guild"
@@ -12,6 +12,8 @@ import { Checkbox, CheckboxIndicator } from "@components/Checkbox"
 import { CheckIcon } from "@radix-ui/react-icons"
 import { Label } from "@components/Label"
 import { Avatar, AvatarFallback, AvatarImage } from "@components/Avatar"
+import { GetStaticProps } from "next"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -81,4 +83,12 @@ export default function GuildPage() {
       )}
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale!, ["common"])),
+    },
+  }
 }
