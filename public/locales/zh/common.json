@@ -109,6 +109,15 @@
   "guild": {
     "create": "创建一个科研公会",
     "list": "公会列表",
-    "guilds": "我的公会"
+    "guilds": "我的公会",
+    "info": "基本信息",
+    "name": "姓名",
+    "desc": "简介",
+    "creator": "创造者",
+    "nft": "NFTs",
+    "guild": "公会",
+    "confirm": "确认",
+    "requirement": "要求",
+    "requirementInfo": "您可以添加加入公会的白名单、持有指定 NFT 的地址或指定公会中的成员。"
   }
 }
