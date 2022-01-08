@@ -1,22 +1,20 @@
 import { get, post } from './http';
 
 export type GuildListType = {
-  guild_id: 0,
-  name: "string",
-  desc: "string",
-  creator: "string",
-  wallet_address: "string",
-  signature: "string",
+  guild_id: number,
+  name: string,
+  desc: string,
+  creator: string,
+  wallet_address: string,
+  signature: string,
   members: {
     nfts: [
       {
-        name: "string",
-        baseURI: "string"
+        name: string,
+        baseURI: string
       }
     ],
-    guilds: [
-      0
-    ]
+    guilds: []
   }
 }
 
