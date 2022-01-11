@@ -98,7 +98,7 @@ export default function GuildPage() {
   return (
     <>
       <Flex>
-        <Fieldset>
+        <Fieldset css={{ marginLeft: "20px" }}>
           <Heading>{t("title")}</Heading>
           <Button onClick={() => setPageContent("createGuildPage")}>
             {t("guild.create")}
@@ -117,7 +117,7 @@ export default function GuildPage() {
         </Fieldset>
       </Flex>
       {pageContent == "guildListPage" && (
-        <Box>
+        <Box css={{ marginLeft: "20px" }}>
           <Flex>
             <Fieldset>
               <Box>{t("guild.list")}</Box> 
@@ -144,7 +144,7 @@ export default function GuildPage() {
         </Box>
       )}
       {pageContent == "createGuildPage" && (
-        <Box css={{ width: "500px" }}>
+        <Box css={{ width: "500px", marginLeft: "20px" }}>
           <Fieldset>
             <Heading>{t("guild.create")}</Heading>
           </Fieldset>
