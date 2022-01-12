@@ -34,9 +34,6 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           onClick={requestNetworkChange}
           size="3"
           css={{ borderWidth: isCurrentChain ? "2px" : undefined }}
-          // borderColor="primary.500"
-          // px="5"
-          // justifyContent="start"
         >
           {RPC[chain].chainName}
         </Button>
