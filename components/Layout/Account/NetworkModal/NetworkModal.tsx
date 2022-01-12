@@ -30,7 +30,7 @@ const NetworkModal = ({
           {active ? "Supported networks" : "Select network"}
         </DialogTitle>
 
-        <Text css={{ mb: 8 }}>
+        <Text css={{ mb: "1.5rem" }}>
           {`It doesn't matter which supported chain you're connected to, it's only used to know your address and sign messages so each will work equally.`}
         </Text>
         <Grid columns={{ bp1: 2 }} gap={{ base: 3, bp2: 4 }}>
