@@ -41,7 +41,7 @@ export const RPC: { [key: string]: any } = {
 } as const
 
 export const supportedChains = ["ETHEREUM"]
-export const supportedChainIds = supportedChains.map((_: string) => Chains[_])
+export const supportedChainIds = supportedChains.map((_: string) => Chains[_ as keyof typeof Chains])
 
 export const injected = new InjectedConnector({ supportedChainIds })
 

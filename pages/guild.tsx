@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
-import { getGuild, getGuildByAddress, addGuild, GuildListType } from "../api/guild"
+import {
+  getGuild,
+  getGuildByAddress,
+  addGuild,
+  GuildListType,
+} from "../api/guild"
 import { injected } from "../connector"
-import { Button } from "@components/Button"
-import { Flex } from "@components/Flex"
-import { Box } from "@components/Box"
-import { Heading } from "@components/Heading"
+import { Button } from "@components/common/Button"
+import { Flex } from "@components/common/Flex"
+import { Box } from "@components/common/Box"
+import { Heading } from "@components/common/Heading"
 import GuildInfo from "./guildInfo"
-import { Checkbox, CheckboxIndicator } from "@components/Checkbox"
+import { Checkbox, CheckboxIndicator } from "@components/common/Checkbox"
 import { CheckIcon } from "@radix-ui/react-icons"
-import { Label } from "@components/Label"
-import { Avatar, AvatarFallback, AvatarImage } from "@components/Avatar"
+import { Label } from "@components/common/Label"
+import { Avatar, AvatarFallback, AvatarImage } from "@components/common/Avatar"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Fieldset } from '@components/Fieldset';
-import { Input } from '@components/Input';
+import { Fieldset } from "@components/common/Fieldset"
+import { Input } from "@components/common/Input"
 import { useRouter } from "next/router"
 
 let newGuilds: GuildListType = {
@@ -29,19 +34,19 @@ let newGuilds: GuildListType = {
     nfts: [
       {
         name: "string",
-        baseURI: "string"
-      }
+        baseURI: "string",
+      },
     ],
-    guilds: []
-  }
-};
+    guilds: [],
+  },
+}
 
 export default function GuildPage() {
   const { t } = useTranslation()
   const { activate, account } = useWeb3React()
   const [guildsList, setGuildsList] = useState<Array<GuildListType>>()
   const [pageContent, setPageContent] = useState<string>("guildListPage")
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -50,49 +55,49 @@ export default function GuildPage() {
     })
     if (checked && account) {
       getGuildByAddress(account)
-      .then((res) => {
-        setGuildsList(JSON.parse(res.result))
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          setGuildsList(JSON.parse(res.result))
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     } else {
       getGuild()
         .then((res) => {
           setGuildsList(JSON.parse(res.result))
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     }
   }, [account, activate, checked])
 
   const handleNfts = (value: string) => {
-    const nfts = value.split(',').map(nft => ({
+    const nfts = value.split(",").map((nft) => ({
       name: "",
-      baseURI: nft
-    }));
-    newGuilds.members.nfts = nfts;
+      baseURI: nft,
+    }))
+    newGuilds.members.nfts = nfts
   }
 
   const handleGuilds = (value: string) => {
-    newGuilds.members.guilds = value.split(',')
+    newGuilds.members.guilds = value.split(",")
   }
 
   const handleSubmit = () => {
-    newGuilds.wallet_address = account || '';
-    newGuilds.creator = account || '';
+    newGuilds.wallet_address = account || ""
+    newGuilds.creator = account || ""
     addGuild(newGuilds)
       .then((res) => {
-        if (JSON.parse(res).message = "SUCCESS") {
+        if ((JSON.parse(res).message = "SUCCESS")) {
           setPageContent("guildListPage")
         } else {
           throw Error("create new guild faild!")
         }
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
 
   return (
@@ -108,8 +113,8 @@ export default function GuildPage() {
               src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
               alt="Pedro Duarte"
               onClick={() => {
-                setPageContent("guildListPage");
-                setChecked(true);
+                setPageContent("guildListPage")
+                setChecked(true)
               }}
             />
             <AvatarFallback delayMs={600}>JD</AvatarFallback>
@@ -120,19 +125,18 @@ export default function GuildPage() {
         <Box>
           <Flex>
             <Fieldset>
-              <Box>{t("guild.list")}</Box> 
-              <Checkbox 
-                defaultChecked id="c1" 
-                checked={checked} 
+              <Box>{t("guild.list")}</Box>
+              <Checkbox
+                defaultChecked
+                id="c1"
+                checked={checked}
                 onCheckedChange={() => setChecked(!checked)}
-                >
+              >
                 <CheckboxIndicator>
                   <CheckIcon />
                 </CheckboxIndicator>
               </Checkbox>
-              <Label htmlFor="c1">
-                {t('guild.guilds')}
-              </Label>
+              <Label htmlFor="c1">{t("guild.guilds")}</Label>
             </Fieldset>
           </Flex>
           {guildsList &&
@@ -153,11 +157,17 @@ export default function GuildPage() {
           </Fieldset>
           <Fieldset>
             <Label htmlFor="name">{t("guild.name")}</Label>
-            <Input id="name" onChange={(e) => newGuilds.name = e.target.value} />
+            <Input
+              id="name"
+              onChange={(e) => (newGuilds.name = e.target.value)}
+            />
           </Fieldset>
           <Fieldset>
             <Label htmlFor="description">{t("guild.desc")}</Label>
-            <Input id="description" onChange={(e) => newGuilds.desc = e.target.value} />
+            <Input
+              id="description"
+              onChange={(e) => (newGuilds.desc = e.target.value)}
+            />
           </Fieldset>
           <Fieldset>
             <Heading>{t("guild.requirement")}</Heading>
@@ -167,7 +177,10 @@ export default function GuildPage() {
           </Fieldset>
           <Fieldset>
             <Label htmlFor="creator">{t("guild.creator")}</Label>
-            <Input id="creator" onChange={(e) => newGuilds.creator = e.target.value} />
+            <Input
+              id="creator"
+              onChange={(e) => (newGuilds.creator = e.target.value)}
+            />
           </Fieldset>
           <Fieldset>
             <Label htmlFor="nfts">{t("guild.nft")}</Label>
@@ -177,8 +190,12 @@ export default function GuildPage() {
             <Label htmlFor="guilds">{t("guild.guild")}</Label>
             <Input id="guilds" onChange={(e) => handleGuilds(e.target.value)} />
           </Fieldset>
-          <Flex css={{ marginTop: 25, justifyContent: 'flex-start' }}>
-            <Button aria-label="Confirm" variant="green" onClick={() => handleSubmit()}>
+          <Flex css={{ marginTop: 25, justifyContent: "flex-start" }}>
+            <Button
+              aria-label="Confirm"
+              variant="green"
+              onClick={() => handleSubmit()}
+            >
               {t("guild.confirm")}
             </Button>
           </Flex>
