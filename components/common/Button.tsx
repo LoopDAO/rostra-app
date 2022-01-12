@@ -1,47 +1,20 @@
+import { ComponentProps, forwardRef, ReactElement } from "react"
 import { styled } from "stitches.config"
+import { Box } from "./Box"
+import { ButtonSpinner } from "./Button/ButtonSpinner"
+import { Text } from "./Text"
 
-// export const Button = styled("button", {
-//   all: "unset",
-//   display: "inline-flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-//   borderRadius: 24,
-//   padding: "0 15px",
-//   fontSize: 15,
-//   lineHeight: 1,
-//   fontWeight: 500,
-//   height: 35,
-//   cursor: "pointer",
-//   border: `1px solid $gray10`,
-//   backgroundColor: "$blackA1",
-//   color: "$white",
-//   "&:hover": { borderColor: "$white" },
-//   "&:focus": { boxShadow: `0 0 0 2px black` },
-
-//   variants: {
-//     variant: {
-//       round: {
-//         borderRadius: 999,
-//       },
-//     },
-//   },
-
-//   defaultVariants: {
-//     variant: "round",
-//   },
-// })
-
-export const Button = styled("button", {
+const StyledButton = styled("button", {
   // Reset
   all: "unset",
   alignItems: "center",
-  boxSizing: "border-box",
+  FlexSizing: "border-Flex",
   userSelect: "none",
   "&::before": {
-    boxSizing: "border-box",
+    FlexSizing: "border-Flex",
   },
   "&::after": {
-    boxSizing: "border-box",
+    FlexSizing: "border-Flex",
   },
 
   // Custom reset?
@@ -61,7 +34,7 @@ export const Button = styled("button", {
 
   "&:disabled": {
     backgroundColor: "$slate2",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
+    FlexShadow: "inset 0 0 0 1px $colors$slate7",
     color: "$slate8",
     pointerEvents: "none",
   },
@@ -92,91 +65,93 @@ export const Button = styled("button", {
     },
     variant: {
       gray: {
-        backgroundColor: "$loContrast",
-        boxShadow: "inset 0 0 0 1px $colors$slate7",
+        backgroundColor: "$grayA2",
+        FlexShadow: "inset 0 0 0 1px $colors$slate7",
         color: "$hiContrast",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            FlexShadow: "inset 0 0 0 1px $colors$slate8",
           },
         },
         "&:active": {
           backgroundColor: "$slate2",
-          boxShadow: "inset 0 0 0 1px $colors$slate8",
+          FlexShadow: "inset 0 0 0 1px $colors$slate8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
+          FlexShadow:
+            "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$slate4",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            FlexShadow: "inset 0 0 0 1px $colors$slate8",
           },
       },
       blue: {
         backgroundColor: "$blue2",
-        boxShadow: "inset 0 0 0 1px $colors$blue7",
+        FlexShadow: "inset 0 0 0 1px $colors$blue7",
         color: "$blue11",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$blue8",
+            FlexShadow: "inset 0 0 0 1px $colors$blue8",
           },
         },
         "&:active": {
           backgroundColor: "$blue3",
-          boxShadow: "inset 0 0 0 1px $colors$blue8",
+          FlexShadow: "inset 0 0 0 1px $colors$blue8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
+          FlexShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$blue4",
-            boxShadow: "inset 0 0 0 1px $colors$blue8",
+            FlexShadow: "inset 0 0 0 1px $colors$blue8",
           },
       },
       green: {
         backgroundColor: "$green2",
-        boxShadow: "inset 0 0 0 1px $colors$green7",
+        FlexShadow: "inset 0 0 0 1px $colors$green7",
         color: "$green11",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$green8",
+            FlexShadow: "inset 0 0 0 1px $colors$green8",
           },
         },
         "&:active": {
           backgroundColor: "$green3",
-          boxShadow: "inset 0 0 0 1px $colors$green8",
+          FlexShadow: "inset 0 0 0 1px $colors$green8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$green8, 0 0 0 1px $colors$green8",
+          FlexShadow:
+            "inset 0 0 0 1px $colors$green8, 0 0 0 1px $colors$green8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$green4",
-            boxShadow: "inset 0 0 0 1px $colors$green8",
+            FlexShadow: "inset 0 0 0 1px $colors$green8",
           },
       },
       red: {
         backgroundColor: "$loContrast",
-        boxShadow: "inset 0 0 0 1px $colors$slate7",
+        FlexShadow: "inset 0 0 0 1px $colors$slate7",
         color: "$red11",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            FlexShadow: "inset 0 0 0 1px $colors$slate8",
           },
         },
         "&:active": {
           backgroundColor: "$red3",
-          boxShadow: "inset 0 0 0 1px $colors$red8",
+          FlexShadow: "inset 0 0 0 1px $colors$red8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$red8, 0 0 0 1px $colors$red8",
+          FlexShadow: "inset 0 0 0 1px $colors$red8, 0 0 0 1px $colors$red8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$red4",
-            boxShadow: "inset 0 0 0 1px $colors$red8",
+            FlexShadow: "inset 0 0 0 1px $colors$red8",
           },
       },
       transparentWhite: {
@@ -191,7 +166,7 @@ export const Button = styled("button", {
           backgroundColor: "hsla(0,100%,100%,.3)",
         },
         "&:focus": {
-          boxShadow:
+          FlexShadow:
             "inset 0 0 0 1px hsla(0,100%,100%,.35), 0 0 0 1px hsla(0,100%,100%,.35)",
         },
       },
@@ -207,7 +182,7 @@ export const Button = styled("button", {
           backgroundColor: "hsla(0,0%,0%,.3)",
         },
         "&:focus": {
-          boxShadow:
+          FlexShadow:
             "inset 0 0 0 1px hsla(0,0%,0%,.35), 0 0 0 1px hsla(0,0%,0%,.35)",
         },
       },
@@ -215,44 +190,45 @@ export const Button = styled("button", {
     state: {
       active: {
         backgroundColor: "$slate4",
-        boxShadow: "inset 0 0 0 1px $colors$slate8",
+        FlexShadow: "inset 0 0 0 1px $colors$slate8",
         color: "$slate11",
         "@hover": {
           "&:hover": {
             backgroundColor: "$slate5",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            FlexShadow: "inset 0 0 0 1px $colors$slate8",
           },
         },
         "&:active": {
           backgroundColor: "$slate5",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
+          FlexShadow:
+            "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
         },
       },
       waiting: {
         backgroundColor: "$slate4",
-        boxShadow: "inset 0 0 0 1px $colors$slate8",
+        FlexShadow: "inset 0 0 0 1px $colors$slate8",
         color: "transparent",
         pointerEvents: "none",
         "@hover": {
           "&:hover": {
             backgroundColor: "$slate5",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            FlexShadow: "inset 0 0 0 1px $colors$slate8",
           },
         },
         "&:active": {
           backgroundColor: "$slate5",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8",
+          FlexShadow: "inset 0 0 0 1px $colors$slate8",
         },
       },
     },
     ghost: {
       true: {
         backgroundColor: "transparent",
-        boxShadow: "none",
+        FlexShadow: "none",
       },
     },
   },
@@ -266,20 +242,20 @@ export const Button = styled("button", {
         "@hover": {
           "&:hover": {
             backgroundColor: "$slateA3",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
         },
         "&:active": {
           backgroundColor: "$slateA4",
         },
         "&:focus": {
-          boxShadow:
+          FlexShadow:
             "inset 0 0 0 1px $colors$slateA8, 0 0 0 1px $colors$slateA8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$slateA4",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
       },
     },
@@ -291,19 +267,20 @@ export const Button = styled("button", {
         "@hover": {
           "&:hover": {
             backgroundColor: "$blueA3",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
         },
         "&:active": {
           backgroundColor: "$blueA4",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$blueA8, 0 0 0 1px $colors$blueA8",
+          FlexShadow:
+            "inset 0 0 0 1px $colors$blueA8, 0 0 0 1px $colors$blueA8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$blueA4",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
       },
     },
@@ -315,20 +292,20 @@ export const Button = styled("button", {
         "@hover": {
           "&:hover": {
             backgroundColor: "$greenA3",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
         },
         "&:active": {
           backgroundColor: "$greenA4",
         },
         "&:focus": {
-          boxShadow:
+          FlexShadow:
             "inset 0 0 0 1px $colors$greenA8, 0 0 0 1px $colors$greenA8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$greenA4",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
       },
     },
@@ -340,19 +317,19 @@ export const Button = styled("button", {
         "@hover": {
           "&:hover": {
             backgroundColor: "$redA3",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
         },
         "&:active": {
           backgroundColor: "$redA4",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$redA8, 0 0 0 1px $colors$redA8",
+          FlexShadow: "inset 0 0 0 1px $colors$redA8, 0 0 0 1px $colors$redA8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$redA4",
-            boxShadow: "none",
+            FlexShadow: "none",
           },
       },
     },
@@ -362,3 +339,103 @@ export const Button = styled("button", {
     variant: "gray",
   },
 })
+
+export type ButtonProps = ComponentProps<typeof StyledButton> & {
+  leftIcon?: ReactElement
+  rightIcon?: ReactElement
+  isLoading?: boolean
+  loadingText?: string
+  spinnerPlacement?: "start" | "end"
+  spinner?: ReactElement
+}
+
+export const Button = forwardRef<
+  React.ElementRef<typeof StyledButton>,
+  ButtonProps
+>((props, forwardedRef) => {
+  const {
+    leftIcon,
+    rightIcon,
+    isLoading,
+    loadingText,
+    children,
+    spinnerPlacement = "start",
+    spinner,
+    disabled,
+    ...buttonProps
+  } = props
+
+  const contentProps = { rightIcon, leftIcon, children }
+
+  return (
+    <StyledButton {...buttonProps} ref={forwardedRef} disabled={disabled || isLoading}>
+      {isLoading && spinnerPlacement === "start" && (
+        <ButtonSpinner label={loadingText} placement="start">
+          {spinner}
+        </ButtonSpinner>
+      )}
+
+      {isLoading ? (
+        loadingText || (
+          <Text as="span" css={{ opacity: 0 }}>
+            <ButtonContent {...contentProps} />
+          </Text>
+        )
+      ) : (
+        <ButtonContent {...contentProps} />
+      )}
+
+      {isLoading && spinnerPlacement === "end" && (
+        <ButtonSpinner
+          className="chakra-button__spinner--end"
+          label={loadingText}
+          placement="end"
+        >
+          {spinner}
+        </ButtonSpinner>
+      )}
+    </StyledButton>
+  )
+})
+
+type ButtonContentProps = Pick<
+  ButtonProps,
+  "leftIcon" | "rightIcon" | "children"
+>
+
+function ButtonContent(props: ButtonContentProps) {
+  const { leftIcon, rightIcon, children } = props
+  return (
+    <>
+      {!!leftIcon && (
+        <Box
+          as="span"
+          css={{
+            mr: "$1",
+            ai: "center",
+            display: "inline-flex",
+            alignSelf: "center",
+            flexShrink: 0,
+          }}
+        >
+          {leftIcon}
+        </Box>
+      )}
+      {children}{" "}
+      {!!rightIcon && (
+        <Box
+          as="span"
+          css={{
+            ml: "$1",
+            ai: "center",
+            display: "inline-flex",
+            alignSelf: "center",
+            flexShrink: 0,
+          }}
+        >
+          {rightIcon}
+        </Box>
+      )}
+    </>
+  )
+}
