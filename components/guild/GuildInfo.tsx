@@ -4,6 +4,7 @@ import { Fieldset } from "@components/common/Fieldset"
 import { Text } from "@components/common/Text"
 import { useRouter } from "next/router"
 import { Heading } from "@components/common/Heading"
+import { Box } from "@components/common/Box"
 
 export default function GuildInfo({ guild }: { guild: GuildListType }) {
   const nfts = guild?.nfts
@@ -15,9 +16,20 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
     })
   }
 
+  // TODO: Add color type
   return (
-    <div onClick={() => handleClick(guild)}>
-      <Heading size="2">{guild?.name}</Heading>
+    <Box
+      css={{
+        px: "$4",
+        py: "$3",
+        backgroundColor: "$amberA10",
+        borderRadius: "$4",
+      }}
+      onClick={() => handleClick(guild)}
+    >
+      <Heading size="2" css={{ color: "$gray12" }}>
+        {guild?.name}
+      </Heading>
       <Text
         css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
         key={guild?.guild_id}
@@ -52,6 +64,6 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
           </Text>
         ))}
       </Fieldset>
-    </div>
+    </Box>
   )
 }
