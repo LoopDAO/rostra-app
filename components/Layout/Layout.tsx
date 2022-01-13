@@ -11,7 +11,6 @@ import { LocaleToggle } from "./LocaleToggle"
 
 export const Layout: FC = ({ children }) => {
   const { t } = useTranslation()
-  const websiteLink = process.env.NEXT_PUBLIC_VERCEL_ENV ?? "//rostra.xyz"
 
   return (
     <Container size={3} css={{ py: "$4" }}>
@@ -31,7 +30,7 @@ export const Layout: FC = ({ children }) => {
           }}
         >
           <Flex>
-            <Link href={websiteLink}>
+            <Link href="/">
               <Heading as="h1">{t("title")}</Heading>
             </Link>
             <Text size="3">{t("description")}</Text>
@@ -42,6 +41,7 @@ export const Layout: FC = ({ children }) => {
             <Account />
           </Flex>
         </Flex>
+
         {children}
       </Flex>
     </Container>
