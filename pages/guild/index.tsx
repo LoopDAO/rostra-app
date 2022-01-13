@@ -145,7 +145,9 @@ export default function GuildPage() {
         </Box>
       )}
       {pageContent == "createGuildPage" && (
-        <Box css={{ width: "500px", marginLeft: "20px" }}>
+        <Flex
+          css={{ width: "500px", marginLeft: "20px", fd: "column", gap: "$2" }}
+        >
           <Fieldset>
             <Heading>{t("guild.create")}</Heading>
           </Fieldset>
@@ -190,13 +192,14 @@ export default function GuildPage() {
           <Flex css={{ marginTop: 25, justifyContent: "flex-start" }}>
             <Button
               aria-label="Confirm"
-              variant="green"
+              variant="gray"
               onClick={() => handleSubmit()}
+              size="3"
             >
               {t("guild.confirm")}
             </Button>
           </Flex>
-        </Box>
+        </Flex>
       )}
     </>
   )
