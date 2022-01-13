@@ -8,7 +8,7 @@ const config = withPlausibleProxy()({
     return [
       {
         source: "/rostra/:path*",
-        destination: "http://localhost:5000/rostra/:path*",
+        destination: process.env.NEXT_PUBLIC_API_BASE + "/rostra/:path*",
       }
     ]
   }
