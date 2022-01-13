@@ -1,6 +1,6 @@
 import React from "react"
-import { Fieldset } from '@components/Fieldset'
-import { Text } from '@components/Text'
+import { Fieldset } from '@components/common/Fieldset'
+import { Text } from '@components/common/Text'
 import { useRouter } from "next/router"
 
 export default function GuildDetails() {
