@@ -1,8 +1,8 @@
 import React from "react"
 import { useTranslation } from "next-i18next"
-import { Flex } from "@components/Flex"
+import { Flex } from "@components/common/Flex"
 import { GuildListType } from "../api/guild"
-import { Fieldset } from '@components/Fieldset'
+import { Fieldset } from '@components/common/Fieldset'
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { Text } from '@components/Text'
