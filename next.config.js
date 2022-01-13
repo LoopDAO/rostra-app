@@ -8,7 +8,7 @@ const config = withPlausibleProxy()({
     return [
       {
         source: "/rostra/:path*",
-        destination: process.env.BASEURI + "/rostra/:path*",
+        destination: 'http://' + process.env.BASEURI + "/rostra/:path*",
       }
     ]
   }
