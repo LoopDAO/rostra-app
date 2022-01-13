@@ -24,14 +24,18 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
         py: "$3",
         backgroundColor: "$amberA10",
         borderRadius: "$4",
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "$amberA11",
+        },
       }}
       onClick={() => handleClick(guild)}
     >
-      <Heading size="2" css={{ color: "$gray12" }}>
+      <Heading size="2" css={{ color: "$gray1" }}>
         {guild?.name}
       </Heading>
       <Text
-        css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
+        css={{ color: "$gray11", fontSize: "12px", marginTop: "5px" }}
         key={guild?.guild_id}
       >
         {members?.length + " members"}
@@ -40,7 +44,7 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
         {nfts?.map((nft) => (
           <Text
             css={{
-              backgroundColor: "Gray",
+              backgroundColor: "$gray11",
               color: "white",
               border: "3px solid gray",
               borderRadius: "5px",
