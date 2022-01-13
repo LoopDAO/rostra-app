@@ -6,13 +6,13 @@ import {
   getGuildByAddress,
   addGuild,
   GuildListType,
-} from "../api/guild"
-import { injected } from "../connector"
+} from "api/guild"
+import { injected } from "connector"
 import { Button } from "@components/common/Button"
 import { Flex } from "@components/common/Flex"
 import { Box } from "@components/common/Box"
 import { Heading } from "@components/common/Heading"
-import GuildInfo from "./guildInfo"
+import GuildInfo from "@components/guild/GuildInfo"
 import { Checkbox, CheckboxIndicator } from "@components/common/Checkbox"
 import { CheckIcon } from "@radix-ui/react-icons"
 import { Label } from "@components/common/Label"

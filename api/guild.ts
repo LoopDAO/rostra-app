@@ -30,11 +30,10 @@ export function addGuild(newGuild: GuildListType): Promise<string> {
   return post('/rostra/guild/add', newGuild, header);
 }
 
-export function getGuild(): Promise<GuildType> {
+export function getGuild(): Promise<GuildType[]> {
   return get('/rostra/guild/get', header);
 }
 
 export function getGuildByAddress(address: string): Promise<GuildType> {
   return get('/rostra/guild/get/' + address, header);
 }
-
