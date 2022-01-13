@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
-import {
-  getGuild,
-  getGuildByAddress,
-  addGuild,
-  GuildListType,
-} from "api/guild"
+import { getGuild, getGuildByAddress, addGuild, GuildListType } from "api/guild"
 import { injected } from "connector"
 import { Button } from "@components/common/Button"
 import { Flex } from "@components/common/Flex"
@@ -139,12 +134,14 @@ export default function GuildPage() {
               <Label htmlFor="c1">{t("guild.guilds")}</Label>
             </Fieldset>
           </Flex>
-          {guildsList &&
-            guildsList?.map((guild) => (
-              <Box key={guild.name}>
-                <GuildInfo guild={guild} />
-              </Box>
-            ))}
+          <Box css={{ marginTop: "$4" }}>
+            {guildsList &&
+              guildsList?.map((guild) => (
+                <Box key={guild.name}>
+                  <GuildInfo guild={guild} />
+                </Box>
+              ))}
+          </Box>
         </Box>
       )}
       {pageContent == "createGuildPage" && (
