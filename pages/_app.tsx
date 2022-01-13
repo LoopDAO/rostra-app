@@ -18,6 +18,8 @@ import "@fontsource/source-code-pro/600.css"
 
 import { darkTheme } from "stitches.config"
 import { globalStyles } from "@styles/global"
+import { Web3ConnectionManager } from "@components/_app/Web3ConnectionManager"
+import { Layout } from "@components/Layout"
 
 const Plausible = ({ children }: { children: ReactNode }) => {
   const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
@@ -61,15 +63,19 @@ const App = ({ Component, pageProps }: AppProps) => {
     <>
       <SEO />
       <Plausible>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <ThemeProvider
-            attribute="class"
-            value={{ light: "light-theme", dark: darkTheme.className }}
-            defaultTheme="system"
-          >
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </Web3ReactProvider>
+        <ThemeProvider
+          attribute="class"
+          value={{ light: "light-theme", dark: darkTheme.className }}
+          defaultTheme="system"
+        >
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Web3ConnectionManager>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Web3ConnectionManager>
+          </Web3ReactProvider>
+        </ThemeProvider>
       </Plausible>
     </>
   )
