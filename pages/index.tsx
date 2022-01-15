@@ -39,26 +39,15 @@ const NewLineText = ({ text, children, as, ...rest }: NewLineTextProps) => {
   return <Text {...rest}>{children}</Text>
 }
 
-type WindowType = Window & typeof globalThis & { ethereum: Web3Provider }
-
 export default function IndexPage() {
   const { t } = useTranslation()
   const router = useRouter()
-
-  const handleClick = () => {
-    const { ethereum } = window as WindowType
-    if (ethereum) {
-      router.push("/guild")
-    } else {
-      alert("请先下载Chrome应用商店内下载MetaMask!")
-    }
-  }
 
   return (
     <>
       <Flex css={{ fd: "column", gap: "$4" }}>
         <Heading as="h4">{t("mission")}</Heading>
-        <Button size="2" onClick={() => handleClick()}>
+        <Button size="2" onClick={() => router.push("/guild")}>
           {t("action.gotoapp")}
         </Button>
       </Flex>
