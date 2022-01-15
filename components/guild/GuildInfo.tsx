@@ -5,10 +5,13 @@ import { Text } from "@components/common/Text"
 import { useRouter } from "next/router"
 import { Heading } from "@components/common/Heading"
 import { Box } from "@components/common/Box"
+import { memberStyle } from "./style"
 
 export default function GuildInfo({ guild }: { guild: GuildListType }) {
-  const nfts = guild?.nfts
+  const requirements = guild?.requirements
   const members = guild?.members
+  const nfts = requirements.nfts
+  const guilds = requirements.guilds
   const router = useRouter()
   const handleClick = (guild: GuildListType) => {
     router.push({
@@ -38,33 +41,23 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
         css={{ color: "$gray11", fontSize: "12px", marginTop: "5px" }}
         key={guild?.guild_id}
       >
-        {members?.length + " members"}
+        {members.length + " members"}
       </Text>
       <Fieldset css={{ marginTop: "5px" }}>
         {nfts?.map((nft) => (
           <Text
-            css={{
-              backgroundColor: "$gray11",
-              color: "white",
-              border: "3px solid gray",
-              borderRadius: "5px",
-            }}
+            css={memberStyle}
             key={nft.name}
           >
             {nft.name}
           </Text>
         ))}
-        {members?.map((memberGuild) => (
+        {guilds?.map((g) => (
           <Text
-            css={{
-              backgroundColor: "#7be2f9",
-              color: "white",
-              border: "3px solid #7be2f9",
-              borderRadius: "5px",
-            }}
-            key={memberGuild}
+            css={memberStyle}
+            key={g}
           >
-            {memberGuild}
+            {g}
           </Text>
         ))}
       </Fieldset>

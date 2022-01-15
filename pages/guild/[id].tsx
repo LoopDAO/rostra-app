@@ -8,17 +8,18 @@ import { fetcher } from "api/http"
 import useSWR from "swr"
 import { Heading } from "@components/common/Heading"
 import { Flex } from "@components/common/Flex"
+import { GuildListType } from "api/guild"
 
 export default function GuildDetails() {
   const { query } = useRouter()
 
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
+    () => `http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
     fetcher
   )
 
   const guilds = JSON.parse(data?.result ?? null)
-  const guild = guilds?.find((g) => g.guild_id === Number(query.id))
+  const guild = guilds?.find((g: GuildListType) => g.guild_id === Number(query.id))
 
   if (error) return <div>{error.message}</div>
   if (!data) return <div>Loading...</div>
@@ -88,13 +89,7 @@ export default function GuildDetails() {
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const { id } = params || {}
-  fetch(`http://localhost:3222/api/guild/${id}`)
-    .then((resp) => resp.json())
-    .then(console.log)
-    .catch(console.log)
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
       ...(await serverSideTranslations(locale!, ["common"])),
