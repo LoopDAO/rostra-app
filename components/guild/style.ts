@@ -1,5 +1,5 @@
 export const memberStyle = {
-  background: "#eee",
+  background: "$gray2",
   borderRadius: "3px",
   color: "#999",
   display: "inline-block",
