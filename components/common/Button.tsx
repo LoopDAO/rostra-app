@@ -17,6 +17,8 @@ const StyledButton = styled("button", {
     FlexSizing: "border-Flex",
   },
 
+  cursor: "pointer",
+
   // Custom reset?
   display: "inline-flex",
   flexShrink: 0,
@@ -368,7 +370,11 @@ export const Button = forwardRef<
   const contentProps = { rightIcon, leftIcon, children }
 
   return (
-    <StyledButton {...buttonProps} ref={forwardedRef} disabled={disabled || isLoading}>
+    <StyledButton
+      {...buttonProps}
+      ref={forwardedRef}
+      disabled={disabled || isLoading}
+    >
       {isLoading && spinnerPlacement === "start" && (
         <ButtonSpinner label={loadingText} placement="start">
           {spinner}
