@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react"
+import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+
+import useSWR from "swr"
 import { GuildListType } from "api/guild"
+import { fetcher } from "api/http"
+
+import { CheckIcon } from "@radix-ui/react-icons"
 import { Button } from "@components/common/Button"
 import { Flex } from "@components/common/Flex"
 import { Box } from "@components/common/Box"
 import { Heading } from "@components/common/Heading"
 import GuildInfo from "@components/guild/GuildInfo"
 import { Checkbox, CheckboxIndicator } from "@components/common/Checkbox"
-import { CheckIcon } from "@radix-ui/react-icons"
 import { Label } from "@components/common/Label"
-import { GetStaticProps } from "next"
-import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { Fieldset } from "@components/common/Fieldset"
 import { Input } from "@components/common/Input"
-import { useRouter } from "next/router"
-import useSWR from "swr"
-import { fetcher } from "api/http"
 
 let newGuilds: GuildListType = {
   guild_id: 0,
@@ -25,7 +26,7 @@ let newGuilds: GuildListType = {
   creator: "string",
   wallet_address: "string",
   signature: "string",
-  members: ["string"],
+  members: ['string'],
   requirements: {
     nfts: [
       {
@@ -43,21 +44,19 @@ export default function GuildPage() {
   const [guildsList, setGuildsList] = useState<Array<GuildListType>>()
   const [pageContent, setPageContent] = useState<string>("guildListPage")
   const [checked, setChecked] = useState(false)
-  const router = useRouter()
 
   const { data: guildsData, error: guildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
+    () => `http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
     fetcher
   )
 
   const { data: userGuildsData, error: userGuildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
+    () => `http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
     fetcher
   )
 
   useEffect((): any => {
-    if (guildsError || userGuildsError)
-      return <div>{guildsError?.message || userGuildsError?.message}</div>
+    if (guildsError || userGuildsError) return <div>{guildsError?.message || userGuildsError?.message}</div>
     if (!guildsData || !userGuildsData) return <div>Loading...</div>
 
     const guilds = JSON.parse(guildsData?.result ?? null)
@@ -68,14 +67,7 @@ export default function GuildPage() {
     } else {
       setGuildsList(guilds)
     }
-  }, [
-    account,
-    checked,
-    guildsData,
-    guildsError,
-    userGuildsData,
-    userGuildsError,
-  ])
+  }, [account, checked, guildsData, guildsError, userGuildsData, userGuildsError])
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
@@ -90,20 +82,17 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
-      method: "POST",
-      body: JSON.stringify(newGuilds),
+    fetch(`http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, { method: 'POST', body: JSON.stringify(newGuilds) })
+    .then((resp) => {
+      const data = resp.json()
+      // if ((data.message = "SUCCESS")) {
+      //   setPageContent("guildListPage")
+      // } else {
+      //   throw Error("create new guild faild!")
+      // }
     })
-      .then((resp) => {
-        const data = resp.json()
-        // if ((data.message = "SUCCESS")) {
-        //   setPageContent("guildListPage")
-        // } else {
-        //   throw Error("create new guild faild!")
-        // }
-      })
-      .then(console.log)
-      .catch(console.log)
+    .then(console.log)
+    .catch(console.log)
   }
 
   return (
