@@ -25,7 +25,7 @@ let newGuilds: GuildListType = {
   creator: "string",
   wallet_address: "string",
   signature: "string",
-  members: ['string'],
+  members: ["string"],
   requirements: {
     nfts: [
       {
@@ -46,17 +46,18 @@ export default function GuildPage() {
   const router = useRouter()
 
   const { data: guildsData, error: guildsError } = useSWR(
-    () => `http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
     fetcher
   )
 
   const { data: userGuildsData, error: userGuildsError } = useSWR(
-    () => `http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
     fetcher
   )
 
   useEffect((): any => {
-    if (guildsError || userGuildsError) return <div>{guildsError?.message || userGuildsError?.message}</div>
+    if (guildsError || userGuildsError)
+      return <div>{guildsError?.message || userGuildsError?.message}</div>
     if (!guildsData || !userGuildsData) return <div>Loading...</div>
 
     const guilds = JSON.parse(guildsData?.result ?? null)
@@ -67,7 +68,14 @@ export default function GuildPage() {
     } else {
       setGuildsList(guilds)
     }
-  }, [account, checked, guildsData, guildsError, userGuildsData, userGuildsError])
+  }, [
+    account,
+    checked,
+    guildsData,
+    guildsError,
+    userGuildsData,
+    userGuildsError,
+  ])
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
@@ -82,17 +90,20 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    fetch(`http://${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, { method: 'POST', body: JSON.stringify(newGuilds) })
-    .then((resp) => {
-      const data = resp.json()
-      // if ((data.message = "SUCCESS")) {
-      //   setPageContent("guildListPage")
-      // } else {
-      //   throw Error("create new guild faild!")
-      // }
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
+      method: "POST",
+      body: JSON.stringify(newGuilds),
     })
-    .then(console.log)
-    .catch(console.log)
+      .then((resp) => {
+        const data = resp.json()
+        // if ((data.message = "SUCCESS")) {
+        //   setPageContent("guildListPage")
+        // } else {
+        //   throw Error("create new guild faild!")
+        // }
+      })
+      .then(console.log)
+      .catch(console.log)
   }
 
   return (
