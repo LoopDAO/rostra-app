@@ -19,7 +19,7 @@ import useSWR from "swr"
 import { fetcher } from "api/http"
 
 let newGuilds: GuildListType = {
-  guild_id: 0,
+  guild_id: "0",
   name: "string",
   desc: "string",
   creator: "string",
@@ -36,6 +36,7 @@ let newGuilds: GuildListType = {
     guilds: [],
   },
 }
+
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -90,8 +91,13 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
+    console.log(newGuilds)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(newGuilds),
     })
       .then((resp) => {
