@@ -11,6 +11,7 @@ import type {
   ExternalProvider,
   JsonRpcFetchFunc,
 } from "@ethersproject/providers"
+import { ChakraProvider } from '@chakra-ui/react'
 
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
@@ -60,7 +61,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   globalStyles()
 
   return (
-    <>
+    <ChakraProvider>
       <SEO />
       <Plausible>
         <ThemeProvider
@@ -77,7 +78,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </Web3ReactProvider>
         </ThemeProvider>
       </Plausible>
-    </>
+    </ChakraProvider>
   )
 }
 
