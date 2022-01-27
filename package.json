@@ -36,6 +36,7 @@
     "next-i18next": "^8.8.0",
     "next-plausible": "^3.1.4",
     "next-themes": "^0.0.15",
+    "nft.storage": "^5.2.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.25.1",

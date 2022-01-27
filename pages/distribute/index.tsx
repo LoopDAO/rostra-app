@@ -1,4 +1,4 @@
-import React, { useRef, ReactNode } from "react";
+import React, { useRef, ReactNode, useState } from "react";
 import {
     FormControl,
     FormLabel,
@@ -12,16 +12,21 @@ import {
 import { Formik, Form, Field } from 'formik';
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { FiFile } from 'react-icons/fi'
+import { NFTStorage, File } from 'nft.storage'
+
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDE0RUIwNWMzRjFBYWE1ODg5NTVlMjIxY0Q2ODNCOTIxY0U5QTU0NTIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MDI2NzY2OTgxOSwibmFtZSI6InJvc3RyYSJ9._VrBWiE5YkB3eDwl0N6PZoOC4fxN2pCwcHgRIuGqsBo';
+const client = new NFTStorage({ token: apiKey })
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
   accept?: string
   multiple?: boolean
-  children?: ReactNode
+  children?: ReactNode,
+  onChange?: Function
 }
 
 const FileUpload = (props: FileUploadProps) => {
-  const { register, accept, multiple, children } = props
+  const { register, accept, multiple, children, onChange } = props
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { ref, ...rest } = register as {ref: (instance: HTMLInputElement | null) => void}
 
@@ -39,6 +44,9 @@ const FileUpload = (props: FileUploadProps) => {
             ref(e)
             inputRef.current = e
           }}
+          onChange={(e) => {
+              onChange && onChange(e)
+          }}
         />
         <>
           {children}
@@ -51,6 +59,8 @@ const FileUpload = (props: FileUploadProps) => {
 export default function FormikExample() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>()
+
+  const [ipfsUrl, setIpfsUrl] = useState('');
   
   const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
 
@@ -99,6 +109,17 @@ export default function FormikExample() {
     return error
   }
 
+  async function fileChangeUpload(e) {
+      console.log(e.target.files);
+      const metadata = await client.store({
+        name: 'Pinpie',
+        description: 'Pin is not delicious beef!',
+        image: new File([e.target.files[0]], 'pinpie.jpg', { type: 'image/jpg' })
+      })
+      console.log(metadata.url)
+      setIpfsUrl(metadata.url);
+  }
+
   return (
     <Formik
       initialValues={{ name: '', description: '', image: '', address: '' }}
@@ -131,14 +152,16 @@ export default function FormikExample() {
           </Field>
             <FormControl isInvalid={!!errors.file_} isRequired>
                 <FormLabel>{'Image'}</FormLabel>
-
                 <FileUpload
                     accept={'image/*'}
                     multiple
                     register={register('file_', { validate: validateFiles })}
+                    onChange={(e) => {
+                        fileChangeUpload(e)
+                    }}
                 >
                     <Button leftIcon={<Icon as={FiFile} />}>
-                        Upload
+                        Upload { ipfsUrl}
                     </Button>
                 </FileUpload>
 
