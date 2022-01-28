@@ -61,8 +61,7 @@ export default function FormikExample() {
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>()
 
   const [ipfsUrl, setIpfsUrl] = useState('');
-  
-  const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
+  const [fileObj, setFileObj] = useState<File>();
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
@@ -109,26 +108,34 @@ export default function FormikExample() {
     return error
   }
 
-  async function fileChangeUpload(e) {
+  async function onFileChanged(e) {
       console.log(e.target.files);
-      const metadata = await client.store({
-        name: 'Pinpie',
-        description: 'Pin is not delicious beef!',
-        image: new File([e.target.files[0]], 'pinpie.jpg', { type: 'image/jpg' })
-      })
-      console.log(metadata.url)
-      setIpfsUrl(metadata.url);
+      const file = e.target.files[0];
+      if (!file) return;
+      console.log(file.name, file.type);
+      setFileObj(e.target.files[0]);
   }
+  console.log('fileObj: ', fileObj)
 
-  return (
-    <Formik
-      initialValues={{ name: '', description: '', image: '', address: '' }}
-      onSubmit={(values, actions) => {
+  // const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
+
+  const onSubmit = async (values, actions) => {
+        const metadata = await client.store({
+          name: values.name,
+          description: values.description,
+          image: fileObj as File
+        })
+        console.log(metadata.url)
+        setIpfsUrl(metadata.url);
+        console.log('onSubmit: call contract =======>')
         setTimeout(() => {
-          alert(JSON.stringify(values, null, 2))
           actions.setSubmitting(false)
         }, 1000)
-      }}
+      }
+  return (
+    <Formik
+      initialValues={{ name: '', description: '', address: '' }}
+      onSubmit={onSubmit}
     >
       {(props) => (
         <Form>
@@ -157,7 +164,7 @@ export default function FormikExample() {
                     multiple
                     register={register('file_', { validate: validateFiles })}
                     onChange={(e) => {
-                        fileChangeUpload(e)
+                        onFileChanged(e)
                     }}
                 >
                     <Button leftIcon={<Icon as={FiFile} />}>
