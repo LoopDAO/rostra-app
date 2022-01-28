@@ -13,6 +13,11 @@ import { Formik, Form, Field } from 'formik';
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { FiFile } from 'react-icons/fi'
 import { NFTStorage, File } from 'nft.storage'
+import { useWeb3React } from "@web3-react/core"
+import { ethers } from "ethers";
+import NFTManagerABI from "../../contracts/NFTManager.json";
+
+
 
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDE0RUIwNWMzRjFBYWE1ODg5NTVlMjIxY0Q2ODNCOTIxY0U5QTU0NTIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MDI2NzY2OTgxOSwibmFtZSI6InJvc3RyYSJ9._VrBWiE5YkB3eDwl0N6PZoOC4fxN2pCwcHgRIuGqsBo';
 const client = new NFTStorage({ token: apiKey })
@@ -119,7 +124,22 @@ export default function FormikExample() {
 
   // const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
 
+  const {
+    account,
+    activate,
+    active,
+    chainId,
+    connector,
+    deactivate,
+    error,
+    library,
+    setError,
+  } = useWeb3React();
   const onSubmit = async (values, actions) => {
+    const nftManagerAddress = '0xf00CFE0B4b6cCBADc345b0229235D8104e7E5464';
+    const signer = library.provider.getSigner(account)
+    const nftManagerContract = new ethers.Contract(nftManagerAddress, NFTManagerABI, signer);
+
     console.log('values: ', values)
     // const metadata = await client.store({
     //   name: values.name,
@@ -134,10 +154,12 @@ export default function FormikExample() {
     const addresses = values.address.split('\n')
     console.log('addresses: ', addresses)
     console.log('onSubmit: call contract =======>')
+    await nftManagerContract.connect(provider).createProxy();
     setTimeout(() => {
       actions.setSubmitting(false)
     }, 1000)
   }
+
   return (
     <Formik
       initialValues={{ name: '', description: '', address: '' }}
