@@ -18,7 +18,7 @@ export default function GuildDetails() {
     fetcher
   )
 
-  const guilds = JSON.parse(data?.result ?? null)
+  const guilds = data?.guilds ?? null
   const guild = guilds?.find((g: GuildListType) => g.guild_id === Number(query.id))
 
   if (error) return <div>{error.message}</div>
