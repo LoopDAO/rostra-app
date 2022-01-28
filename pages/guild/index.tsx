@@ -19,7 +19,7 @@ import useSWR from "swr"
 import { fetcher } from "api/http"
 
 let newGuilds: GuildListType = {
-  guild_id: "0",
+  guild_id: 0,
   name: "string",
   desc: "string",
   creator: "string",
@@ -36,7 +36,6 @@ let newGuilds: GuildListType = {
     guilds: [],
   },
 }
-
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -57,26 +56,20 @@ export default function GuildPage() {
   )
 
   useEffect((): any => {
-    if (guildsError || userGuildsError)
-      return <div>{guildsError?.message || userGuildsError?.message}</div>
-    if (!guildsData || !userGuildsData) return <div>Loading...</div>
-
-    const guilds = JSON.parse(guildsData?.result ?? null)
-    const userGuilds = JSON.parse(userGuildsData?.result ?? null)
-
+    const guilds = guildsData?.guilds ?? null
+    const userGuilds = userGuildsData?.guilds ?? null
+      
     if (checked && account) {
       setGuildsList(userGuilds)
     } else {
       setGuildsList(guilds)
     }
-  }, [
-    account,
-    checked,
-    guildsData,
-    guildsError,
-    userGuildsData,
-    userGuildsError,
-  ])
+  }, [account, checked, guildsData?.guilds, userGuildsData?.guilds])
+
+  if (guildsError || userGuildsError)
+    return <div>{guildsError?.message || userGuildsError?.message}</div>
+  if (!guildsData || !userGuildsData) return <div>Loading...</div>
+
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
@@ -91,8 +84,7 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    console.log(newGuilds)
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -100,13 +92,13 @@ export default function GuildPage() {
       },
       body: JSON.stringify(newGuilds),
     })
-      .then((resp) => {
-        const data = resp.json()
-        // if ((data.message = "SUCCESS")) {
-        //   setPageContent("guildListPage")
-        // } else {
-        //   throw Error("create new guild faild!")
-        // }
+      .then(async resp => {
+        const data = await resp.json();
+        if (data.message == "SUCCESS") {
+          setPageContent("guildListPage")
+        } else {
+          throw Error("create new guild faild!")
+        }
       })
       .then(console.log)
       .catch(console.log)
@@ -158,9 +150,6 @@ export default function GuildPage() {
             <Heading>{t("guild.create")}</Heading>
           </Fieldset>
           <Fieldset>
-            <Label>{t("guild.info")}</Label>
-          </Fieldset>
-          <Fieldset>
             <Label htmlFor="name">{t("guild.name")}</Label>
             <Input
               id="name"
@@ -173,27 +162,6 @@ export default function GuildPage() {
               id="description"
               onChange={(e) => (newGuilds.desc = e.target.value)}
             />
-          </Fieldset>
-          <Fieldset>
-            <Heading>{t("guild.requirement")}</Heading>
-          </Fieldset>
-          <Fieldset>
-            <Label>{t("guild.requirementInfo")}</Label>
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="creator">{t("guild.creator")}</Label>
-            <Input
-              id="creator"
-              onChange={(e) => (newGuilds.creator = e.target.value)}
-            />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="nfts">{t("guild.nft")}</Label>
-            <Input id="nfts" onChange={(e) => handleNfts(e.target.value)} />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="guilds">{t("guild.guild")}</Label>
-            <Input id="guilds" onChange={(e) => handleGuilds(e.target.value)} />
           </Fieldset>
           <Flex css={{ marginTop: 25, justifyContent: "flex-start" }}>
             <Button
