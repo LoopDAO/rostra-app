@@ -14,7 +14,7 @@ export default function GuildDetails() {
   const { query } = useRouter()
 
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetcher
   )
 
