@@ -152,9 +152,6 @@ export default function GuildPage() {
             <Heading>{t("guild.create")}</Heading>
           </Fieldset>
           <Fieldset>
-            <Label>{t("guild.info")}</Label>
-          </Fieldset>
-          <Fieldset>
             <Label htmlFor="name">{t("guild.name")}</Label>
             <Input
               id="name"
@@ -168,27 +165,7 @@ export default function GuildPage() {
               onChange={(e) => (newGuilds.desc = e.target.value)}
             />
           </Fieldset>
-          <Fieldset>
-            <Heading>{t("guild.requirement")}</Heading>
-          </Fieldset>
-          <Fieldset>
-            <Label>{t("guild.requirementInfo")}</Label>
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="creator">{t("guild.creator")}</Label>
-            <Input
-              id="creator"
-              onChange={(e) => (newGuilds.creator = e.target.value)}
-            />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="nfts">{t("guild.nft")}</Label>
-            <Input id="nfts" onChange={(e) => handleNfts(e.target.value)} />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="guilds">{t("guild.guild")}</Label>
-            <Input id="guilds" onChange={(e) => handleGuilds(e.target.value)} />
-          </Fieldset>
+
           <Flex css={{ marginTop: 25, justifyContent: "flex-start" }}>
             <Button
               aria-label="Confirm"
