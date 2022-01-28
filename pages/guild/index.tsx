@@ -46,7 +46,7 @@ export default function GuildPage() {
   const router = useRouter()
 
   const { data: guildsData, error: guildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetcher
   )
 
@@ -84,7 +84,7 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
       headers: {
         'Accept': 'application/json',
