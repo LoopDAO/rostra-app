@@ -120,18 +120,24 @@ export default function FormikExample() {
   // const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
 
   const onSubmit = async (values, actions) => {
-        const metadata = await client.store({
-          name: values.name,
-          description: values.description,
-          image: fileObj as File
-        })
-        console.log(metadata.url)
-        setIpfsUrl(metadata.url);
-        console.log('onSubmit: call contract =======>')
-        setTimeout(() => {
-          actions.setSubmitting(false)
-        }, 1000)
-      }
+    console.log('values: ', values)
+    // const metadata = await client.store({
+    //   name: values.name,
+    //   description: values.description,
+    //   image: fileObj as File
+    // })
+    const metadata = {
+      url: 'ipfs://bafyreigtaeq3onyvlsg7chafu2oarnb4afkacl6jcbassjcygi4rvlpvry/metadata.json'
+    }
+    console.log(metadata.url)
+    setIpfsUrl(metadata.url);
+    const addresses = values.address.split('\n')
+    console.log('addresses: ', addresses)
+    console.log('onSubmit: call contract =======>')
+    setTimeout(() => {
+      actions.setSubmitting(false)
+    }, 1000)
+  }
   return (
     <Formik
       initialValues={{ name: '', description: '', address: '' }}
