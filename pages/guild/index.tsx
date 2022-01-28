@@ -40,36 +40,35 @@ let newGuilds: GuildListType = {
 export default function GuildPage() {
   const { t } = useTranslation()
   const { account } = useWeb3React()
-  const [guildsList, setGuildsList] = useState<Array<GuildListType>>()
   const [pageContent, setPageContent] = useState<string>("guildListPage")
   const [checked, setChecked] = useState(false)
-  const router = useRouter()
 
-  const { data: guildsData, error: guildsError } = useSWR(
+  const {
+    data: guildsData,
+    error: guildsError,
+    isValidating: isLoadingGuildData,
+  } = useSWR(
     () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetcher
   )
+  const guildsList = guildsData?.guilds
 
-  const { data: userGuildsData, error: userGuildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
+  const {
+    data: userGuildsData,
+    error: userGuildsError,
+    isValidating: isLoadingUserGuilds,
+  } = useSWR(
+    () =>
+      account
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`
+        : null,
     fetcher
   )
-
-  useEffect((): any => {
-    const guilds = guildsData?.guilds ?? null
-    const userGuilds = userGuildsData?.guilds ?? null
-      
-    if (checked && account) {
-      setGuildsList(userGuilds)
-    } else {
-      setGuildsList(guilds)
-    }
-  }, [account, checked, guildsData?.guilds, userGuildsData?.guilds])
-
+  console.log()
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
-  if (!guildsData || !userGuildsData) return <div>Loading...</div>
 
+  if (isLoadingGuildData || isLoadingUserGuilds) return <div>Loading...</div>
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
@@ -87,13 +86,13 @@ export default function GuildPage() {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(newGuilds),
     })
-      .then(async resp => {
-        const data = await resp.json();
+      .then(async (resp) => {
+        const data = await resp.json()
         if (data.message == "SUCCESS") {
           setPageContent("guildListPage")
         } else {
@@ -132,14 +131,14 @@ export default function GuildPage() {
               <Label htmlFor="c1">{t("guild.guilds")}</Label>
             </Fieldset>
           </Flex>
-          <Box css={{ marginTop: "$4" }}>
+          <Flex css={{ marginTop: "$4", flexWrap: 'wrap', gap: "$4" }}>
             {guildsList &&
               guildsList?.map((guild) => (
                 <Box key={guild.creator}>
                   <GuildInfo guild={guild} />
                 </Box>
               ))}
-          </Box>
+          </Flex>
         </Box>
       )}
       {pageContent == "createGuildPage" && (

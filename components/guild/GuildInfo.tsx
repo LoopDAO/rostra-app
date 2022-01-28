@@ -1,17 +1,10 @@
 import React from "react"
 import { GuildListType } from "../../api/guild"
-import { Fieldset } from "@components/common/Fieldset"
-import { Text } from "@components/common/Text"
 import { useRouter } from "next/router"
 import { Heading } from "@components/common/Heading"
 import { Box } from "@components/common/Box"
-import { memberStyle } from "./style"
 
 export default function GuildInfo({ guild }: { guild: GuildListType }) {
-  const requirements = guild?.requirements
-  const members = guild?.members
-  const nfts = requirements.nfts
-  const guilds = requirements.guilds
   const router = useRouter()
   const handleClick = (guild: GuildListType) => {
     router.push({
@@ -25,42 +18,16 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
       css={{
         px: "$4",
         py: "$3",
-        backgroundColor: "$amberA10",
-        borderRadius: "$4",
+        border: "2px solid",
+        borderColor: '$gray11',
+        borderRadius: "8px",
         cursor: "pointer",
-        "&:hover": {
-          backgroundColor: "$amberA11",
-        },
+        width: "166px"
       }}
       onClick={() => handleClick(guild)}
     >
-      <Heading size="2" css={{ color: "$gray1" }}>
-        {guild?.name}
-      </Heading>
-      <Text
-        css={{ color: "$gray11", fontSize: "12px", marginTop: "5px" }}
-        key={guild?.guild_id}
-      >
-        {members.length + " members"}
-      </Text>
-      <Fieldset css={{ marginTop: "5px" }}>
-        {nfts?.map((nft) => (
-          <Text
-            css={memberStyle}
-            key={nft.name}
-          >
-            {nft.name}
-          </Text>
-        ))}
-        {guilds?.map((g) => (
-          <Text
-            css={memberStyle}
-            key={g}
-          >
-            {g}
-          </Text>
-        ))}
-      </Fieldset>
+      <Heading size="2">{guild?.name}</Heading>
+      <Heading size="1" css={{ color: '$grayA10'}}>{guild?.desc}</Heading>
     </Box>
   )
 }
