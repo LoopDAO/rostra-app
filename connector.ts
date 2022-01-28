@@ -5,6 +5,7 @@ import { InjectedConnector } from "@web3-react/injected-connector"
 export enum Chains {
   ETHEREUM = 1,
   POLYGON = 137,
+  POLYGON_TESTNET = 80001
 }
 
 export const RPC: { [key: string]: any } = {
