@@ -46,36 +46,30 @@ export default function GuildPage() {
   const router = useRouter()
 
   const { data: guildsData, error: guildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get`,
     fetcher
   )
 
   const { data: userGuildsData, error: userGuildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}/`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`,
     fetcher
   )
 
   useEffect((): any => {
-    if (guildsError || userGuildsError)
-      return <div>{guildsError?.message || userGuildsError?.message}</div>
-    if (!guildsData || !userGuildsData) return <div>Loading...</div>
-
-    const guilds = JSON.parse(guildsData?.result ?? null)
-    const userGuilds = JSON.parse(userGuildsData?.result ?? null)
-
+    const guilds = guildsData?.guilds ?? null
+    const userGuilds = userGuildsData?.guilds ?? null
+      
     if (checked && account) {
       setGuildsList(userGuilds)
     } else {
       setGuildsList(guilds)
     }
-  }, [
-    account,
-    checked,
-    guildsData,
-    guildsError,
-    userGuildsData,
-    userGuildsError,
-  ])
+  }, [account, checked, guildsData?.guilds, userGuildsData?.guilds])
+
+  if (guildsError || userGuildsError)
+    return <div>{guildsError?.message || userGuildsError?.message}</div>
+  if (!guildsData || !userGuildsData) return <div>Loading...</div>
+
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
@@ -90,7 +84,7 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add`, {
       method: "POST",
       headers: {
         'Accept': 'application/json',
