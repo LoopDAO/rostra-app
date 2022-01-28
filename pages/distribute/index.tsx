@@ -13,6 +13,8 @@ import { Formik, Form, Field } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
 import { NFTStorage, File } from "nft.storage"
+import { GetStaticProps } from "next"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
@@ -228,4 +230,12 @@ export default function FormikExample() {
       )}
     </Formik>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale!, ["common"])),
+    },
+  }
 }
