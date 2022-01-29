@@ -12,6 +12,7 @@ export default function GuildInfo({ guild }: { guild: GuildListType }) {
     })
   }
 
+  console.log('guild info', guild)
   // TODO: Add color type
   return (
     <Box

@@ -12,9 +12,10 @@ import { GuildListType } from "api/guild"
 
 export default function GuildDetails() {
   const { query } = useRouter()
-
+  console.log('query: ', query)
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/61f4b058cc48944f5852f337`,
+    // () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${query.id}`,
     fetcher
   )
 
@@ -23,7 +24,7 @@ export default function GuildDetails() {
 
   if (error) return <div>{error.message}</div>
   if (!data) return <div>Loading...</div>
-
+  console.log("guild id page", guild)
   if (!guild) return null
 
   const nfts = guild.members?.nfts
@@ -37,53 +38,8 @@ export default function GuildDetails() {
           css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
           key={guild?.guild_id}
         >
-          {members?.length + " members"}
+          {guild?.description}
         </Text>
-      </Flex>
-
-      <Flex css={{ fd: 'column', gap: '$2', mt: "$6" }}>
-        <Flex css={{ gap: "$2" }}>
-          <Heading>NFT:</Heading>
-          <Fieldset css={{ marginTop: "5px" }}>
-            {!nfts?.length && "No NFTs"}
-            {nfts?.map((nft: any) => (
-              <Text
-                css={{
-                  display: "inline-flex",
-                  jc: "center",
-                  ai: "center",
-                  backgroundColor: "$gray12",
-                  color: "$white",
-                  border: "3px solid gray",
-                  borderRadius: "5px",
-                }}
-                key={nft.name}
-              >
-                {nft.name}
-              </Text>
-            ))}
-          </Fieldset>
-        </Flex>
-
-        <Flex css={{ gap: "$2" }}>
-          <Heading>Members:</Heading>
-          {members?.map((memberGuild: any) => (
-            <Text
-              css={{
-                display: "inline-flex",
-                jc: "center",
-                ai: "center",
-                p: "$1",
-                backgroundColor: "$blue6",
-                color: "$black",
-                borderRadius: "5px",
-              }}
-              key={memberGuild}
-            >
-              {memberGuild}
-            </Text>
-          ))}
-        </Flex>
       </Flex>
     </Flex>
   )

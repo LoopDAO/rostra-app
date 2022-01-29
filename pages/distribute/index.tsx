@@ -132,23 +132,27 @@ export default function FormikExample() {
 
     if (!library || !account) return
     const signer = await library.getSigner(account)
-    const nftManagerContract = getNftManagerContract(signer)
-    if (!nftManagerContract) return
+    const nftManager = getNftManagerContract(signer)
+    if (!nftManager) return
     console.log("values: ", values)
-    // const metadata = await client.store({
-    //   name: values.name,
-    //   description: values.description,
-    //   image: fileObj as File
-    // })
-    const metadata = {
-      url: "ipfs://bafyreigtaeq3onyvlsg7chafu2oarnb4afkacl6jcbassjcygi4rvlpvry/metadata.json",
-    }
+    const metadata = await client.store({
+      name: values.name,
+      description: values.description,
+      image: fileObj as File
+    })
+    // const metadata = {
+    //   url: "ipfs://bafyreigtaeq3onyvlsg7chafu2oarnb4afkacl6jcbassjcygi4rvlpvry/metadata.json",
+    // }
     console.log(metadata.url)
     setIpfsUrl(metadata.url)
     const addresses = values.address.split("\n")
     console.log("addresses: ", addresses)
     console.log("onSubmit: call contract =======>")
-    await nftManagerContract.connect(signer).createProxy()
+    const guildName = 'social-wiki'
+    const guildId = await nftManager.stringToBytes32(guildName);
+    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
+
+    // await nftManager.connect(signer).createGuild('social-wiki', '', [])
     setTimeout(() => {
       actions.setSubmitting(false)
     }, 1000)

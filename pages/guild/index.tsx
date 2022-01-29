@@ -134,7 +134,7 @@ export default function GuildPage() {
           <Flex css={{ marginTop: "$4", flexWrap: 'wrap', gap: "$4" }}>
             {guildsList &&
               guildsList?.map((guild) => (
-                <Box key={guild.creator}>
+                <Box key={guild.id}>
                   <GuildInfo guild={guild} />
                 </Box>
               ))}
