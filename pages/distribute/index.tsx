@@ -140,7 +140,8 @@ export default function FormikExample() {
 
     setIpfsUrl(metadata.url)
     const addresses = values.address.split("\n")
-
+    // todo
+    alert('change the guild name')
     const guildName = 'Social Wiki'
     const guildId = await nftManager.stringToBytes32(guildName);
     await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
