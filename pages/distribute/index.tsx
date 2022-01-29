@@ -19,10 +19,6 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 
-const apiKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDE0RUIwNWMzRjFBYWE1ODg5NTVlMjIxY0Q2ODNCOTIxY0U5QTU0NTIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MDI2NzY2OTgxOSwibmFtZSI6InJvc3RyYSJ9._VrBWiE5YkB3eDwl0N6PZoOC4fxN2pCwcHgRIuGqsBo"
-const client = new NFTStorage({ token: apiKey })
-
 type FileUploadProps = {
   register: UseFormRegisterReturn
   accept?: string
@@ -130,6 +126,10 @@ export default function FormikExample() {
 
   const { account, library } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
+    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
+    if (!apiKey) return
+    const client = new NFTStorage({ token: apiKey })
+
     if (!library || !account) return
     const signer = await library.getSigner(account)
     const nftManagerContract = getNftManagerContract(signer)
