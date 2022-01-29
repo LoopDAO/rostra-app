@@ -148,11 +148,11 @@ export default function FormikExample() {
     const addresses = values.address.split("\n")
     console.log("addresses: ", addresses)
     console.log("onSubmit: call contract =======>")
-    const guildName = 'social-wiki'
+    const guildName = 'Social Wiki'
     const guildId = await nftManager.stringToBytes32(guildName);
     await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
 
-    // await nftManager.connect(signer).createGuild('social-wiki', '', [])
+    // await nftManager.connect(signer).createGuild(guildName, '', [])
     setTimeout(() => {
       actions.setSubmitting(false)
     }, 1000)
