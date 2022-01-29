@@ -120,9 +120,6 @@ export default function FormikExample() {
     console.log(file.name, file.type)
     setFileObj(e.target.files[0])
   }
-  console.log("fileObj: ", fileObj)
-
-  // const onSubmit = handleSubmit((data) => console.log('On Submit: ', data))
 
   const { account, library } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
@@ -140,20 +137,16 @@ export default function FormikExample() {
       description: values.description,
       image: fileObj as File
     })
-    // const metadata = {
-    //   url: "ipfs://bafyreigtaeq3onyvlsg7chafu2oarnb4afkacl6jcbassjcygi4rvlpvry/metadata.json",
-    // }
-    console.log(metadata.url)
+
     setIpfsUrl(metadata.url)
     const addresses = values.address.split("\n")
-    console.log("addresses: ", addresses)
-    console.log("onSubmit: call contract =======>")
+
     const guildName = 'Social Wiki'
     const guildId = await nftManager.stringToBytes32(guildName);
     await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
 
-    // await nftManager.connect(signer).createGuild(guildName, '', [])
     setTimeout(() => {
+      setIpfsUrl('')
       actions.setSubmitting(false)
     }, 1000)
   }

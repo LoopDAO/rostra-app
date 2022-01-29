@@ -17,6 +17,8 @@ import { Input } from "@components/common/Input"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 import { fetcher } from "api/http"
+import { getNftManagerContract } from "@lib/utils/contracts"
+import { Web3Provider } from "@ethersproject/providers"
 
 let newGuilds: GuildListType = {
   guild_id: 0,
@@ -39,9 +41,17 @@ let newGuilds: GuildListType = {
 
 export default function GuildPage() {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account, library, chainId } = useWeb3React<Web3Provider>()
+  console.log('==== chainId: ', chainId)
   const [pageContent, setPageContent] = useState<string>("guildListPage")
   const [checked, setChecked] = useState(false)
+  if (!library || !account || !chainId) {
+    console.error("Library or account not found")
+    return 'Loading...'
+  }
+  const signer = library.getSigner(account)
+  const nftManager = getNftManagerContract(signer, chainId)
+
 
   const {
     data: guildsData,
@@ -64,7 +74,7 @@ export default function GuildPage() {
         : null,
     fetcher
   )
-  console.log()
+
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
 
@@ -83,6 +93,7 @@ export default function GuildPage() {
   }
 
   const handleSubmit = async () => {
+
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
       headers: {
@@ -95,6 +106,8 @@ export default function GuildPage() {
         const data = await resp.json()
         if (data.message == "SUCCESS") {
           setPageContent("guildListPage")
+          console.log('newGuilds.name:', newGuilds.name)
+          await nftManager.connect(signer).createGuild(newGuilds.name, '', [])
         } else {
           throw Error("create new guild faild!")
         }
