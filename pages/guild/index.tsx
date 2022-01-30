@@ -103,11 +103,11 @@ export default function GuildPage() {
       body: JSON.stringify(newGuilds),
     })
       .then(async (resp) => {
+        await nftManager.connect(signer).createGuild(newGuilds.name, '', [])
         const data = await resp.json()
         if (data.message == "SUCCESS") {
           setPageContent("guildListPage")
           console.log('newGuilds.name:', newGuilds.name)
-          await nftManager.connect(signer).createGuild(newGuilds.name, '', [])
         } else {
           throw Error("create new guild faild!")
         }
