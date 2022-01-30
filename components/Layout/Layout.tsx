@@ -33,7 +33,6 @@ export const Layout: FC = ({ children }) => {
             <Link href="/">
               <Heading as="h1">{t("title")}</Heading>
             </Link>
-            <Text size="3">{t("description")}</Text>
           </Flex>
           <Flex css={{ gap: "$1" }}>
             <LocaleToggle />

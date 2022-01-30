@@ -23,7 +23,7 @@ import { Web3ConnectionManager } from "@components/_app/Web3ConnectionManager"
 import { Layout } from "@components/Layout"
 
 const Plausible = ({ children }: { children: ReactNode }) => {
-  const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+  const isProd = process.env.NEXT_PUBLIC_BUILD_ENV === "production"
   const domainName = process.env.NEXT_PUBLIC_DOMAIN_NAME
   if (isProd && domainName) {
     return <PlausibleProvider domain={domainName}>{children}</PlausibleProvider>
