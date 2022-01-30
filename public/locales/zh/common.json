@@ -1,8 +1,14 @@
 {
   "title": "Rostra",
-  "mission": "Rostra 致力于构建去中心化的教育和研究体系，促进知识开放和创新。",
+  "hero": {
+    "title1": "构建你的",
+    "title2": "web3 社区",
+    "line1": "Rostra 是一个 web3 社区构建协议。",
+    "line2": "通过提供一套完整的 NFT 和身份解决方案， 帮助各种组织构建有归属感的社区。"
+  },
   "action": {
-    "gotoapp": "开始尝试"
+    "getStarted": "开始使用",
+    "startFree": "免费使用"
   },
   "problems": {
     "title": "Problems",
@@ -106,9 +112,10 @@
     "twitter": "https://twitter.com/rostra_xyz"
   },
   "guild": {
-    "create": "创建公会",
+    "create": "创建一个科研公会",
     "list": "公会列表",
-    "guilds": "我的公会",
+    "myGuilds": "我的公会",
+    "guilds": "公会",
     "name": "名称",
     "desc": "简介",
     "creator": "创造者",
@@ -117,5 +124,13 @@
     "confirm": "确认",
     "requirement": "要求",
     "requirementInfo": "您可以添加加入公会的白名单、持有指定 NFT 的地址或指定公会中的成员。"
-  }
+  },
+    "nft": {
+      "distribute": "发 NFT",
+      "claim": "领 NFT"
+    },
+    "redpacket": {
+      "create": "发红包",
+      "claim": "领红包"
+    }
 }

@@ -5,7 +5,6 @@ import { InjectedConnector } from "@web3-react/injected-connector"
 export enum Chains {
   ETHEREUM = 1,
   POLYGON = 137,
-  POLYGON_TESTNET = 80001
 }
 
 export const RPC: { [key: string]: any } = {
@@ -25,7 +24,7 @@ export const RPC: { [key: string]: any } = {
     rpcUrls: ["https://main-light.eth.linkpool.io"],
   },
   POLYGON: {
-    chainId: 137,
+    chainId: "0x89",
     chainName: "Matic",
     nativeCurrency: {
       name: "Polygon",
@@ -39,24 +38,9 @@ export const RPC: { [key: string]: any } = {
     blockExplorerUrls: ["https://polygonscan.com"],
     iconUrls: ["/image/network/polygon.svg"],
   },
-  POLYGON_TESTNET: {
-    chainId: 80001,
-    chainName: "Matic Testnet",
-    nativeCurrency: {
-      name: "Polygon",
-      symbol: "MATIC",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
-    },
-    rpcUrls: ["https://matic-testnet-archive-rpc.bwarelabs.com"],
-    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
-    iconUrls: ["/image/network/polygon.svg"],
-  },
 } as const
 
-export const supportedChains = ['POLYGON', 'POLYGON_TESTNET']
+export const supportedChains = ["ETHEREUM"]
 export const supportedChainIds = supportedChains.map((_: string) => Chains[_ as keyof typeof Chains])
 
 export const injected = new InjectedConnector({ supportedChainIds })

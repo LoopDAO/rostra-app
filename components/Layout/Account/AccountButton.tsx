@@ -1,13 +1,19 @@
-import { PropsWithChildren } from "react"
-import { Button, ButtonProps } from "@components/common/Button"
+import { forwardRef, PropsWithChildren } from "react"
+import { Button, ButtonProps } from "@chakra-ui/react"
 
-const AccountButton = ({
-  children,
-  ...rest
-}: PropsWithChildren<ButtonProps>): JSX.Element => (
-  <Button {...rest}>
-    {children}
-  </Button>
+const AccountButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, ...rest }: PropsWithChildren<ButtonProps>, ref): JSX.Element => (
+    <Button
+      type="button"
+      colorScheme="cyan"
+      color="white"
+      size="sm"
+      ref={ref}
+      {...rest}
+    >
+      {children}
+    </Button>
+  )
 )
 
 export default AccountButton

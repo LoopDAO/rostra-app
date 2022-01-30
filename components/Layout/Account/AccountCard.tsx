@@ -1,16 +1,14 @@
-import { Card } from "@components/common/Card"
+import { Box, BoxProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
-const AccountCard = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+const AccountCard = ({
+  children,
+  ...props
+}: PropsWithChildren<BoxProps>): JSX.Element => {
   return (
-    <Card
-      variant="ghost"
-      // bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
-      // boxShadow="none"
-      // overflow="visible"
-    >
+    <Box borderRadius={12} {...props}>
       {children}
-    </Card>
+    </Box>
   )
 }
 

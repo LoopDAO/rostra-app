@@ -4,12 +4,16 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  Textarea,
   Button,
   Icon,
   InputGroup,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react"
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
 import { NFTStorage, File } from "nft.storage"
@@ -19,13 +23,30 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import { getSecp256k1CellDep } from "@lib/utils/ckb"
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
+import { Collector, Aggregator, generateDefineCotaTx, generateIssuerInfoTx, CotaInfo, IssuerInfo, Service } from '@nervina-labs/cota-sdk'
+
+const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
+const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
+
+
+const secp256k1Dep = getSecp256k1CellDep(false)
+
+const service: Service = {
+  collector: new Collector({
+    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
+  }),
+  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
+}
+const ckb = service.collector.getCkb()
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
   accept?: string
   multiple?: boolean
   children?: ReactNode
-  onChange?: Function
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 const FileUpload = (props: FileUploadProps) => {
@@ -58,8 +79,7 @@ const FileUpload = (props: FileUploadProps) => {
   )
 }
 
-export default function FormikExample() {
-  // TODO: Add typing
+export default function CreateTicket() {
   const {
     register,
     handleSubmit,
@@ -82,15 +102,8 @@ export default function FormikExample() {
     }
     return true
   }
-  function validateGuildName(value) {
-    let error
-    if (!value) {
-      error = "Guild Name is required"
-    }
-    return error
-  }
 
-  function validateName(value) {
+  function validateName(value: string) {
     let error
     if (!value) {
       error = "Name is required"
@@ -98,7 +111,7 @@ export default function FormikExample() {
     return error
   }
 
-  function validateDescription(value) {
+  function validateDescription(value: string) {
     let error
     if (!value) {
       error = "Description is required"
@@ -106,94 +119,76 @@ export default function FormikExample() {
     return error
   }
 
-  function validateImage(value) {
-    let error
-    if (!value) {
-      error = "Image is required"
-    }
-    return error
-  }
-
-  function validateAddress(value) {
-    let error
-    if (!value) {
-      error = "Address is required"
-    }
-    return error
-  }
-
-  async function onFileChanged(e) {
+  async function onFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.files)
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
     console.log(file.name, file.type)
-    setFileObj(e.target.files[0])
+    setFileObj(file)
   }
 
-  const { account, library, chainId } = useWeb3React<Web3Provider>()
+  // @ts-expect-error TODO: Add typings
   const onSubmit = async (values, actions) => {
-    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
-    if (!apiKey) return
-    const client = new NFTStorage({ token: apiKey })
+    console.log("values...", values)
 
-    if (!library || !account) return
-    const signer = await library.getSigner(account)
-    const nftManager = getNftManagerContract(signer, chainId)
-    if (!nftManager) return
-    console.log("values: ", values)
-    const metadata = await client.store({
+    const defineLock = addressToScript(TEST_ADDRESS)
+
+    const cotaInfo: CotaInfo = {
       name: values.name,
       description: values.description,
-      image: fileObj as File
-    })
+      image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+    }
+
+    let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+    console.log(` ======> cotaId: ${cotaId}`)
+    console.log(' ===================== secp256k1Dep ===================== ')
+    rawTx.cellDeps.push(secp256k1Dep)
+    try {
+      const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
+      console.log(JSON.stringify(signedTx))
+      let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+      console.info(`Define cota nft tx has been sent with tx hash ${txHash}`)
+    } catch (error) {
+      console.error('error happened:', error)
+    }
+
+    console.log("========> createNFT finished...")
+
+    // const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
+    // if (!apiKey) return
+    // const client = new NFTStorage({ token: apiKey })
+
+    // const metadata = await client.store({
+    //   name: values.name,
+    //   description: values.description,
+    //   image: fileObj as File,
+    // })
     // const metadata = {
     //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     // }
-    console.log("metadata.url: ", metadata.url)
-    setIpfsUrl(metadata.url)
-    const addresses = values.address.split("\n")
-    const guildName = values.guildName
-    console.log("guildName: ", guildName)
-    console.log("nftManager.address: ", nftManager.address)
+    // console.log("metadata.url: ", metadata.url)
+    // setIpfsUrl(metadata.url)
+    // const guildName = values.guildName
+    // console.log("guildName: ", guildName)
 
-    const guildId = await nftManager.guildNameToGuildId(guildName);
-    console.log("guildId: ", guildId)
-    if (guildId === ZERO_GUILD_ID) {
-      alert(`No guild id found for guild name: ${guildName}`);
-      return;
-    }
-    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
-
-    setTimeout(() => {
-      setIpfsUrl('')
-      actions.setSubmitting(false)
-    }, 1000)
+    // setTimeout(() => {
+    //   setIpfsUrl("")
+    //   actions.setSubmitting(false)
+    // }, 1000)
   }
 
   return (
     <Formik
-      initialValues={{ guildName: "", name: "", description: "", address: "" }}
+      initialValues={{ guildName: "", name: "", description: "", amount: 0 }}
       onSubmit={onSubmit}
     >
       {(props) => (
         <Form>
-          <Field name="guildName" validate={validateGuildName}>
-            {({ field, form }) => (
-              <FormControl
-                isRequired
-                isInvalid={form.errors.guildName && form.touched.guildName}
-              >
-                <FormLabel htmlFor="guildName">Guild Name</FormLabel>
-                <Input {...field} id="guildName" placeholder="Guild Name" />
-                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
           <Field name="name" validate={validateName}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <Input {...field} id="name" placeholder="Name" />
@@ -202,14 +197,35 @@ export default function FormikExample() {
             )}
           </Field>
           <Field name="description" validate={validateDescription}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="description">Description</FormLabel>
                 <Input {...field} id="description" placeholder="Description" />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+              </FormControl>
+            )}
+          </Field>
+          <Field name="amount">
+            {({ field, form }: FieldProps) => (
+              <FormControl
+                isRequired
+                isInvalid={!!(form.errors.guildName && form.touched.guildName)}
+              >
+                <FormLabel htmlFor="guildName">Amount</FormLabel>
+                <NumberInput
+                  {...field}
+                  onChange={(val) => form.setFieldValue(field.name, val)}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
               </FormControl>
             )}
           </Field>
@@ -230,22 +246,6 @@ export default function FormikExample() {
               {errors.file_ && errors?.file_.message}
             </FormErrorMessage>
           </FormControl>
-          <Field name="address" validate={validateAddress}>
-            {({ field, form }) => (
-              <FormControl
-                isRequired
-                isInvalid={form.errors.name && form.touched.name}
-              >
-                <FormLabel htmlFor="address">Address</FormLabel>
-                <Textarea
-                  {...field}
-                  id="address"
-                  placeholder="address1,address2,address3"
-                />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
           <Button
             mt={4}
             colorScheme="teal"

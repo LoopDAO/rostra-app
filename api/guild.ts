@@ -1,12 +1,13 @@
-export type GuildListType = {
-  guild_id: number,
+export type GuildType = {
+  guild_id?: string;
   name: string,
   desc: string,
-  creator: string,
-  wallet_address: string,
-  signature: string,
-  members: Array<string>,
-  requirements: {
+  ipfsAddr?: string,
+  wallet_address?: string,
+  creator?: string,
+  signature?: string,
+  members?: Array<string>,
+  requirements?: {
     nfts: Array<{
       name: string,
       baseURI: string
@@ -15,7 +16,7 @@ export type GuildListType = {
   }
 }
 
-export type GuildType = {
+export type GuildAPIType = {
   result: string;
   error: string;
 };
