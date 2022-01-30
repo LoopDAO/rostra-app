@@ -1,5 +1,5 @@
 export type GuildListType = {
-  guild_id: number,
+  guild_id?: string,
   name: string,
   desc: string,
   creator: string,

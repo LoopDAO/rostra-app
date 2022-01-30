@@ -21,7 +21,6 @@ import { getNftManagerContract } from "@lib/utils/contracts"
 import { Web3Provider } from "@ethersproject/providers"
 
 let newGuilds: GuildListType = {
-  guild_id: 0,
   name: "string",
   desc: "string",
   creator: "string",
@@ -45,13 +44,6 @@ export default function GuildPage() {
   console.log('==== chainId: ', chainId)
   const [pageContent, setPageContent] = useState<string>("guildListPage")
   const [checked, setChecked] = useState(false)
-  if (!library || !account || !chainId) {
-    console.error("Library or account not found")
-    return 'Loading...'
-  }
-  const signer = library.getSigner(account)
-  const nftManager = getNftManagerContract(signer, chainId)
-
 
   const {
     data: guildsData,
@@ -74,6 +66,13 @@ export default function GuildPage() {
         : null,
     fetcher
   )
+
+  if (!library || !account || !chainId) {
+    console.error("Library or account not found")
+    return 'Loading...'
+  }
+  const signer = library.getSigner(account)
+  const nftManager = getNftManagerContract(signer, chainId)
 
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>

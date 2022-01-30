@@ -9,18 +9,27 @@ import useSWR from "swr"
 import { Heading } from "@components/common/Heading"
 import { Flex } from "@components/common/Flex"
 import { GuildListType } from "api/guild"
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Textarea,
+  Button,
+  Icon,
+  InputGroup,
+} from "@chakra-ui/react"
 
 export default function GuildDetails() {
   const { query } = useRouter()
   console.log('query: ', query)
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/61f4b058cc48944f5852f337`,
-    // () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${query.id}`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetcher
   )
 
   const guilds = data?.guilds ?? null
-  const guild = guilds?.find((g: GuildListType) => g.guild_id === Number(query.id))
+  const guild = guilds?.find((g: GuildListType) => g.guild_id == query.id)
 
   if (error) return <div>{error.message}</div>
   if (!data) return <div>Loading...</div>
@@ -34,13 +43,27 @@ export default function GuildDetails() {
     <Flex css={{ fd: "column", gap: "$4" }}>
       <Flex css={{ fd: "row", ai: "center", gap: "$2" }}>
         <Heading size="3">{guild.name}</Heading>
-        <Text
-          css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
-          key={guild?.guild_id}
-        >
-          {guild?.description}
-        </Text>
       </Flex>
+      <Flex css={{ fd: "row", ai: "center", gap: "$2" }}>
+        <Button
+          mt={4}
+          colorScheme="teal"
+        >
+          Initiate NFT template
+        </Button>
+        <Button
+          mt={4}
+          colorScheme="teal"
+        >
+          Create NFT for Event
+        </Button>
+      </Flex>
+      <Text
+        css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
+        key={guild?.guild_id}
+      >
+        {guild?.desc}
+      </Text>
     </Flex>
   )
 }
