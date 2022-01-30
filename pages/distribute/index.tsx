@@ -18,6 +18,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
+import { ZERO_GUILD_ID } from "@lib/utils/constants"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -81,6 +82,14 @@ export default function FormikExample() {
     }
     return true
   }
+  function validateGuildName(value) {
+    let error
+    if (!value) {
+      error = "Guild Name is required"
+    }
+    return error
+  }
+
   function validateName(value) {
     let error
     if (!value) {
@@ -121,7 +130,7 @@ export default function FormikExample() {
     setFileObj(e.target.files[0])
   }
 
-  const { account, library } = useWeb3React<Web3Provider>()
+  const { account, library, chainId } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
     const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
     if (!apiKey) return
@@ -129,7 +138,7 @@ export default function FormikExample() {
 
     if (!library || !account) return
     const signer = await library.getSigner(account)
-    const nftManager = getNftManagerContract(signer)
+    const nftManager = getNftManagerContract(signer, chainId)
     if (!nftManager) return
     console.log("values: ", values)
     const metadata = await client.store({
@@ -137,13 +146,22 @@ export default function FormikExample() {
       description: values.description,
       image: fileObj as File
     })
-
+    // const metadata = {
+    //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+    // }
+    console.log("metadata.url: ", metadata.url)
     setIpfsUrl(metadata.url)
     const addresses = values.address.split("\n")
-    // todo
-    alert('change the guild name')
-    const guildName = 'Social Wiki'
-    const guildId = await nftManager.stringToBytes32(guildName);
+    const guildName = values.guildName
+    console.log("guildName: ", guildName)
+    console.log("nftManager.address: ", nftManager.address)
+
+    const guildId = await nftManager.guildNameToGuildId(guildName);
+    console.log("guildId: ", guildId)
+    if (guildId === ZERO_GUILD_ID) {
+      alert(`No guild id found for guild name: ${guildName}`);
+      return;
+    }
     await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
 
     setTimeout(() => {
@@ -154,19 +172,31 @@ export default function FormikExample() {
 
   return (
     <Formik
-      initialValues={{ name: "", description: "", address: "" }}
+      initialValues={{ guildName: "", name: "", description: "", address: "" }}
       onSubmit={onSubmit}
     >
       {(props) => (
         <Form>
+          <Field name="guildName" validate={validateGuildName}>
+            {({ field, form }) => (
+              <FormControl
+                isRequired
+                isInvalid={form.errors.guildName && form.touched.guildName}
+              >
+                <FormLabel htmlFor="guildName">Guild Name</FormLabel>
+                <Input {...field} id="guildName" placeholder="Guild Name" />
+                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
+              </FormControl>
+            )}
+          </Field>
           <Field name="name" validate={validateName}>
             {({ field, form }) => (
               <FormControl
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
-                <FormLabel htmlFor="name">name</FormLabel>
-                <Input {...field} id="name" placeholder="name" />
+                <FormLabel htmlFor="name">Name</FormLabel>
+                <Input {...field} id="name" placeholder="Name" />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
               </FormControl>
             )}
