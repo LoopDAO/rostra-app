@@ -117,5 +117,13 @@
     "confirm": "Confirm",
     "requirement": "Requirement",
     "requirementInfo": "You can add whitelist for joining the guild, addresses that hold specified NFTs or members in specified guilds."
+  },
+  "nft": {
+    "distribute": "Distribute NFT",
+    "claim": "Claim NFT"
+  },
+  "redpacket": {
+    "create": "Create Redpacket",
+    "claim": "Claim Redpacket"
   }
 }

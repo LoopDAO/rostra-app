@@ -35,8 +35,16 @@ export const Layout: FC = ({ children }) => {
             </Link>
           </Flex>
           <Flex css={{ gap: "$1" }}>
+            <Link href="/distribute">
+              <Text>{t("nft.distribute")}</Text>
+            </Link>
+
+            <Link href="/redpacket/create">
+              <Text>{t("redpacket.create")}</Text>
+            </Link>
+
             <LocaleToggle />
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <Account />
           </Flex>
         </Flex>
