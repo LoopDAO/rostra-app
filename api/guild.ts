@@ -1,4 +1,4 @@
-export type GuildListType = {
+export type GuildType = {
   name: string,
   desc: string,
   wallet_address?: string,

@@ -8,7 +8,7 @@ import { fetcher } from "api/http"
 import useSWR from "swr"
 import { Heading } from "@components/common/Heading"
 import { Flex } from "@components/common/Flex"
-import { GuildListType } from "api/guild"
+import { GuildType } from "api/guild"
 
 export default function GuildDetails() {
   const { query } = useRouter()
@@ -20,7 +20,7 @@ export default function GuildDetails() {
   )
 
   const guilds = data?.guilds ?? null
-  const guild = guilds?.find((g: GuildListType) => g.guild_id === Number(query.id))
+  const guild = guilds?.find((g: GuildType) => g.guild_id === Number(query.id))
 
   if (error) return <div>{error.message}</div>
   if (!data) return <div>Loading...</div>

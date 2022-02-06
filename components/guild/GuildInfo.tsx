@@ -1,12 +1,12 @@
 import React from "react"
-import { GuildListType } from "../../api/guild"
+import { GuildType } from "../../api/guild"
 import { useRouter } from "next/router"
 import { Heading } from "@components/common/Heading"
 import { Box } from "@components/common/Box"
 
-export default function GuildInfo({ guild }: { guild: GuildListType }) {
+export default function GuildInfo({ guild }: { guild: GuildType }) {
   const router = useRouter()
-  const handleClick = (guild: GuildListType) => {
+  const handleClick = (guild: GuildType) => {
     router.push({
       pathname: `/guild/${guild.guild_id}`,
     })

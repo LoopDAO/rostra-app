@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
-import { GuildListType } from "api/guild"
+import { GuildType } from "api/guild"
 import { Heading } from "@components/common/Heading"
 import { Web3Provider } from "@ethersproject/providers"
 import {
@@ -19,7 +19,7 @@ import { getNftManagerContract } from "@lib/utils/contracts"
 export default function CreateGuild() {
   const { t } = useTranslation()
 
-  function validateName(value) {
+  function validateName(value: string) {
     let error
     if (!value) {
       error = "Name is required"
@@ -27,7 +27,7 @@ export default function CreateGuild() {
     return error
   }
 
-  function validateDescription(value) {
+  function validateDescription(value: string) {
     let error
     if (!value) {
       error = "Description is required"
@@ -36,7 +36,7 @@ export default function CreateGuild() {
   }
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
-  const onSubmit = async (values, actions) => {
+  const onSubmit = async (values: GuildType) => {
     console.log('values: ', values)
     if (!library || !account) return
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
