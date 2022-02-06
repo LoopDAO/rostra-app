@@ -39,11 +39,12 @@ export const Layout: FC = ({ children }) => {
             <Link href="/guild">
               <Text>{t("guild.guilds")}</Text>
             </Link>
-
+            <Link href="/guild/create">
+              <Text>{t("guild.create")}</Text>
+            </Link>
             <Link href="/distribute">
               <Text>{t("nft.distribute")}</Text>
             </Link>
-
             {/* <Link href="/redpacket/create">
               <Text>{t("redpacket.create")}</Text>
             </Link> */}
