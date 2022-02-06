@@ -38,6 +38,7 @@ export default function CreateGuild() {
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const onSubmit = async (values: GuildType) => {
     console.log('values: ', values)
+    const { name, desc } = values
     if (!library || !account) return
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
@@ -47,11 +48,9 @@ export default function CreateGuild() {
       },
       body: JSON.stringify(
         {
-          ...values,
+          name: name.trim(),
+          desc: desc.trim(),
           creator: account,
-          // signature: 'sig',
-          // members: [],
-          // requirements: []
         }
       ),
     })
