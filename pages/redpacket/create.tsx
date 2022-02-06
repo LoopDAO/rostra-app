@@ -62,8 +62,7 @@ const FileUpload = (props: FileUploadProps) => {
     )
 }
 
-export default function FormikExample() {
-    // TODO: Add typing
+export default function CreateRedPacket() {
     const {
         register,
         handleSubmit,
@@ -71,7 +70,7 @@ export default function FormikExample() {
     } = useForm()
 
     const [ipfsUrl, setIpfsUrl] = useState("")
-    const [fileObj, setFileObj] = useState < File > ()
+    const [fileObj, setFileObj] = useState<File>()
 
     const validateFiles = (value: FileList) => {
         if (value.length < 1) {
@@ -110,14 +109,6 @@ export default function FormikExample() {
         return error
     }
 
-    function validateImage(value) {
-        let error
-        if (!value) {
-            error = "Image is required"
-        }
-        return error
-    }
-
     async function onFileChanged(e) {
         console.log(e.target.files)
         const file = e.target.files[0]
@@ -129,7 +120,6 @@ export default function FormikExample() {
     const { account, library, chainId } = useWeb3React < Web3Provider > ()
     const onSubmit = async (values, actions) => {
         console.log('values...', values);
-        return false;
         const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
         if (!apiKey) return
         const client = new NFTStorage({ token: apiKey })
@@ -253,7 +243,7 @@ export default function FormikExample() {
                         type="submit"
                     >
                         Confirm
-          </Button>
+                    </Button>
                 </Form>
             )}
         </Formik>
