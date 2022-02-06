@@ -45,13 +45,6 @@ export default function GuildPage() {
   console.log('==== chainId: ', chainId)
   const [pageContent, setPageContent] = useState<string>("guildListPage")
   const [checked, setChecked] = useState(false)
-  if (!library || !account || !chainId) {
-    console.error("Library or account not found")
-    return 'Loading...'
-  }
-  const signer = library.getSigner(account)
-  const nftManager = getNftManagerContract(signer, chainId)
-
 
   const {
     data: guildsData,
@@ -79,6 +72,13 @@ export default function GuildPage() {
     return <div>{guildsError?.message || userGuildsError?.message}</div>
 
   if (isLoadingGuildData || isLoadingUserGuilds) return <div>Loading...</div>
+
+  if (!library || !account || !chainId) {
+    console.error("Library or account not found")
+    return 'Loading...'
+  }
+  const signer = library.getSigner(account)
+  const nftManager = getNftManagerContract(signer, chainId)
 
   const handleNfts = (value: string) => {
     const nfts = value.split(",").map((nft) => ({
