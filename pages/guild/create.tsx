@@ -2,49 +2,66 @@ import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
 import { GuildListType } from "api/guild"
-import { Button } from "@components/common/Button"
-import { Flex } from "@components/common/Flex"
 import { Heading } from "@components/common/Heading"
-import { Label } from "@components/common/Label"
+import { Web3Provider } from "@ethersproject/providers"
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Button,
+} from "@chakra-ui/react"
+import { Formik, Form, Field } from "formik"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Fieldset } from "@components/common/Fieldset"
-import { Input } from "@components/common/Input"
-import { useRouter } from "next/router"
 import { getNftManagerContract } from "@lib/utils/contracts"
-import { Web3Provider } from "@ethersproject/providers"
 
-let newGuilds: GuildListType = {
-  name: "string",
-  desc: "string",
-  wallet_address: "string",
-}
-
-export default function GuildPage() {
+export default function CreateGuild() {
   const { t } = useTranslation()
-  const { account, library, chainId } = useWeb3React<Web3Provider>()
 
-  if (!library || !account || !chainId) {
-    console.error("Library or account not found")
-    return 'Loading...'
+  function validateName(value) {
+    let error
+    if (!value) {
+      error = "Name is required"
+    }
+    return error
   }
-  const signer = library.getSigner(account)
-  const nftManager = getNftManagerContract(signer, chainId)
 
-  const handleSubmit = async () => {
+  function validateDescription(value) {
+    let error
+    if (!value) {
+      error = "Description is required"
+    }
+    return error
+  }
+
+  const { account, library, chainId } = useWeb3React<Web3Provider>()
+  const onSubmit = async (values, actions) => {
+    console.log('values: ', values)
+    if (!library || !account) return
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newGuilds),
+      body: JSON.stringify(
+        {
+          ...values,
+          creator: account,
+          // signature: 'sig',
+          // members: [],
+          // requirements: []
+        }
+      ),
     })
       .then(async (resp) => {
-        await nftManager.connect(signer).createGuild(newGuilds.name, '', [])
+        const signer = await library.getSigner(account)
+        const nftManager = getNftManagerContract(signer, chainId)
+        await nftManager.connect(signer).createGuild(values.name, '', [])
         const data = await resp.json()
         if (data.message == "SUCCESS") {
-          console.log('newGuilds.name:', newGuilds.name)
+          console.log('values.name:', values.name)
         } else {
           throw Error("create new guild faild!")
         }
@@ -54,41 +71,50 @@ export default function GuildPage() {
   }
 
   return (
-    <>
-      <Flex
-        css={{ width: "500px", marginLeft: "20px", fd: "column", gap: "$2" }}
-      >
-        <Flex>
-          <Heading>{t("guild.create")}</Heading>
-        </Flex>
-        <Fieldset>
-          <Label htmlFor="name">{t("guild.name")}</Label>
-          <Input
-            id="name"
-            onChange={(e) => (newGuilds.name = e.target.value)}
-          />
-        </Fieldset>
-        <Fieldset>
-          <Label htmlFor="description">{t("guild.desc")}</Label>
-          <Input
-            id="description"
-            onChange={(e) => (newGuilds.desc = e.target.value)}
-          />
-        </Fieldset>
-
-        <Flex css={{ marginTop: 25, justifyContent: "flex-start" }}>
+    <div>
+    <Heading>{t("guild.create")}</Heading>
+    <Formik
+      initialValues={{ name: "", desc: "" }}
+      onSubmit={onSubmit}
+    >
+      {(props) => (
+        <Form>
+          <Field name="name" validate={validateName}>
+            {({ field, form }) => (
+              <FormControl
+                isRequired
+                isInvalid={form.errors.name && form.touched.name}
+              >
+                <FormLabel htmlFor="name">{t("guild.name")}</FormLabel>
+                <Input {...field} id="name" placeholder="Name" />
+                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+              </FormControl>
+            )}
+          </Field>
+          <Field name="desc" validate={validateDescription}>
+            {({ field, form }) => (
+              <FormControl
+                isRequired
+                isInvalid={form.errors.name && form.touched.name}
+              >
+                <FormLabel htmlFor="desc">{t("guild.desc")}</FormLabel>
+                <Input {...field} id="desc" placeholder="Description" />
+                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+              </FormControl>
+            )}
+          </Field>
           <Button
-            aria-label="Confirm"
-            variant="gray"
-            onClick={() => handleSubmit()}
-            size="3"
+            mt={4}
+            colorScheme="teal"
+            isLoading={props.isSubmitting}
+            type="submit"
           >
-            {t("guild.confirm")}
+            Confirm
           </Button>
-        </Flex>
-      </Flex>
-    </>
-  )
+        </Form>
+      )}
+    </Formik>
+  </div>)
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {

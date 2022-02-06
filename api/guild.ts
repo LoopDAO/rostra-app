@@ -1,7 +1,7 @@
 export type GuildListType = {
   name: string,
   desc: string,
-  wallet_address: string,
+  wallet_address?: string,
   creator?: string,
   signature?: string,
   members?: Array<string>,
