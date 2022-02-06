@@ -28,7 +28,6 @@ export default function GuildPage() {
     () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetcher
   )
-  const guildsList = guildsData?.guilds
 
   const {
     data: userGuildsData,
@@ -41,6 +40,8 @@ export default function GuildPage() {
         : null,
     fetcher
   )
+
+  const guildsList = checked ? userGuildsData?.result : guildsData?.result
 
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
