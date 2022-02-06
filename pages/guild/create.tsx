@@ -15,22 +15,9 @@ import { getNftManagerContract } from "@lib/utils/contracts"
 import { Web3Provider } from "@ethersproject/providers"
 
 let newGuilds: GuildListType = {
-  guild_id: 0,
   name: "string",
   desc: "string",
-  creator: "string",
   wallet_address: "string",
-  signature: "string",
-  members: ["string"],
-  requirements: {
-    nfts: [
-      {
-        name: "string",
-        baseURI: "string",
-      },
-    ],
-    guilds: [],
-  },
 }
 
 export default function GuildPage() {
@@ -45,7 +32,6 @@ export default function GuildPage() {
   const nftManager = getNftManagerContract(signer, chainId)
 
   const handleSubmit = async () => {
-
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
       method: "POST",
       headers: {
