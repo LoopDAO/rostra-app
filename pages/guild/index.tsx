@@ -64,7 +64,7 @@ export default function GuildPage() {
                 <CheckIcon />
               </CheckboxIndicator>
             </Checkbox>
-            <Label htmlFor="c1">{t("guild.guilds")}</Label>
+            <Label htmlFor="c1">{t("guild.myGuilds")}</Label>
           </Fieldset>
         </Flex>
         <Flex css={{ marginTop: "$4", flexWrap: 'wrap', gap: "$4" }}>

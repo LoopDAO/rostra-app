@@ -14,13 +14,12 @@ export default function GuildDetails() {
   const { query } = useRouter()
   console.log('query: ', query)
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/61f4b058cc48944f5852f337`,
-    // () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${query.id}`,
+    // () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/61f4b058cc48944f5852f337`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/${query.id}`,
     fetcher
   )
-
-  const guilds = data?.guilds ?? null
-  const guild = guilds?.find((g: GuildType) => g.guild_id === Number(query.id))
+  console.log('data: ', data)
+  const guild = data?.result
 
   if (error) return <div>{error.message}</div>
   if (!data) return <div>Loading...</div>
@@ -34,12 +33,12 @@ export default function GuildDetails() {
     <Flex css={{ fd: "column", gap: "$4" }}>
       <Flex css={{ fd: "row", ai: "center", gap: "$2" }}>
         <Heading size="3">{guild.name}</Heading>
-        <Text
+        <Flex
           css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
           key={guild?.guild_id}
         >
-          {guild?.description}
-        </Text>
+          {guild?.desc}
+        </Flex>
       </Flex>
     </Flex>
   )

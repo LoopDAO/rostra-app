@@ -108,7 +108,8 @@
   "guild": {
     "create": "Create guild",
     "list": "Guild List",
-    "guilds": "My guilds",
+    "myGuilds": "My guilds",
+    "guilds": "Guilds",
     "name": "Name",
     "desc": "Description",
     "creator": "Creator",

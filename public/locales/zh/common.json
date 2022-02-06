@@ -108,7 +108,8 @@
   "guild": {
     "create": "创建公会",
     "list": "公会列表",
-    "guilds": "我的公会",
+    "myGuilds": "我的公会",
+    "guilds": "公会",
     "name": "名称",
     "desc": "简介",
     "creator": "创造者",
