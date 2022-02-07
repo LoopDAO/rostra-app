@@ -12,26 +12,35 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { Button } from "@chakra-ui/react"
 import Distribute from "components/distribute"
+import { useTranslation } from "next-i18next"
+import { ZERO_GUILD_ID } from "@lib/utils/constants"
 
 const GuildInfo = (props: any) => {
+  const { t } = useTranslation()
   const { guild, account, library, chainId } = props
   const signer = library.getSigner(account)
   const nftManager = getNftManagerContract(signer, chainId)
 
+  const createNFTTemplate = async () => {
+    await nftManager.connect(signer).createGuild(guild.name, '', [])
+    console.log('createNFTTemplate done')
+  }
+
   const { data: templateId } = useSWR(['guildNameToGuildId', guild.name], {
     fetcher: fetchers.contract(nftManager),
   })
-  if (!templateId) {
+  if (!templateId || templateId === ZERO_GUILD_ID) {
     return (
       <div>
         No NFT template found
-        <Button>Create One</Button>
+        <Button onClick={createNFTTemplate}>Create One</Button>
       </div>
     )
   }
   return (
     <div>
       <div>NFT template ID: {templateId.toString()}</div>
+      <Heading size="3">{t('nft.distribute')}</Heading>
       <Distribute guild={{ ...guild, guildId: templateId }} />
     </div>
   )
@@ -53,6 +62,12 @@ export default function GuildDetails() {
 
   const { name, desc, creator } = guild
 
+  let guildInfoElem
+
+  if (creator === account) {
+    guildInfoElem = <GuildInfo guild={guild} account={account} library={library} chainId={chainId} />
+  }
+
   return (
     <Grid>
       <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
@@ -60,7 +75,7 @@ export default function GuildDetails() {
         <Grid>{desc}</Grid>
         <Grid>Creator: {creator}</Grid>
       </Grid>
-      <GuildInfo guild={guild} account={account} library={library} chainId={chainId} />
+      {guildInfoElem}
     </Grid>
   )
 }
