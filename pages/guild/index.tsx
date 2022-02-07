@@ -12,7 +12,7 @@ import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { Fieldset } from "@components/common/Fieldset"
 import useSWR from "swr"
-import { fetcher } from "api/http"
+import fetchers from "api/fetchers"
 import { Web3Provider } from "@ethersproject/providers"
 
 export default function GuildPage() {
@@ -26,7 +26,7 @@ export default function GuildPage() {
     isValidating: isLoadingGuildData,
   } = useSWR(
     () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
-    fetcher
+    fetchers.http
   )
 
   const {
@@ -38,7 +38,7 @@ export default function GuildPage() {
       account
         ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`
         : null,
-    fetcher
+    fetchers.http
   )
 
   const guildsList = checked ? userGuildsData?.result : guildsData?.result
