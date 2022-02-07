@@ -2,45 +2,64 @@ import React from "react"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Fieldset } from "@components/common/Fieldset"
-import { Text } from "@components/common/Text"
-import { fetcher } from "api/http"
+import fetchers from "api/fetchers"
 import useSWR from "swr"
 import { Heading } from "@components/common/Heading"
-import { Flex } from "@components/common/Flex"
+import { Grid } from "@components/common/Grid"
 import { GuildType } from "api/guild"
+import { getNftManagerContract } from "@lib/utils/contracts"
+import { useWeb3React } from "@web3-react/core"
+import { Web3Provider } from "@ethersproject/providers"
+import {
+  Button,
+} from "@chakra-ui/react"
+export const GuildInfo = (props: any) => {
+  const { name, account, library, chainId } = props
+  const signer = library.getSigner(account)
+  const nftManager = getNftManagerContract(signer, chainId)
+  console.log('account: ', account)
+  const { data: nftAddress } = useSWR(['guildNameToGuildId', name], {
+    fetcher: fetchers.contract(nftManager),
+  })
+  if (!nftAddress) {
+    return (
+      <div>
+        No NFT template found
+        <Button>Create One</Button>
+      </div>
+    )
+  }
+  return (
+    <div>
+      <div>NFT template ID: {nftAddress.toString()}</div>
+    </div>
+  )
+}
 
 export default function GuildDetails() {
+  const { account, library, chainId } = useWeb3React<Web3Provider>()
   const { query } = useRouter()
   console.log('query: ', query)
   const { data, error } = useSWR(
-    // () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/61f4b058cc48944f5852f337`,
     () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/${query.id}`,
-    fetcher
+    fetchers.http
   )
   console.log('data: ', data)
-  const guild = data?.result
+  const guild: GuildType = data?.result
 
   if (error) return <div>{error.message}</div>
-  if (!data) return <div>Loading...</div>
-  console.log("guild id page", guild)
-  if (!guild) return null
+  if (!guild || !account || !library || !chainId) return <div>Loading...</div>
 
-  const nfts = guild.members?.nfts
-  const members = guild.members
-
+  const { name, desc, creator } = guild
   return (
-    <Flex css={{ fd: "column", gap: "$4" }}>
-      <Flex css={{ fd: "row", ai: "center", gap: "$2" }}>
-        <Heading size="3">{guild.name}</Heading>
-        <Flex
-          css={{ color: "Gray", fontSize: "12px", marginTop: "5px" }}
-          key={guild?.guild_id}
-        >
-          {guild?.desc}
-        </Flex>
-      </Flex>
-    </Flex>
+    <Grid>
+      <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
+        <Heading size="3">{name}</Heading>
+        <Grid>{desc}</Grid>
+        <Grid>Creator: {creator}</Grid>
+      </Grid>
+      <GuildInfo name={name} account={account} library={library} chainId={chainId} />
+    </Grid>
   )
 }
 
