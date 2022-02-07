@@ -142,21 +142,21 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     const nftManager = getNftManagerContract(signer, chainId)
     if (!nftManager) return
     console.log("values: ", values)
-    // const metadata = await client.store({
-    //   name: values.name,
-    //   description: values.description,
-    //   image: fileObj as File
-    // })
-    const metadata = {
-      url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
-    }
+    const metadata = await client.store({
+      name: values.name,
+      description: values.description,
+      image: fileObj as File
+    })
+    // const metadata = {
+    //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+    // }
     console.log("metadata.url: ", metadata.url)
     setIpfsUrl(metadata.url)
     const addressesList = addresses.split("\n")
     console.log("addressesList: ", addressesList)
     console.log("nftManager.address: ", nftManager.address)
 
-    // await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addressesList);
+    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addressesList);
 
     setTimeout(() => {
       setIpfsUrl('')
