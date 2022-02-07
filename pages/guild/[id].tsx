@@ -13,7 +13,8 @@ import { Web3Provider } from "@ethersproject/providers"
 import {
   Button,
 } from "@chakra-ui/react"
-export const GuildInfo = (props: any) => {
+
+const GuildInfo = (props: any) => {
   const { name, account, library, chainId } = props
   const signer = library.getSigner(account)
   const nftManager = getNftManagerContract(signer, chainId)
