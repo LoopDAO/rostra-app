@@ -12,14 +12,12 @@ import {
 import { Formik, Form, Field } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
-import { NFTStorage, File } from "nft.storage"
-import { GetStaticProps } from "next"
-import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { NFTStorage } from "nft.storage"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
-import { ZERO_GUILD_ID } from "@lib/utils/constants"
 import { GuildType } from "api/guild"
+import Image from 'next/image'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -70,6 +68,19 @@ export default function DistributeNFT(props: { guild: GuildType }) {
 
   const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
+  const [image, setImage] = useState("");
+
+  let imageElem: ReactNode = null
+  if (image) {
+    imageElem = (
+      <Image
+        src={image}
+        alt="NFT image"
+        width={300}
+        height={300}
+      />
+    )
+  }
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
@@ -101,14 +112,6 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     return error
   }
 
-  function validateImage(value) {
-    let error
-    if (!value) {
-      error = "Image is required"
-    }
-    return error
-  }
-
   function validateAddress(value) {
     let error
     if (!value) {
@@ -122,11 +125,13 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     const file = e.target.files[0]
     if (!file) return
     console.log(file.name, file.type)
-    setFileObj(e.target.files[0])
+    setFileObj(file)
+    setImage(URL.createObjectURL(file))
   }
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
+    console.log('actions: ', actions)
     const { name, description, addresses } = values
     const guildId = guild.guildId;
     console.log("guildId: ", guildId)
@@ -160,6 +165,8 @@ export default function DistributeNFT(props: { guild: GuildType }) {
 
     setTimeout(() => {
       setIpfsUrl('')
+      setImage('')
+      actions.resetForm()
       actions.setSubmitting(false)
     }, 1000)
   }
@@ -205,7 +212,8 @@ export default function DistributeNFT(props: { guild: GuildType }) {
                 onFileChanged(e)
               }}
             >
-              <Button leftIcon={<Icon as={FiFile} />}>Upload {ipfsUrl}</Button>
+              {imageElem}
+              <Button leftIcon={<Icon as={FiFile} />}>Upload </Button>
             </FileUpload>
 
             <FormErrorMessage>
@@ -222,7 +230,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
                 <Textarea
                   {...field}
                   id="addresses"
-                  placeholder="address1,address2,address3"
+                  placeholder="Split by new line"
                 />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
               </FormControl>
