@@ -1,11 +1,10 @@
 import { FC } from "react"
 import { useTranslation } from "next-i18next"
-import { Link } from "@chakra-ui/react"
+import Link from 'next/link'
 import { Container } from "@components/common/Container"
 import { Flex } from "@components/common/Flex"
 import { Heading } from "@components/common/Heading"
 import { Text } from "@components/common/Text"
-// import { Link } from "@components/common/Link"
 import { ThemeToggle } from "@components/Layout/ThemeToggle"
 import Account from "./Account"
 import { LocaleToggle } from "./LocaleToggle"
@@ -31,21 +30,21 @@ export const Layout: FC = ({ children }) => {
           }}
         >
           <Flex>
-            <Link href="/">
+            <Link href="/" passHref>
               <Heading as="h1">{t("title")}</Heading>
             </Link>
           </Flex>
           <Flex css={{ gap: "$1" }}>
-            <Link href="/guild">
+            <Link href="/guild" passHref>
               <Text>{t("guild.guilds")}</Text>
             </Link>
-            <Link href="/guild/create">
+            <Link href="/guild/create" passHref>
               <Text>{t("guild.create")}</Text>
             </Link>
-            <Link href="/distribute">
+            <Link href="/distribute" passHref>
               <Text>{t("nft.distribute")}</Text>
             </Link>
-            {/* <Link href="/redpacket/create">
+            {/* <Link href="/redpacket/create" passHref>
               <Text>{t("redpacket.create")}</Text>
             </Link> */}
 

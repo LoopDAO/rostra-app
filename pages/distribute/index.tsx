@@ -58,7 +58,7 @@ const FileUpload = (props: FileUploadProps) => {
   )
 }
 
-export default function FormikExample() {
+export default function DistributeNFT() {
   // TODO: Add typing
   const {
     register,
