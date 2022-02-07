@@ -55,7 +55,7 @@ export default function CreateGuild() {
       ),
     })
       .then(async (resp) => {
-        const signer = await library.getSigner(account)
+        const signer = library.getSigner(account)
         const nftManager = getNftManagerContract(signer, chainId)
         await nftManager.connect(signer).createGuild(values.name, '', [])
         const data = await resp.json()
