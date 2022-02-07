@@ -41,9 +41,6 @@ export const Layout: FC = ({ children }) => {
             <Link href="/guild/create" passHref>
               <Text>{t("guild.create")}</Text>
             </Link>
-            <Link href="/distribute" passHref>
-              <Text>{t("nft.distribute")}</Text>
-            </Link>
             {/* <Link href="/redpacket/create" passHref>
               <Text>{t("redpacket.create")}</Text>
             </Link> */}
