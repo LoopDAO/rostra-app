@@ -1,4 +1,5 @@
 export type GuildType = {
+  guildId?: string;
   name: string,
   desc: string,
   wallet_address?: string,

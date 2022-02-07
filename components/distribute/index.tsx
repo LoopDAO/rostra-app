@@ -19,6 +19,7 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import { GuildType } from "api/guild"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -58,8 +59,9 @@ const FileUpload = (props: FileUploadProps) => {
   )
 }
 
-export default function DistributeNFT() {
-  // TODO: Add typing
+export default function DistributeNFT(props: { guild: GuildType }) {
+  console.log('props: ', props)
+  const { guild } = props
   const {
     register,
     handleSubmit,
@@ -81,13 +83,6 @@ export default function DistributeNFT() {
       }
     }
     return true
-  }
-  function validateGuildName(value) {
-    let error
-    if (!value) {
-      error = "Guild Name is required"
-    }
-    return error
   }
 
   function validateName(value) {
@@ -132,6 +127,12 @@ export default function DistributeNFT() {
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
+    const { name, description, addresses } = values
+    const guildId = guild.guildId;
+    console.log("guildId: ", guildId)
+    if (!guildId || !name || !description) {
+      return;
+    }
     const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
     if (!apiKey) return
     const client = new NFTStorage({ token: apiKey })
@@ -141,28 +142,21 @@ export default function DistributeNFT() {
     const nftManager = getNftManagerContract(signer, chainId)
     if (!nftManager) return
     console.log("values: ", values)
-    const metadata = await client.store({
-      name: values.name,
-      description: values.description,
-      image: fileObj as File
-    })
-    // const metadata = {
-    //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
-    // }
+    // const metadata = await client.store({
+    //   name: values.name,
+    //   description: values.description,
+    //   image: fileObj as File
+    // })
+    const metadata = {
+      url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+    }
     console.log("metadata.url: ", metadata.url)
     setIpfsUrl(metadata.url)
-    const addresses = values.address.split("\n")
-    const guildName = values.guildName
-    console.log("guildName: ", guildName)
+    const addressesList = addresses.split("\n")
+    console.log("addressesList: ", addressesList)
     console.log("nftManager.address: ", nftManager.address)
 
-    const guildId = await nftManager.guildNameToGuildId(guildName);
-    console.log("guildId: ", guildId)
-    if (guildId === ZERO_GUILD_ID) {
-      alert(`No guild id found for guild name: ${guildName}`);
-      return;
-    }
-    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
+    // await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addressesList);
 
     setTimeout(() => {
       setIpfsUrl('')
@@ -172,23 +166,11 @@ export default function DistributeNFT() {
 
   return (
     <Formik
-      initialValues={{ guildName: "", name: "", description: "", address: "" }}
+      initialValues={{ name: "", description: "", addresses: "" }}
       onSubmit={onSubmit}
     >
       {(props) => (
         <Form>
-          <Field name="guildName" validate={validateGuildName}>
-            {({ field, form }) => (
-              <FormControl
-                isRequired
-                isInvalid={form.errors.guildName && form.touched.guildName}
-              >
-                <FormLabel htmlFor="guildName">Guild Name</FormLabel>
-                <Input {...field} id="guildName" placeholder="Guild Name" />
-                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
           <Field name="name" validate={validateName}>
             {({ field, form }) => (
               <FormControl
@@ -230,16 +212,16 @@ export default function DistributeNFT() {
               {errors.file_ && errors?.file_.message}
             </FormErrorMessage>
           </FormControl>
-          <Field name="address" validate={validateAddress}>
+          <Field name="addresses" validate={validateAddress}>
             {({ field, form }) => (
               <FormControl
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
-                <FormLabel htmlFor="address">Address</FormLabel>
+                <FormLabel htmlFor="addresses">Addresses</FormLabel>
                 <Textarea
                   {...field}
-                  id="address"
+                  id="addresses"
                   placeholder="address1,address2,address3"
                 />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
@@ -260,10 +242,3 @@ export default function DistributeNFT() {
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale!, ["common"])),
-    },
-  }
-}

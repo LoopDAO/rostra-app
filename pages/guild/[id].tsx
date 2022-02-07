@@ -10,19 +10,18 @@ import { GuildType } from "api/guild"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
-import {
-  Button,
-} from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
+import Distribute from "components/distribute"
 
 const GuildInfo = (props: any) => {
-  const { name, account, library, chainId } = props
+  const { guild, account, library, chainId } = props
   const signer = library.getSigner(account)
   const nftManager = getNftManagerContract(signer, chainId)
-  console.log('account: ', account)
-  const { data: nftAddress } = useSWR(['guildNameToGuildId', name], {
+
+  const { data: templateId } = useSWR(['guildNameToGuildId', guild.name], {
     fetcher: fetchers.contract(nftManager),
   })
-  if (!nftAddress) {
+  if (!templateId) {
     return (
       <div>
         No NFT template found
@@ -32,7 +31,8 @@ const GuildInfo = (props: any) => {
   }
   return (
     <div>
-      <div>NFT template ID: {nftAddress.toString()}</div>
+      <div>NFT template ID: {templateId.toString()}</div>
+      <Distribute guild={{ ...guild, guildId: templateId }} />
     </div>
   )
 }
@@ -52,6 +52,7 @@ export default function GuildDetails() {
   if (!guild || !account || !library || !chainId) return <div>Loading...</div>
 
   const { name, desc, creator } = guild
+
   return (
     <Grid>
       <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
@@ -59,7 +60,7 @@ export default function GuildDetails() {
         <Grid>{desc}</Grid>
         <Grid>Creator: {creator}</Grid>
       </Grid>
-      <GuildInfo name={name} account={account} library={library} chainId={chainId} />
+      <GuildInfo guild={guild} account={account} library={library} chainId={chainId} />
     </Grid>
   )
 }
