@@ -14,7 +14,7 @@ export type GuildType = {
   }
 }
 
-export type GuildType = {
+export type GuildAPIType = {
   result: string;
   error: string;
 };
