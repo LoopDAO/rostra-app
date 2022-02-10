@@ -1,8 +1,12 @@
 {
   "title": "Rostra",
-  "mission": "Rostra is dedicted to build a decentralized education and research system, so as to promoto the open access and innovation of knowledge.",
+  "mission": "Build your web3 community",
+  "hero": {
+    "line1": "Rostra is a web3 community building protocol",
+    "line2": "Help build belonging into communities by providing a complete set of NFT and identity solutions"
+  },
   "action": {
-    "gotoapp": "Begin to Try"
+    "gotoapp": "Go to App"
   },
   "problems": {
     "title": "Problems",
