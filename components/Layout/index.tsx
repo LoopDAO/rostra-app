@@ -1,6 +1,7 @@
 import { FC } from "react"
 import { Container } from '@chakra-ui/react'
 import Header from "./Header"
+import Footer from "./Footer"
 
 export const Layout: FC = ({ children }) => {
   return (
@@ -9,6 +10,7 @@ export const Layout: FC = ({ children }) => {
       <Container>
         {children}
       </Container>
+      <Footer />
     </>
   )
 }
