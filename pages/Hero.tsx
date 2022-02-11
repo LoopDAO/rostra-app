@@ -77,7 +77,7 @@ export default function CallToActionWithAnnotation() {
                 right={'-125px'}
                 top={'-15px'}
                 transform={'rotate(10deg)'}>
-                {t('getStarted')}
+                {t('action.startFree')}
               </Text>
             </Box>
           </Stack>
