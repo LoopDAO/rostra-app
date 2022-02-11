@@ -56,7 +56,7 @@ export default function CallToActionWithAnnotation() {
               _hover={{
                 bg: 'green.500',
               }}>
-              {t('getStarted')}
+              {t('action.getStarted')}
             </Button>
             {/* <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
               Learn more
