@@ -1,17 +1,13 @@
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useRouter } from "next/router"
 import { Text } from "@components/common/Text"
 import { Flex } from "@components/common/Flex"
-import { Heading } from "@components/common/Heading"
 import { Link } from "@components/common/Link"
-import { Button } from "@components/common/Button"
 import Hero from './Hero'
 
 export default function IndexPage() {
   const { t } = useTranslation()
-  const router = useRouter()
 
   return (
     <>
