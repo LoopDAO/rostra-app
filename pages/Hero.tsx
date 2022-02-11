@@ -11,6 +11,7 @@ import {
   createIcon,
 } from '@chakra-ui/react';
 import { useTranslation } from "next-i18next"
+import Link from 'next/link'
 
 export default function CallToActionWithAnnotation() {
   const { t } = useTranslation()
@@ -48,16 +49,18 @@ export default function CallToActionWithAnnotation() {
             align={'center'}
             alignSelf={'center'}
             position={'relative'}>
-            <Button
-              colorScheme={'green'}
-              bg={'green.400'}
-              rounded={'full'}
-              px={6}
-              _hover={{
-                bg: 'green.500',
-              }}>
-              {t('action.getStarted')}
-            </Button>
+            <Link href='/guild' passHref>
+              <Button
+                colorScheme={'green'}
+                bg={'green.400'}
+                rounded={'full'}
+                px={6}
+                _hover={{
+                  bg: 'green.500',
+                }}>
+                {t('action.getStarted')}
+              </Button>
+            </Link>
             {/* <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
               Learn more
             </Button> */}
