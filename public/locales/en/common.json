@@ -1,12 +1,14 @@
 {
   "title": "Rostra",
-  "mission": "Build your web3 community",
   "hero": {
-    "line1": "Rostra is a web3 community building protocol",
-    "line2": "Help build belonging into communities by providing a complete set of NFT and identity solutions"
+    "title1": "Build your",
+    "title2": "web3 community",
+    "line1": "Rostra is a web3 community building protocol. ",
+    "line2": "Help build belonging into communities by providing a complete set of NFT and identity solutions."
   },
   "action": {
-    "gotoapp": "Go to App"
+    "getStarted": "开始使用",
+    "startFree": "免费使用"
   },
   "problems": {
     "title": "Problems",

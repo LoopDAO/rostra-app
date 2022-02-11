@@ -7,6 +7,7 @@ import { Flex } from "@components/common/Flex"
 import { Heading } from "@components/common/Heading"
 import { Link } from "@components/common/Link"
 import { Button } from "@components/common/Button"
+import Hero from './Hero'
 
 export default function IndexPage() {
   const { t } = useTranslation()
@@ -14,14 +15,7 @@ export default function IndexPage() {
 
   return (
     <>
-      <Flex css={{ fd: "column", gap: "$4" }}>
-        <Heading as="h2">{t("mission")}</Heading>
-        <Text as="p">{t("hero.line1")}</Text>
-        <Text as="p">{t("hero.line2")}</Text>
-        <Button size="2" onClick={() => router.push("/guild")}>
-          {t("action.gotoapp")}
-        </Button>
-      </Flex>
+      <Hero />
       <Flex css={{ fd: "column", gap: "$4" }}>
         <Text as="p" color="yellow.200">
           {t("media.docs")}:{" "}

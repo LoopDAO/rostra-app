@@ -51,7 +51,7 @@ export default function Header() {
             <Link href='/guild/create' passHref>
               <Button
                 variant={'solid'}
-                colorScheme={'teal'}
+                colorScheme={'green'}
                 size={'sm'}
                 ml={4}
                 mr={4}
