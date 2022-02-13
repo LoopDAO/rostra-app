@@ -12,6 +12,7 @@ import { Flex } from "@components/common/Flex"
 import { Text } from "@components/common/Text"
 import { Button } from "@components/common/Button"
 import CopyableAddress from "@components/Layout/Account/CopyableAddress"
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 
 const AccountModal = ({
   isOpen,
@@ -22,6 +23,8 @@ const AccountModal = ({
 }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
+  //flashsigner
+  const { account: accountFlashsigner, isLoggedIn } = useAccountFlashsigner()
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -34,14 +37,13 @@ const AccountModal = ({
       <DialogContent>
         <DialogTitle>Account</DialogTitle>
         <DialogClose onClick={onClose} />
-
         <Flex css={{ my: "$6", gap: "$4", ai: "center" }}>
-          <CopyableAddress address={account!} decimals={5} />
+          <CopyableAddress address={isLoggedIn ? accountFlashsigner?.address : account!} decimals={5} />
         </Flex>
         <Flex css={{ ai: "center", jc: "space-between", mb: "-$1" }}>
           <Text color="$gray">
             Connected with{" "}
-            {connector === injected ? "MetaMask" : "WalletConnect"}
+            {isLoggedIn ? "Flashsigner" : connector === injected ? "MetaMask" : "WalletConnect"}
           </Text>
           <Button size="1" onClick={handleWalletProviderSwitch}>
             Switch

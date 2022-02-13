@@ -14,6 +14,8 @@ import { injected } from "connector"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./ConnectorButton"
 import { Flex } from "@components/common/Flex"
+import { loginWithRedirect } from '@nervina-labs/flashsigner'
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 
 type Props = {
   activatingConnector?: AbstractConnector
@@ -32,6 +34,8 @@ const WalletSelectorModal = ({
 }: Props): JSX.Element => {
   const { error } = useWeb3React()
   const { active, activate, connector, setError } = useWeb3React()
+  //flashsigner
+  const { account, isLoggedIn, logout } = useAccountFlashsigner()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -40,11 +44,23 @@ const WalletSelectorModal = ({
   }
 
   const handleConnect = (provider: AbstractConnector) => {
+    //flashsigner logout
+    if (isLoggedIn) logout()
+
     setActivatingConnector(provider)
     activate(provider, undefined, true).catch((err) => {
       setActivatingConnector(undefined)
       setError(err)
     })
+  }
+
+  const handleConnectFlashsigner = (provider: AbstractConnector) => {
+    loginWithRedirect(`${location.origin}/Flashsigner`, {
+      name: 'Rostra',
+      logo: `${location.origin}/logo512.png`,
+      extra: `${location.href}`,
+    })
+    return
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
@@ -87,9 +103,25 @@ const WalletSelectorModal = ({
                 alt="Extension logo"
               />
             }
-            disabled={connector === injected || !!activatingConnector}
+            disabled={(connector === injected || !!activatingConnector) && !isLoggedIn}
             isActive={connector === injected}
             isLoading={activatingConnector === injected}
+          />
+          <ConnectorButton
+            name='Flashsigner'
+            onClick={() => handleConnectFlashsigner(injected)}
+
+            rightIcon={
+              <Image
+                src="/image/wallet/flashsigner.svg"
+                height={24}
+                width={24}
+                alt="Extension logo"
+              />
+            }
+            disabled={isLoggedIn}
+            isActive={isLoggedIn}
+            isLoading={false}
           />
         </Flex>
       </DialogContent>

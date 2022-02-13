@@ -11,6 +11,8 @@ import { useTranslation } from "next-i18next"
 import Link from 'next/link'
 import LocaleToggle from "./LocaleToggle"
 import Account from "./Account"
+import { useAccountFlashsigner } from '@lib/hooks/useAccount'
+import AccountFlashsigner from './Account/AccountFlashsigner'
 
 const Links = ['guild.guilds']
 const hrefs = {
@@ -27,6 +29,7 @@ const NavLink = ({ children, href }: { children: ReactNode, href: any }) => (
 
 export default function Header() {
   const { t } = useTranslation()
+  const { isLoggedIn } = useAccountFlashsigner()
 
   return (
     <>
@@ -59,7 +62,7 @@ export default function Header() {
                 Guild
               </Button>
             </Link>
-            <Account />
+            {isLoggedIn ? <AccountFlashsigner /> : <Account />}
           </Flex>
         </Flex>
       </Box>
