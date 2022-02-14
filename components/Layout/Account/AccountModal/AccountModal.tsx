@@ -13,6 +13,7 @@ import { Text } from "@components/common/Text"
 import { Button } from "@components/common/Button"
 import CopyableAddress from "@components/Layout/Account/CopyableAddress"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
+import { FiLogOut } from "react-icons/fi"
 
 const AccountModal = ({
   isOpen,
@@ -24,7 +25,7 @@ const AccountModal = ({
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   //flashsigner
-  const { account: accountFlashsigner, isLoggedIn } = useAccountFlashsigner()
+  const { account: accountFlashsigner, logout: logoutFlashsigner, isLoggedIn } = useAccountFlashsigner()
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -45,9 +46,14 @@ const AccountModal = ({
             Connected with{" "}
             {isLoggedIn ? "Flashsigner" : connector === injected ? "MetaMask" : "WalletConnect"}
           </Text>
+          {isLoggedIn ? (
+            <Button size="1" onClick={logoutFlashsigner}>
+              Logout
+            </Button>) : null}
           <Button size="1" onClick={handleWalletProviderSwitch}>
             Switch
           </Button>
+
         </Flex>
       </DialogContent>
     </Dialog>
