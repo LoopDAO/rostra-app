@@ -77,7 +77,7 @@ export default function GuildDetails() {
         <Grid>{desc}</Grid>
         <Grid>{nfts?.map(nft => (<>
           <img alt="nfts" src={nft?.baseURI}></img>
-          <>{nft?.name}</>
+          {nft?.name}
         </>))}</Grid>
       </Grid>
       {guildInfoElem}
