@@ -61,6 +61,8 @@ export default function GuildDetails() {
   if (!guild || !account || !library || !chainId) return <div>Loading...</div>
 
   const { name, desc, creator } = guild
+  
+  const nfts = guild?.requirements?.nfts
 
   let guildInfoElem
 
@@ -73,7 +75,10 @@ export default function GuildDetails() {
       <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
         <Heading size="3">{name}</Heading>
         <Grid>{desc}</Grid>
-        <Grid>Creator: {creator}</Grid>
+        <Grid>{nfts?.map(nft => (<>
+          <img alt="nfts" src={nft?.baseURI}></img>
+          <>{nft?.name}</>
+        </>))}</Grid>
       </Grid>
       {guildInfoElem}
     </Grid>
