@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
-import { CheckIcon } from "@radix-ui/react-icons"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useSWR from "swr"
 import fetchers from "api/fetchers"
 import { Web3Provider } from "@ethersproject/providers"
-import { Grid, GridItem, Box, Flex, Heading, Checkbox, Stack } from "@chakra-ui/react"
-import { Fieldset } from "@components/common/Fieldset"
-import { Label } from "@components/common/Label"
+import { Flex, Heading, Stack } from "@chakra-ui/react"
 import GuildInfo from "@components/guild/GuildInfo"
-import { CheckboxIndicator } from "@radix-ui/react-checkbox"
+import Loading from "@components/Loading"
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -44,7 +41,7 @@ export default function GuildPage() {
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
 
-  if (isLoadingGuildData || isLoadingUserGuilds) return <div>Loading...</div>
+  if (isLoadingGuildData || isLoadingUserGuilds) return <Loading></Loading>
 
   return (
     <Stack spacing={2} p={4}>
@@ -57,37 +54,6 @@ export default function GuildPage() {
           ))}
       </Flex>
     </Stack>
-  )
-
-  return (
-    <>
-      <Box css={{ marginLeft: "20px", font: "12px/1.5 'PT Sans', serif" }}>
-        <Flex>
-          <Heading>{t("guild.list")}</Heading>
-          <Fieldset>
-            <Checkbox
-              defaultChecked
-              id="c1"
-              checked={checked}
-              onCheckedChange={() => setChecked(!checked)}
-            >
-              <CheckboxIndicator>
-                <CheckIcon />
-              </CheckboxIndicator>
-            </Checkbox>
-            <Label htmlFor="c1">{t("guild.myGuilds")}</Label>
-          </Fieldset>
-        </Flex>
-        <Flex css={{ marginTop: "$4", flexWrap: "wrap", gap: "$4" }}>
-          {guildsList &&
-            guildsList?.map((guild) => (
-              <Box key={guild.id}>
-                <GuildInfo guild={guild} />
-              </Box>
-            ))}
-        </Flex>
-      </Box>
-    </>
   )
 }
 

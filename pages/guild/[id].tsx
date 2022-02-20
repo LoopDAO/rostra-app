@@ -14,6 +14,7 @@ import { Button } from "@chakra-ui/react"
 import Distribute from "components/distribute"
 import { useTranslation } from "next-i18next"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import Loading from 'components/Loading/index'
 
 const GuildInfo = (props: any) => {
   const { t } = useTranslation()
@@ -58,7 +59,9 @@ export default function GuildDetails() {
   const guild: GuildType = data?.result
 
   if (error) return <div>{error.message}</div>
-  if (!guild || !account || !library || !chainId) return <div>Loading...</div>
+  if (!guild || !account || !library || !chainId) return (
+    <Loading></Loading>
+  )
 
   const { name, desc, creator } = guild
   

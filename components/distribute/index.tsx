@@ -181,6 +181,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="name" validate={validateName}>
             {({ field, form }) => (
               <FormControl
+                style={{paddingTop: "10px"}}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -193,6 +194,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="description" validate={validateDescription}>
             {({ field, form }) => (
               <FormControl
+                style={{paddingTop: "10px"}}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -202,9 +204,10 @@ export default function DistributeNFT(props: { guild: GuildType }) {
               </FormControl>
             )}
           </Field>
-          <FormControl isInvalid={!!errors.file_} isRequired>
+          <FormControl style={{paddingTop: "10px"}} isInvalid={!!errors.file_} isRequired>
             <FormLabel>{"Image"}</FormLabel>
             <FileUpload
+              
               accept={"image/*"}
               multiple
               register={register("file_", { validate: validateFiles })}
@@ -223,6 +226,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="addresses" validate={validateAddress}>
             {({ field, form }) => (
               <FormControl
+                style={{paddingTop: "10px"}}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
