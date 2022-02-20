@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { useWeb3React } from "@web3-react/core"
-import { Flex } from "@components/common/Flex"
-import { Box } from "@components/common/Box"
-import { Heading } from "@components/common/Heading"
-import GuildInfo from "@components/guild/GuildInfo"
-import { Checkbox, CheckboxIndicator } from "@components/common/Checkbox"
 import { CheckIcon } from "@radix-ui/react-icons"
-import { Label } from "@components/common/Label"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Fieldset } from "@components/common/Fieldset"
 import useSWR from "swr"
 import fetchers from "api/fetchers"
 import { Web3Provider } from "@ethersproject/providers"
+import { Grid, GridItem, Box, Flex, Heading, Checkbox, Stack } from "@chakra-ui/react"
+import { Fieldset } from "@components/common/Fieldset"
+import { Label } from "@components/common/Label"
+import GuildInfo from "@components/guild/GuildInfo"
+import { CheckboxIndicator } from "@radix-ui/react-checkbox"
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -49,6 +47,19 @@ export default function GuildPage() {
   if (isLoadingGuildData || isLoadingUserGuilds) return <div>Loading...</div>
 
   return (
+    <Stack spacing={2} p={4}>
+      <Heading>{t("guild.list")}</Heading>
+
+      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+        {guildsList &&
+          guildsList?.map((guild) => (
+            <GuildInfo guild={guild} key={guild.id} />
+          ))}
+      </Flex>
+    </Stack>
+  )
+
+  return (
     <>
       <Box css={{ marginLeft: "20px", font: "12px/1.5 'PT Sans', serif" }}>
         <Flex>
@@ -67,7 +78,7 @@ export default function GuildPage() {
             <Label htmlFor="c1">{t("guild.myGuilds")}</Label>
           </Fieldset>
         </Flex>
-        <Flex css={{ marginTop: "$4", flexWrap: 'wrap', gap: "$4" }}>
+        <Flex css={{ marginTop: "$4", flexWrap: "wrap", gap: "$4" }}>
           {guildsList &&
             guildsList?.map((guild) => (
               <Box key={guild.id}>
