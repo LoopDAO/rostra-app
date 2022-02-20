@@ -4,13 +4,19 @@ import { useRouter } from "next/router"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import fetchers from "api/fetchers"
 import useSWR from "swr"
-import { Heading } from "@components/common/Heading"
-import { Grid } from "@components/common/Grid"
 import { GuildType } from "api/guild"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
-import { Button, Text } from "@chakra-ui/react"
+import {
+  Heading,
+  Button,
+  GridItem,
+  Image,
+  Text,
+  Grid,
+  SimpleGrid,
+} from "@chakra-ui/react"
 import Distribute from "components/distribute"
 import { useTranslation } from "next-i18next"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
@@ -24,7 +30,6 @@ const GuildInfo = (props: any) => {
 
   const createNFTTemplate = async () => {
     await nftManager.connect(signer).createGuild(guild.name, "", [])
-    console.log("createNFTTemplate done")
   }
 
   const { data: templateId } = useSWR(["guildNameToGuildId", guild.name], {
@@ -57,7 +62,7 @@ export default function GuildDetails() {
   const guild: GuildType = data?.result
 
   if (error) return <div>{error.message}</div>
-  if (!guild || !account || !library || !chainId) return <Loading></Loading>
+  if (!guild || !account || !library || !chainId) return <Loading />
 
   const { name, desc, creator } = guild
 
@@ -79,16 +84,20 @@ export default function GuildDetails() {
   return (
     <Grid>
       <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
-        <Heading size="3">{name}</Heading>
-        <Grid>{desc}</Grid>
-        <Grid>
-          {nfts?.map((nft) => (
-            <>
-              <img alt="nfts" src={nft?.baseURI}></img>
+        <Heading size="2xl">{name}</Heading>
+        <Text size="lg">{desc}</Text>
+        <SimpleGrid gap={2} py={2} columns={{ base: 2, sm: 5 }}>
+          {nfts?.map((nft, index) => (
+            <GridItem key={nft.name + index}>
+              <Image
+                alt="nfts"
+                src={nft?.baseURI}
+                fallbackSrc="https://via.placeholder.com/150"
+              />
               <Text>{nft?.name}</Text>
-            </>
+            </GridItem>
           ))}
-        </Grid>
+        </SimpleGrid>
       </Grid>
       {guildInfoElem}
     </Grid>
