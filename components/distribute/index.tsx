@@ -17,7 +17,7 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { GuildType } from "api/guild"
-import Image from 'next/image'
+import Image from "next/image"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -58,7 +58,6 @@ const FileUpload = (props: FileUploadProps) => {
 }
 
 export default function DistributeNFT(props: { guild: GuildType }) {
-  console.log('props: ', props)
   const { guild } = props
   const {
     register,
@@ -68,18 +67,11 @@ export default function DistributeNFT(props: { guild: GuildType }) {
 
   const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState("")
 
   let imageElem: ReactNode = null
   if (image) {
-    imageElem = (
-      <Image
-        src={image}
-        alt="NFT image"
-        width={300}
-        height={300}
-      />
-    )
+    imageElem = <Image src={image} alt="NFT image" width={300} height={300} />
   }
 
   const validateFiles = (value: FileList) => {
@@ -131,14 +123,12 @@ export default function DistributeNFT(props: { guild: GuildType }) {
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const onSubmit = async (values, actions) => {
-    console.log('actions: ', actions)
     const { name, description, addresses } = values
-    const guildId = guild.guildId;
-    console.log("guildId: ", guildId)
+    const guildId = guild.guildId
     if (!guildId || !name || !description) {
-      return;
+      return
     }
-    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
+    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
     if (!apiKey) return
     const client = new NFTStorage({ token: apiKey })
 
@@ -146,26 +136,24 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     const signer = await library.getSigner(account)
     const nftManager = getNftManagerContract(signer, chainId)
     if (!nftManager) return
-    console.log("values: ", values)
     const metadata = await client.store({
       name: values.name,
       description: values.description,
-      image: fileObj as File
+      image: fileObj as File,
     })
     // const metadata = {
     //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     // }
-    console.log("metadata.url: ", metadata.url)
     setIpfsUrl(metadata.url)
     const addressesList = addresses.split("\n")
-    console.log("addressesList: ", addressesList)
-    console.log("nftManager.address: ", nftManager.address)
 
-    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addressesList);
+    await nftManager
+      .connect(signer)
+      .mintNewNFT(guildId, metadata.url, addressesList)
 
     setTimeout(() => {
-      setIpfsUrl('')
-      setImage('')
+      setIpfsUrl("")
+      setImage("")
       actions.resetForm()
       actions.setSubmitting(false)
     }, 1000)
@@ -181,7 +169,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="name" validate={validateName}>
             {({ field, form }) => (
               <FormControl
-                style={{paddingTop: "10px"}}
+                style={{ paddingTop: "10px" }}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -194,7 +182,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="description" validate={validateDescription}>
             {({ field, form }) => (
               <FormControl
-                style={{paddingTop: "10px"}}
+                style={{ paddingTop: "10px" }}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -204,10 +192,13 @@ export default function DistributeNFT(props: { guild: GuildType }) {
               </FormControl>
             )}
           </Field>
-          <FormControl style={{paddingTop: "10px"}} isInvalid={!!errors.file_} isRequired>
+          <FormControl
+            style={{ paddingTop: "10px" }}
+            isInvalid={!!errors.file_}
+            isRequired
+          >
             <FormLabel>{"Image"}</FormLabel>
             <FileUpload
-              
               accept={"image/*"}
               multiple
               register={register("file_", { validate: validateFiles })}
@@ -226,7 +217,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
           <Field name="addresses" validate={validateAddress}>
             {({ field, form }) => (
               <FormControl
-                style={{paddingTop: "10px"}}
+                style={{ paddingTop: "10px" }}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -253,4 +244,3 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     </Formik>
   )
 }
-

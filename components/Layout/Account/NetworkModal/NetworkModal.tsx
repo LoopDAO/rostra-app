@@ -33,7 +33,7 @@ const NetworkModal = ({
         <Text css={{ mb: "1.5rem" }}>
           {`It doesn't matter which supported chain you're connected to, it's only used to know your address and sign messages so each will work equally.`}
         </Text>
-        <Grid columns={{ bp1: 2 }} gap={{ base: 3, bp2: 4 }}>
+        <Grid columns={2} gap={4}>
           {supportedChains.map((chain) => (
             <NetworkButton
               key={chain}

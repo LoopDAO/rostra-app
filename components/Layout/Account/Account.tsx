@@ -1,4 +1,4 @@
-import { FC, useContext } from "react"
+import { FC, useContext, useRef } from "react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import Image from "next/image"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -6,8 +6,7 @@ import { LinkBreak2Icon, EnterIcon } from "@radix-ui/react-icons"
 
 import { ControlGroup } from "@components/common/ControllGroup"
 import { Flex } from "@components/common/Flex"
-import { Text } from "@components/common/Text"
-import { Tooltip } from "@components/common/Tooltip"
+import { Tooltip, Text, Tag, Box } from "@chakra-ui/react"
 import shortenHex from "@lib/utils/shortenHex"
 import { Chains, RPC } from "connector"
 
@@ -19,6 +18,7 @@ import { Separator } from "@radix-ui/react-separator"
 import { useDisclosure } from "@lib/hooks/useDisclosure"
 
 const Account: FC = () => {
+  const accountBtnRef = useRef<HTMLButtonElement>(null)
   const { error, account, chainId } = useWeb3React()
   const ENSName = useENSName(account)
 
@@ -61,29 +61,27 @@ const Account: FC = () => {
     )
   }
   return (
-    <AccountCard>
+    <AccountCard bgColor="cyan.400">
       <ControlGroup>
-        <AccountButton
-          css={{ border: "1px solid $colors$slate7" }}
-          onClick={openNetworkModal}
+        <Tooltip
+          label={RPC[Chains[chainId!]].chainName}
+          portalProps={{ containerRef: accountBtnRef }}
+          hasArrow
         >
-          <Tooltip label={RPC[Chains[chainId!]].chainName}>
+          <AccountButton onClick={openNetworkModal} ref={accountBtnRef}>
             <Image
               src={RPC[Chains[chainId!]].iconUrls[0]}
               height={12}
               width={12}
               alt="Chain avatar"
             />
-          </Tooltip>
-        </AccountButton>
-        <Separator orientation="vertical" />
-        <AccountButton
-          css={{ border: "1px solid $colors$slate7" }}
-          onClick={onAccountModalOpen}
-        >
+          </AccountButton>
+        </Tooltip>
+        <Box width="1px" bgColor="gray.300" />
+        <AccountButton onClick={onAccountModalOpen}>
           <Flex css={{ gap: "$3" }}>
             <Flex css={{ gap: 0, fd: "column", ai: "flex-end" }}>
-              <Text as="span" css={{ fontSize: "$2", fontWeight: "500" }}>
+              <Text as="span" sx={{ fontSize: "$2", fontWeight: "500" }}>
                 {ENSName || `${shortenHex(account, 3)}`}
               </Text>
             </Flex>
