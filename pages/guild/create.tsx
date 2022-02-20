@@ -78,9 +78,10 @@ export default function CreateGuild() {
     >
       {(props) => (
         <Form>
-          <Field name="name" validate={validateName}>
+          <Field name="name" style={{paddingTop: "10px"}} validate={validateName}>
             {({ field, form }) => (
               <FormControl
+                style={{paddingTop: "10px"}}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >
@@ -93,6 +94,7 @@ export default function CreateGuild() {
           <Field name="desc" validate={validateDescription}>
             {({ field, form }) => (
               <FormControl
+                style={{paddingTop: "10px"}}
                 isRequired
                 isInvalid={form.errors.name && form.touched.name}
               >

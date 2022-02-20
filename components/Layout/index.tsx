@@ -12,6 +12,7 @@ export const Layout: FC = ({ children }) => {
           height: "calc(100vh - 128px)",
           overflow: "auto",
           maxWidth: "1080px",
+          paddingTop: "2vh",
         }}
       >
         {children}
