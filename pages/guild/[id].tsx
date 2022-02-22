@@ -47,7 +47,7 @@ const GuildInfo = (props: any) => {
     <div>
       <div>NFT template ID: {templateId.toString()}</div>
       <Heading size="3">{t("nft.distribute")}</Heading>
-      <Distribute guild={{ ...guild, guildId: templateId }} />
+      <Distribute guild={{ ...guild, guild_id: templateId }} />
     </div>
   )
 }

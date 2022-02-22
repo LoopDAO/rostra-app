@@ -14,7 +14,7 @@ import { injected } from "connector"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./ConnectorButton"
 import { Flex } from "@components/common/Flex"
-import { loginWithRedirect } from '@nervina-labs/flashsigner'
+import { loginWithRedirect } from "@nervina-labs/flashsigner"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 
 type Props = {
@@ -54,11 +54,12 @@ const WalletSelectorModal = ({
     })
   }
 
-  const handleConnectFlashsigner = (provider: AbstractConnector) => {
+  const handleConnectFlashsigner = () => {
     loginWithRedirect(`${location.origin}/Flashsigner`, {
-      name: 'Rostra',
+      name: "Rostra",
       logo: `${location.origin}/logo512.png`,
-      extra: `${location.href}` as any,
+      // @ts-expect-error This could accept any type
+      extra: `${location.href}`,
     })
     return
   }
@@ -103,14 +104,15 @@ const WalletSelectorModal = ({
                 alt="Extension logo"
               />
             }
-            disabled={(connector === injected || !!activatingConnector) && !isLoggedIn}
+            disabled={
+              (connector === injected || !!activatingConnector) && !isLoggedIn
+            }
             isActive={connector === injected}
             isLoading={activatingConnector === injected}
           />
           <ConnectorButton
-            name='Flashsigner'
-            onClick={() => handleConnectFlashsigner(injected)}
-
+            name="Flashsigner"
+            onClick={() => handleConnectFlashsigner()}
             rightIcon={
               <Image
                 src="/image/wallet/flashsigner.svg"

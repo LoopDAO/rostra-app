@@ -9,7 +9,7 @@ import {
   Icon,
   InputGroup,
 } from "@chakra-ui/react"
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
 import { NFTStorage } from "nft.storage"
@@ -24,7 +24,7 @@ type FileUploadProps = {
   accept?: string
   multiple?: boolean
   children?: ReactNode
-  onChange?: Function
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 const FileUpload = (props: FileUploadProps) => {
@@ -88,7 +88,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     return true
   }
 
-  function validateName(value) {
+  function validateName(value?: string) {
     let error
     if (!value) {
       error = "Name is required"
@@ -96,7 +96,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     return error
   }
 
-  function validateDescription(value) {
+  function validateDescription(value?: string) {
     let error
     if (!value) {
       error = "Description is required"
@@ -104,7 +104,7 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     return error
   }
 
-  function validateAddress(value) {
+  function validateAddress(value?: string) {
     let error
     if (!value) {
       error = "Address is required"
@@ -112,9 +112,9 @@ export default function DistributeNFT(props: { guild: GuildType }) {
     return error
   }
 
-  async function onFileChanged(e) {
+  async function onFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.files)
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
     console.log(file.name, file.type)
     setFileObj(file)
@@ -122,9 +122,10 @@ export default function DistributeNFT(props: { guild: GuildType }) {
   }
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
-  const onSubmit = async (values, actions) => {
+  // TODO: Add typing
+  const onSubmit = async (values: any, actions: any) => {
     const { name, description, addresses } = values
-    const guildId = guild.guildId
+    const guildId = guild.guild_id
     if (!guildId || !name || !description) {
       return
     }
@@ -167,11 +168,11 @@ export default function DistributeNFT(props: { guild: GuildType }) {
       {(props) => (
         <Form>
           <Field name="name" validate={validateName}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
                 style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <Input {...field} id="name" placeholder="Name" />
@@ -180,11 +181,11 @@ export default function DistributeNFT(props: { guild: GuildType }) {
             )}
           </Field>
           <Field name="description" validate={validateDescription}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
                 style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="description">Description</FormLabel>
                 <Input {...field} id="description" placeholder="Description" />
@@ -215,11 +216,11 @@ export default function DistributeNFT(props: { guild: GuildType }) {
             </FormErrorMessage>
           </FormControl>
           <Field name="addresses" validate={validateAddress}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
                 style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="addresses">Addresses</FormLabel>
                 <Textarea
