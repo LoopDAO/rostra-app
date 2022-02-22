@@ -9,6 +9,7 @@ import { Web3Provider } from "@ethersproject/providers"
 import { Flex, Heading, Stack } from "@chakra-ui/react"
 import GuildInfo from "@components/guild/GuildInfo"
 import Loading from "@components/Loading"
+import { GuildType } from "api/guild"
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -49,8 +50,8 @@ export default function GuildPage() {
 
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {guildsList &&
-          guildsList?.map((guild) => (
-            <GuildInfo guild={guild} key={guild.id} />
+          guildsList?.map((guild: GuildType) => (
+            <GuildInfo guild={guild} key={guild.guild_id} />
           ))}
       </Flex>
     </Stack>
