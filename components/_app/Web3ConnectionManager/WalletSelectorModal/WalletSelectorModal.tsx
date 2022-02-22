@@ -58,7 +58,7 @@ const WalletSelectorModal = ({
     loginWithRedirect(`${location.origin}/Flashsigner`, {
       name: 'Rostra',
       logo: `${location.origin}/logo512.png`,
-      extra: `${location.href}`,
+      extra: `${location.href}` as any,
     })
     return
   }

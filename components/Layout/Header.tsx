@@ -14,11 +14,6 @@ import Account from "./Account"
 import { useAccountFlashsigner } from '@lib/hooks/useAccount'
 import AccountFlashsigner from './Account/AccountFlashsigner'
 
-const Links = ['guild.guilds']
-const hrefs = {
-  'guild.guilds': '/guild',
-  'guild.create': '/guild/create',
-}
 
 const NavLink = ({ children, href }: { children: ReactNode, href: any }) => (
   <Link
@@ -43,9 +38,7 @@ export default function Header() {
               as={'nav'}
               spacing={4}
             >
-              {Links.map((link) => (
-                <NavLink key={link} href={hrefs[link]}>{t(link)}</NavLink>
-              ))}
+              <NavLink key={'/guild'} href='/guild'>{t('/guild')}</NavLink>
             </HStack>
           </HStack>
 
