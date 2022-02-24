@@ -10,7 +10,6 @@ import { Flex, Heading, Stack } from "@chakra-ui/react"
 import GuildInfo from "@components/guild/GuildInfo"
 import Loading from "@components/Loading"
 import { GuildType } from "api/guild"
-import * as IPFS from 'ipfs-core'
 
 export default function GuildPage() {
   const { t } = useTranslation()
@@ -45,15 +44,7 @@ export default function GuildPage() {
 
   if (isLoadingGuildData || isLoadingUserGuilds) return <Loading />
 
-  const saveToIpfs = async (data: any) => {
-    const ipfs = await IPFS.create()
-    const { cid } = await ipfs.add(JSON.stringify(data))
-
-    console.log("IPFS address", cid);
-    return cid;
-  }
   
-  saveToIpfs(guildsData);
 
   return (
     <Stack spacing={2} p={4}>
