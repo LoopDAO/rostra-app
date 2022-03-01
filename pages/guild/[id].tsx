@@ -21,7 +21,6 @@ import Distribute from "components/distribute"
 import { useTranslation } from "next-i18next"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
 import Loading from "components/Loading/index"
-import { getFromIpfs } from "@components/IPFS/getFromIpfs"
 
 const GuildInfo = (props: any) => {
   const { t } = useTranslation()
@@ -61,11 +60,6 @@ export default function GuildDetails() {
     fetchers.http
   )
   const guild: GuildType = data?.result
-  
-  // send guild_id and get ipfsAddr from b/e
-
-  const guildInfo = getFromIpfs("ipfsAddr")
-  console.log("guildInfo:", guildInfo)
 
   if (error) return <div>{error.message}</div>
   if (!guild || !account || !library || !chainId) return <Loading />

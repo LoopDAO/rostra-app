@@ -41,35 +41,39 @@ export default function CreateGuild() {
     console.log("values: ", values)
     const { name, desc } = values
     if (!library || !account) return
-    const guildInfo = JSON.stringify({
+    const guildInfo: GuildType = {
       name: name.trim(),
       desc: desc.trim(),
       creator: account,
-    });
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: guildInfo,
-    })
-      .then(async (resp) => {
-        const signer = library.getSigner(account)
-        const nftManager = getNftManagerContract(signer, chainId)
-        await nftManager.connect(signer).createGuild(values.name, "", [])
-        const data = await resp.json()
-        if (data.message == "SUCCESS") {
-          console.log("values.name:", values.name)
-          const ipfsAddr = await saveToIpfs(guildInfo)
-          console.log("IPFS Address:", ipfsAddr);
-          // send ipfsAddr to b/e
-        } else {
-          throw Error("create new guild faild!")
-        }
+    };
+    const ipfsAddr = await saveToIpfs(guildInfo)
+    console.log("IPFS Address:", ipfsAddr);
+    if (ipfsAddr.length) {
+      guildInfo['ipfsAddr'] = ipfsAddr
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(guildInfo),
       })
-      .then(console.log)
-      .catch(console.log)
+        .then(async (resp) => {
+          const signer = library.getSigner(account)
+          const nftManager = getNftManagerContract(signer, chainId)
+          await nftManager.connect(signer).createGuild(values.name, "", [])
+          const data = await resp.json()
+          if (data.message == "SUCCESS") {
+            console.log("values.name:", values.name)
+          } else {
+            throw Error("create new guild faild!")
+          }
+        })
+        .then(console.log)
+        .catch(console.log)
+    } else {
+      console.log("Failed to save to IPFS")
+    }
   }
 
   return (
