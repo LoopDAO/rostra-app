@@ -50,6 +50,7 @@ export default function CreateGuild() {
         name: name.trim(),
         desc: desc.trim(),
         creator: account,
+        ipfsAddr: "",
       }),
     })
       .then(async (resp) => {
