@@ -15,6 +15,7 @@ import { Formik, Form, Field, FieldProps } from "formik"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { getNftManagerContract } from "@lib/utils/contracts"
+import { saveToIpfs } from "@components/IPFS/saveToIpfs"
 
 export default function CreateGuild() {
   const { t } = useTranslation()
@@ -40,32 +41,39 @@ export default function CreateGuild() {
     console.log("values: ", values)
     const { name, desc } = values
     if (!library || !account) return
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: name.trim(),
-        desc: desc.trim(),
-        creator: account,
-        ipfsAddr: "",
-      }),
-    })
-      .then(async (resp) => {
-        const signer = library.getSigner(account)
-        const nftManager = getNftManagerContract(signer, chainId)
-        await nftManager.connect(signer).createGuild(values.name, "", [])
-        const data = await resp.json()
-        if (data.message == "SUCCESS") {
-          console.log("values.name:", values.name)
-        } else {
-          throw Error("create new guild faild!")
-        }
+    const guildInfo: GuildType = {
+      name: name.trim(),
+      desc: desc.trim(),
+      creator: account,
+    };
+    const ipfsAddr = await saveToIpfs(guildInfo)
+    console.log("IPFS Address:", ipfsAddr);
+    if (ipfsAddr.length) {
+      guildInfo['ipfsAddr'] = ipfsAddr
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(guildInfo),
       })
-      .then(console.log)
-      .catch(console.log)
+        .then(async (resp) => {
+          const signer = library.getSigner(account)
+          const nftManager = getNftManagerContract(signer, chainId)
+          await nftManager.connect(signer).createGuild(values.name, "", [])
+          const data = await resp.json()
+          if (data.message == "SUCCESS") {
+            console.log("values.name:", values.name)
+          } else {
+            throw Error("create new guild faild!")
+          }
+        })
+        .then(console.log)
+        .catch(console.log)
+    } else {
+      console.log("Failed to save to IPFS")
+    }
   }
 
   return (

@@ -2,6 +2,7 @@ export type GuildType = {
   guild_id?: string;
   name: string,
   desc: string,
+  ipfsAddr?: string,
   wallet_address?: string,
   creator?: string,
   signature?: string,

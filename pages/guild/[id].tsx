@@ -81,6 +81,8 @@ export default function GuildDetails() {
     )
   }
 
+
+
   return (
     <Grid>
       <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>

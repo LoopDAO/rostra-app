@@ -44,6 +44,8 @@ export default function GuildPage() {
 
   if (isLoadingGuildData || isLoadingUserGuilds) return <Loading />
 
+  
+
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("guild.list")}</Heading>
