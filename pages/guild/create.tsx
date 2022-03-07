@@ -16,9 +16,16 @@ import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { saveToIpfs } from "@components/IPFS/saveToIpfs"
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
+import { getResultFromURL, signMessageWithRedirect } from "@nervina-labs/flashsigner"
+import { RouteState } from "pages/Flashsigner"
+import router from "next/router"
+import Loading from "@components/Loading"
 
 export default function CreateGuild() {
+  const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const { t } = useTranslation()
+  const [isCallbacked, setCallbacked] = useState(true)
 
   function validateName(value: string) {
     let error
@@ -40,44 +47,85 @@ export default function CreateGuild() {
   const onSubmit = async (values: GuildType) => {
     console.log("values: ", values)
     const { name, desc } = values
-    if (!library || !account) return
+    if (!isLoggedInFlash && (!library || !account)) return
     const guildInfo: GuildType = {
       name: name.trim(),
       desc: desc.trim(),
-      creator: account,
+      creator: account ?? accountFlash.address,
     };
     const ipfsAddr = await saveToIpfs(guildInfo)
     console.log("IPFS Address:", ipfsAddr);
     if (ipfsAddr.length) {
       guildInfo['ipfsAddr'] = ipfsAddr
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(guildInfo),
-      })
-        .then(async (resp) => {
-          const signer = library.getSigner(account)
-          const nftManager = getNftManagerContract(signer, chainId)
-          await nftManager.connect(signer).createGuild(values.name, "", [])
-          const data = await resp.json()
-          if (data.message == "SUCCESS") {
-            console.log("values.name:", values.name)
-          } else {
-            throw Error("create new guild faild!")
-          }
+      if (isLoggedInFlash) {
+        signMessageWithRedirect(`${window.location.origin}/guild/create`, {
+          message: JSON.stringify(guildInfo),
+          isRaw: true,
         })
-        .then(console.log)
-        .catch(console.log)
+        return
+      } else {
+        postGuild2Rostra(guildInfo)
+      }
     } else {
       console.log("Failed to save to IPFS")
     }
   }
 
+  function postGuild2Rostra(guildInfo: GuildType) {
+    console.log("postGuild2Rostra: ", guildInfo)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(guildInfo),
+    })
+      .then(async (resp) => {
+        console.log("resp:", resp)
+        if (library && account) {
+          const signer = library.getSigner(account)
+          const nftManager = getNftManagerContract(signer, chainId)
+          await nftManager.connect(signer).createGuild(guildInfo.name, "", [])
+          const data = await resp.json()
+          if (data.message == "SUCCESS") {
+            console.log("values.name:", guildInfo.name)
+          } else {
+            throw Error("create new guild faild!")
+          }
+        }
+        router.push({
+          pathname: '/guild',
+        })
+      })
+      .then(console.log)
+      .catch(console.log)
+  }
+  useEffect(() => {
+    try {
+      getResultFromURL<RouteState>({
+        onLogin(res) {
+          console.log("onLogin: ", res)
+        },
+        onSignRawMessage(res) {
+          const { address, pubkey, message, signature } = res
+          console.log("onSignRawMessage: ", res)
+          const guildInfo: GuildType = JSON.parse(message)
+          guildInfo['signature'] = signature
+
+          postGuild2Rostra(guildInfo)
+        }
+      })
+    } catch (err) {
+      console.log(err)
+      setCallbacked(false)
+    }
+
+  }, [])
+
   return (
-    <div>
+    isCallbacked ? (<Loading />) :
+      (<div>
       <Heading>{t("guild.create")}</Heading>
       <Formik initialValues={{ name: "", desc: "" }} onSubmit={onSubmit}>
         {(props) => (
@@ -123,7 +171,8 @@ export default function CreateGuild() {
           </Form>
         )}
       </Formik>
-    </div>
+      </div>)
+
   )
 }
 
