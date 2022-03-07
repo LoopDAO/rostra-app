@@ -21,6 +21,7 @@ import Distribute from "components/distribute"
 import { useTranslation } from "next-i18next"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
 import Loading from "components/Loading/index"
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 
 const GuildInfo = (props: any) => {
   const { t } = useTranslation()
@@ -51,8 +52,27 @@ const GuildInfo = (props: any) => {
     </div>
   )
 }
+const GuildInfoFlash = (props: any) => {
+  const { t } = useTranslation()
+  const { guild, account } = props
 
+  return (
+    <div>
+      No NFT template found
+      <Button >Create One</Button>
+    </div>
+  )
+
+  // return (
+  //   <div>
+  //     <div>NFT template ID: {templateId.toString()}</div>
+  //     <Heading size="3">{t("nft.distribute")}</Heading>
+  //     <Distribute guild={{ ...guild, guild_id: templateId }} />
+  //   </div>
+  // )
+}
 export default function GuildDetails() {
+  const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const { query } = useRouter()
   const { data, error } = useSWR(
@@ -62,7 +82,8 @@ export default function GuildDetails() {
   const guild: GuildType = data?.result
 
   if (error) return <div>{error.message}</div>
-  if (!guild || !account || !library || !chainId) return <Loading />
+  if (!guild) return <Loading />
+  if (!isLoggedInFlash && (!account || !library || !chainId)) return <Loading />
 
   const { name, desc, creator } = guild
 
@@ -70,14 +91,17 @@ export default function GuildDetails() {
 
   let guildInfoElem
 
-  if (creator === account) {
+  if (creator === account || creator === accountFlash.address) {
     guildInfoElem = (
-      <GuildInfo
-        guild={guild}
-        account={account}
-        library={library}
-        chainId={chainId}
-      />
+      isLoggedInFlash ? (
+        <GuildInfoFlash
+          guild={guild}
+          account={accountFlash} />) : (
+          <GuildInfo
+            guild={guild}
+            account={account}
+            library={library}
+            chainId={chainId} />)
     )
   }
 
