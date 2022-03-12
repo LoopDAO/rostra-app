@@ -24,7 +24,7 @@ import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
 import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
-import { Collector, Aggregator, generateDefineCotaTx, CotaInfo, Service } from '@nervina-labs/cota-sdk'
+import { Collector, Aggregator, generateDefineCotaTx, generateIssuerInfoTx, CotaInfo, IssuerInfo, Service } from '@nervina-labs/cota-sdk'
 import CKB from '@nervosnetwork/ckb-sdk-core'
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
@@ -35,14 +35,16 @@ const secp256k1CellDep = async (ckb: CKB): Promise<CKBComponents.CellDep> => {
   return { outPoint: secp256k1Dep?.outPoint || null, depType: 'depGroup' }
 }
 
+const service: Service = {
+  // collector: new Collector({ ckbNodeUrl: 'https://mainnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://mainnet.ckbapp.dev/indexer' }),
+  collector: new Collector({
+    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer' }),
+    // ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://ckb-testnet.rebase.network/indexer_rpc' }),
+  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
+}
+const ckb = service.collector.getCkb()
+
 const run = async () => {
-  const service: Service = {
-    // collector: new Collector({ ckbNodeUrl: 'https://mainnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://mainnet.ckbapp.dev/indexer' }),
-    collector: new Collector({
-      ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://ckb-testnet.rebase.network/indexer_rpc' }),
-    aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
-  }
-  const ckb = service.collector.getCkb()
   const defineLock = addressToScript(TEST_ADDRESS)
 
   const cotaInfo: CotaInfo = {
@@ -64,6 +66,26 @@ const run = async () => {
   } catch (error) {
     console.error('error happened:', error)
   }
+}
+
+const setIssuer = async () => {
+  const cotaLock = addressToScript(TEST_ADDRESS)
+
+  const issuer: IssuerInfo = {
+    name: "Rostra",
+    description: "Community building protocol",
+    avatar: "https://i.loli.net/2021/04/29/IigbpOWP8fw9qDn.png",
+  }
+
+  let rawTx = await generateIssuerInfoTx(service, cotaLock, issuer)
+
+  const secp256k1Dep = await secp256k1CellDep(ckb)
+  rawTx.cellDeps.push(secp256k1Dep)
+
+  const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
+  console.log(JSON.stringify(signedTx))
+  let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+  console.info(`Set issuer information tx has been sent with tx hash ${txHash}`)
 }
 
 type FileUploadProps = {
@@ -277,6 +299,15 @@ export default function CreateRedPacket() {
             onClick={run}
           >
             Confirm
+          </Button>
+          <Button
+            mt={4}
+            colorScheme="teal"
+            isLoading={props.isSubmitting}
+            // type="submit"
+            onClick={setIssuer}
+          >
+            Set Issuer
           </Button>
         </Form>
       )}
