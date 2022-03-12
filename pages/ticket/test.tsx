@@ -14,6 +14,7 @@ import {
   generateMintCotaTx,
   generateClaimCotaTx,
   generateWithdrawCotaTx,
+  generateTransferCotaTx,
   Claim,
   CotaInfo,
   IssuerInfo,
@@ -26,6 +27,7 @@ const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f7390
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
 const RECEIVER_PRIVATE_KEY = '0xcf56c11ce3fbec627e5118acd215838d1f9c5048039792d42143f933cde76311'
 const RECEIVER_ADDRESS = 'ckt1qyqdcu8n8h5xlhecrd8ut0cf9wer6qnhfqqsnz3lw9'
+const OTHER_ADDRESS = 'ckt1qyqz8vxeyrv4nur4j27ktp34fmwnua9wuyqqggd748'
 
 const secp256k1CellDep = async (ckb: CKB): Promise<CKBComponents.CellDep> => {
   const secp256k1Dep = (await ckb.loadDeps()).secp256k1Dep
@@ -40,6 +42,28 @@ const service: Service = {
   aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
 }
 const ckb = service.collector.getCkb()
+
+const transfer = async () => {
+  const cotaLock = addressToScript(RECEIVER_ADDRESS)
+  const withdrawLock = addressToScript(TEST_ADDRESS)
+
+  const transfers: TransferWithdrawal[] = [
+    {
+      cotaId: '0x1deb31f603652bf59ff5027b522e1d81c288b72f',
+      tokenIndex: '0x00000001',
+      toLockScript: serializeScript(addressToScript(OTHER_ADDRESS)),
+    },
+  ]
+  let rawTx = await generateTransferCotaTx(service, cotaLock, withdrawLock, transfers)
+
+  const secp256k1Dep = await secp256k1CellDep(ckb)
+  rawTx.cellDeps.push(secp256k1Dep)
+
+  const signedTx = ckb.signTransaction(RECEIVER_PRIVATE_KEY)(rawTx)
+  console.log(JSON.stringify(signedTx))
+  let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+  console.info(`Transfer cota nft tx has been sent with tx hash ${txHash}`)
+}
 
 const withdraw = async () => {
   const withdrawLock = addressToScript(RECEIVER_ADDRESS)
@@ -188,6 +212,7 @@ export default function CreateRedPacket() {
       <Button onClick={mint}> mint </Button>
       <Button onClick={claim}> claim </Button>
       <Button onClick={withdraw}> withdraw </Button>
+      <Button onClick={transfer}> transfer </Button>
     </>
   )
 }
