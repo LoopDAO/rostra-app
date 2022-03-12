@@ -23,6 +23,48 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
+import { Collector, Aggregator, generateDefineCotaTx, CotaInfo, Service } from '@nervina-labs/cota-sdk'
+import CKB from '@nervosnetwork/ckb-sdk-core'
+
+const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
+const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
+
+const secp256k1CellDep = async (ckb: CKB): Promise<CKBComponents.CellDep> => {
+  const secp256k1Dep = (await ckb.loadDeps()).secp256k1Dep
+  return { outPoint: secp256k1Dep?.outPoint || null, depType: 'depGroup' }
+}
+
+const run = async () => {
+  const service: Service = {
+    // collector: new Collector({ ckbNodeUrl: 'https://mainnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://mainnet.ckbapp.dev/indexer' }),
+    collector: new Collector({
+      ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://ckb-testnet.rebase.network/indexer_rpc' }),
+    aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
+  }
+  const ckb = service.collector.getCkb()
+  const defineLock = addressToScript(TEST_ADDRESS)
+
+  const cotaInfo: CotaInfo = {
+    name: "Rostra launched",
+    description: "Rostra launched, new age comes",
+    image: "https://i.loli.net/2021/04/29/qyJNSE4iHAas7GL.png",
+  }
+
+  let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+  console.log(` ======> cotaId: ${cotaId}`)
+  let secp256k1Dep = await secp256k1CellDep(ckb)
+  console.log(' ===================== secp256k1Dep ===================== ')
+  rawTx.cellDeps.push(secp256k1Dep)
+  try {
+    const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
+    console.log(JSON.stringify(signedTx))
+    let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+    console.info(`Define cota nft tx has been sent with tx hash ${txHash}`)
+  } catch (error) {
+    console.error('error happened:', error)
+  }
+}
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -117,44 +159,33 @@ export default function CreateRedPacket() {
     setFileObj(file)
   }
 
-  const { account, library, chainId } = useWeb3React<Web3Provider>()
   // @ts-expect-error TODO: Add typings
   const onSubmit = async (values, actions) => {
     console.log("values...", values)
-    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
-    if (!apiKey) return
-    const client = new NFTStorage({ token: apiKey })
+    await run();
+    console.log("========> run finished...")
 
-    if (!library || !account) return
-    const signer = await library.getSigner(account)
-    const nftManager = getNftManagerContract(signer, chainId)
-    if (!nftManager) return
-    console.log("values: ", values)
-    const metadata = await client.store({
-      name: values.name,
-      description: values.description,
-      image: fileObj as File,
-    })
+    // const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
+    // if (!apiKey) return
+    // const client = new NFTStorage({ token: apiKey })
+
+    // const metadata = await client.store({
+    //   name: values.name,
+    //   description: values.description,
+    //   image: fileObj as File,
+    // })
     // const metadata = {
     //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     // }
-    console.log("metadata.url: ", metadata.url)
-    setIpfsUrl(metadata.url)
-    const guildName = values.guildName
-    console.log("guildName: ", guildName)
+    // console.log("metadata.url: ", metadata.url)
+    // setIpfsUrl(metadata.url)
+    // const guildName = values.guildName
+    // console.log("guildName: ", guildName)
 
-    const guildId = await nftManager.guildNameToGuildId(guildName)
-    console.log("guildId: ", guildId)
-    if (guildId === ZERO_GUILD_ID) {
-      alert(`No guild id found for guild name: ${guildName}`)
-      return
-    }
-    // await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
-
-    setTimeout(() => {
-      setIpfsUrl("")
-      actions.setSubmitting(false)
-    }, 1000)
+    // setTimeout(() => {
+    //   setIpfsUrl("")
+    //   actions.setSubmitting(false)
+    // }, 1000)
   }
 
   return (
@@ -242,7 +273,8 @@ export default function CreateRedPacket() {
             mt={4}
             colorScheme="teal"
             isLoading={props.isSubmitting}
-            type="submit"
+            // type="submit"
+            onClick={run}
           >
             Confirm
           </Button>
