@@ -206,7 +206,7 @@ const mint = async () => {
 export default function CreateRedPacket() {
   return (
     <>
-      <Button onClick={defineNFT}> Confirm </Button>
+      <Button onClick={defineNFT}> defineNFT </Button>
       <Button onClick={setIssuer}> Set Issuer </Button>
       <Button onClick={getNFTInfo}> getNFTInfo </Button>
       <Button onClick={mint}> mint </Button>
