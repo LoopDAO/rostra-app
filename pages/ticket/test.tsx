@@ -4,7 +4,7 @@ import {
 } from "@chakra-ui/react"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { addressToScript, serializeScript } from '@nervosnetwork/ckb-sdk-utils'
+import { addressToScript, serializeScript, scriptToHash, rawTransactionToHash, serializeWitnessArgs } from '@nervosnetwork/ckb-sdk-utils'
 import {
   Service,
   Collector,
@@ -15,6 +15,8 @@ import {
   generateClaimCotaTx,
   generateWithdrawCotaTx,
   generateTransferCotaTx,
+  generateRegisterCotaTx,
+  getAlwaysSuccessLock,
   Claim,
   CotaInfo,
   IssuerInfo,
@@ -22,11 +24,13 @@ import {
   TransferWithdrawal,
 } from '@nervina-labs/cota-sdk'
 import CKB from '@nervosnetwork/ckb-sdk-core'
+import signWitnesses from '@nervosnetwork/ckb-sdk-core/lib/signWitnesses'
 
-const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
-const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
-const RECEIVER_PRIVATE_KEY = '0xcf56c11ce3fbec627e5118acd215838d1f9c5048039792d42143f933cde76311'
-const RECEIVER_ADDRESS = 'ckt1qyqdcu8n8h5xlhecrd8ut0cf9wer6qnhfqqsnz3lw9'
+
+const TEST_PRIVATE_KEY = '0xd4537602bd78139bfde0771f43f7c007ea1bbb858507055d2ef6225d4ebec23e'
+const TEST_ADDRESS = 'ckt1qyqdtuf6kx8f7664atn9xkmwc9qcv4phs4xsackhmh'
+const RECEIVER_PRIVATE_KEY = '0x305fbaead56bde6f675fe0294e2126377d7025f36bf4bc1c8f840cb0e22eafef'
+const RECEIVER_ADDRESS = 'ckt1qyqrvzu5yw30td23fzw5259j0l0pymj2lc9shtynac'
 const OTHER_ADDRESS = 'ckt1qyqz8vxeyrv4nur4j27ktp34fmwnua9wuyqqggd748'
 
 const secp256k1CellDep = async (ckb: CKB): Promise<CKBComponents.CellDep> => {
@@ -44,7 +48,42 @@ const service: Service = {
 }
 const ckb = service.collector.getCkb()
 
-let cotaId: string = '0x8b1d57106941ed7dcda9677e79a54946914d845e'
+let cotaId: string = '0x3c7a0ff1c0331c46b84696595eab954613fbf2f3'
+
+const registerCota = async () => {
+  const provideCKBLock = addressToScript(TEST_ADDRESS)
+  const unregisteredCotaLock = addressToScript(TEST_ADDRESS)
+  let rawTx = await generateRegisterCotaTx(service, [unregisteredCotaLock], provideCKBLock)
+  const secp256k1Dep = await secp256k1CellDep(ckb)
+  rawTx.cellDeps.push(secp256k1Dep)
+
+  const registryLock = getAlwaysSuccessLock(false)
+
+  let keyMap = new Map<string, string>()
+  keyMap.set(scriptToHash(registryLock), '')
+  keyMap.set(scriptToHash(provideCKBLock), TEST_PRIVATE_KEY)
+
+  const cells = rawTx.inputs.map((input, index) => ({
+    outPoint: input.previousOutput,
+    lock: index === 0 ? registryLock : provideCKBLock,
+  }))
+
+  const transactionHash = rawTransactionToHash(rawTx)
+
+  const signedWitnesses = signWitnesses(keyMap)({
+    transactionHash,
+    witnesses: rawTx.witnesses,
+    inputCells: cells,
+    skipMissingKeys: true,
+  })
+  const signedTx = {
+    ...rawTx,
+    witnesses: signedWitnesses.map(witness => (typeof witness === 'string' ? witness : serializeWitnessArgs(witness))),
+  }
+  console.log('signedTx: ', JSON.stringify(signedTx))
+  let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+  console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
+}
 
 const defineNFT = async () => {
   const defineLock = addressToScript(TEST_ADDRESS)
@@ -120,13 +159,13 @@ const mint = async () => {
     cotaId,
     withdrawals: [
       {
-        tokenIndex: '0x00000002', // can only increase from 0x00000000
+        tokenIndex: '0x00000000', // can only increase from 0x00000000
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
       },
       {
-        tokenIndex: '0x00000003',
+        tokenIndex: '0x00000001',
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
@@ -152,7 +191,7 @@ const claim = async () => {
   const claims: Claim[] = [
     {
       cotaId,
-      tokenIndex: '0x00000002',
+      tokenIndex: '0x00000000',
     }
   ]
   let rawTx = await generateClaimCotaTx(service, claimLock, withdrawLock, claims)
@@ -215,8 +254,9 @@ const transfer = async () => {
 export default function CreateRedPacket() {
   return (
     <>
+      <Button onClick={registerCota}> registerCota </Button>
       <Button onClick={defineNFT}> defineNFT </Button>
-      <Button onClick={setIssuer}> Set Issuer </Button>
+      <Button onClick={setIssuer}> setIssuer </Button>
       <Button onClick={getNFTInfo}> getNFTInfo </Button>
       <Button onClick={mint}> mint </Button>
       <Button onClick={claim}> claim </Button>
