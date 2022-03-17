@@ -213,7 +213,7 @@ const withdraw = async () => {
   const withdrawals: TransferWithdrawal[] = [
     {
       cotaId,
-      tokenIndex: '0x00000001',
+      tokenIndex: '0x00000000',
       toLockScript: serializeScript(toLock),
     },
   ]
