@@ -1505,10 +1505,10 @@
   resolved "https://registry.npmmirror.com/@napi-rs/triples/download/@napi-rs/triples-1.0.3.tgz#76d6d0c3f4d16013c61e45dfca5ff1e6c31ae53c"
   integrity sha1-dtbQw/TRYBPGHkXfyl/x5sMa5Tw=
 
-"@nervina-labs/cota-sdk@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.npmmirror.com/@nervina-labs/cota-sdk/-/cota-sdk-0.1.7.tgz#2f8a53512b4e79b7a2b196753a21afed050c26cf"
-  integrity sha512-TAA42eDBQrbyWZOwTAIekMaaty2v59AupP9I0O1c8/MSyTcOapjEYNsq9oRLDchMrDuxJE3WRfIuejgyTr8oBg==
+"@nervina-labs/cota-sdk@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.npmmirror.com/@nervina-labs/cota-sdk/-/cota-sdk-0.2.2.tgz#066ab6144e2cd71300a895b92ec83bde9a3349b3"
+  integrity sha512-C7gFc1V4iEFrmlSoijOlgwAJP2FlEwdB/zlTNBBo51vMk6KWJOYZ5AgfyBu0BWJ00EhTGoEqWnQGimERhiSWsQ==
   dependencies:
     "@nervosnetwork/ckb-sdk-core" "^0.102.2"
     "@nervosnetwork/ckb-sdk-utils" "^0.102.2"
