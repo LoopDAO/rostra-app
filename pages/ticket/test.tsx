@@ -38,10 +38,13 @@ const service: Service = {
   collector: new Collector({
     ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
     // ckbNodeUrl: 'https://testnet.ckb.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
+    // ckbNodeUrl: 'https://testnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
   }),
   aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
 }
 const ckb = service.collector.getCkb()
+
+let cotaId: string = '0x8b1d57106941ed7dcda9677e79a54946914d845e'
 
 const defineNFT = async () => {
   const defineLock = addressToScript(TEST_ADDRESS)
@@ -52,14 +55,15 @@ const defineNFT = async () => {
     image: "https://i.loli.net/2021/04/29/qyJNSE4iHAas7GL.png",
   }
 
-  let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+  let { rawTx, cotaId: cId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+  cotaId = cId
   console.log(` ======> cotaId: ${cotaId}`)
   let secp256k1Dep = await secp256k1CellDep(ckb)
   console.log(' ===================== secp256k1Dep ===================== ')
   rawTx.cellDeps.push(secp256k1Dep)
   try {
     const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-    console.log(JSON.stringify(signedTx))
+    console.log('signedTx: ', JSON.stringify(signedTx))
     let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
     console.info(`Define cota nft tx has been sent with tx hash ${txHash}`)
   } catch (error) {
@@ -68,6 +72,7 @@ const defineNFT = async () => {
 }
 
 const setIssuer = async () => {
+  console.log(` ======> cotaId: ${cotaId}`)
   const cotaLock = addressToScript(TEST_ADDRESS)
 
   const issuer: IssuerInfo = {
@@ -82,7 +87,7 @@ const setIssuer = async () => {
   rawTx.cellDeps.push(secp256k1Dep)
 
   const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
+  console.log('signedTx: ', JSON.stringify(signedTx))
   let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
   console.info(`Set issuer information tx has been sent with tx hash ${txHash}`)
 }
@@ -100,7 +105,7 @@ const getNFTInfo = async () => {
   const senderLockHash = await aggregator.getCotaNftSender({
     lockScript:
       '0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000dc70f33de86fdf381b4fc5bf092bb23d02774801',
-    cotaId: '0xb22585a8053af3fed0fd39127f5b1487ce08b756',
+    cotaId,
     tokenIndex: '0x00000000',
   })
   console.log('======= senderLockHash: ', JSON.stringify(senderLockHash))
@@ -108,19 +113,20 @@ const getNFTInfo = async () => {
 
 
 const mint = async () => {
+  console.log(` ======> cotaId: ${cotaId}`)
   const mintLock = addressToScript(TEST_ADDRESS)
 
   const mintCotaInfo: MintCotaInfo = {
-    cotaId: '0x678319cdf1f343aa4adf379bafebbb2fc9360ac9',
+    cotaId,
     withdrawals: [
       {
-        tokenIndex: '0x10000000',
+        tokenIndex: '0x00000002', // can only increase from 0x00000000
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
       },
       {
-        tokenIndex: '0x10000001',
+        tokenIndex: '0x00000003',
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
@@ -133,20 +139,21 @@ const mint = async () => {
   rawTx.cellDeps.push(secp256k1Dep)
 
   const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
+  console.log('signedTx: ', JSON.stringify(signedTx))
   let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
   console.info(`Mint cota nft tx has been sent with tx hash ${txHash}`)
 }
 
 const claim = async () => {
+  console.log(` ======> cotaId: ${cotaId}`)
   const claimLock = addressToScript(RECEIVER_ADDRESS)
   const withdrawLock = addressToScript(TEST_ADDRESS)
 
   const claims: Claim[] = [
     {
-      cotaId: '0x1deb31f603652bf59ff5027b522e1d81c288b72f',
-      tokenIndex: '0x00000000',
-    },
+      cotaId,
+      tokenIndex: '0x00000002',
+    }
   ]
   let rawTx = await generateClaimCotaTx(service, claimLock, withdrawLock, claims)
 
@@ -154,18 +161,19 @@ const claim = async () => {
   rawTx.cellDeps.push(secp256k1Dep)
 
   const signedTx = ckb.signTransaction(RECEIVER_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
+  console.log('signedTx: ', JSON.stringify(signedTx))
   let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
   console.info(`Claim cota nft tx has been sent with tx hash ${txHash}`)
 }
 
 const withdraw = async () => {
+  console.log(` ======> cotaId: ${cotaId}`)
   const withdrawLock = addressToScript(RECEIVER_ADDRESS)
   const toLock = addressToScript(TEST_ADDRESS)
 
   const withdrawals: TransferWithdrawal[] = [
     {
-      cotaId: '0x1deb31f603652bf59ff5027b522e1d81c288b72f',
+      cotaId,
       tokenIndex: '0x00000000',
       toLockScript: serializeScript(toLock),
     },
@@ -176,18 +184,19 @@ const withdraw = async () => {
   rawTx.cellDeps.push(secp256k1Dep)
 
   const signedTx = ckb.signTransaction(RECEIVER_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
+  console.log('signedTx: ', JSON.stringify(signedTx))
   let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
   console.info(`Withdraw cota nft tx has been sent with tx hash ${txHash}`)
 }
 
 const transfer = async () => {
+  console.log(` ======> cotaId: ${cotaId}`)
   const cotaLock = addressToScript(RECEIVER_ADDRESS)
   const withdrawLock = addressToScript(TEST_ADDRESS)
 
   const transfers: TransferWithdrawal[] = [
     {
-      cotaId: '0x1deb31f603652bf59ff5027b522e1d81c288b72f',
+      cotaId,
       tokenIndex: '0x00000001',
       toLockScript: serializeScript(addressToScript(OTHER_ADDRESS)),
     },
@@ -198,7 +207,7 @@ const transfer = async () => {
   rawTx.cellDeps.push(secp256k1Dep)
 
   const signedTx = ckb.signTransaction(RECEIVER_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
+  console.log('signedTx: ', JSON.stringify(signedTx))
   let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
   console.info(`Transfer cota nft tx has been sent with tx hash ${txHash}`)
 }
