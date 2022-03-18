@@ -14,3 +14,6 @@ export const getSecp256k1CellDep = (isMainnet: boolean): CKBComponents.CellDep =
     }, depType: 'depGroup'
   }
 }
+
+export const padStr = (str: string) => '0x' + str.padStart(8, '0');
+
