@@ -89,7 +89,7 @@ export default function SendTickets() {
                 isNumber
                 isInvalid={!!(form.errors.name && form.touched.name)}
               >
-                <FormLabel htmlFor="startIndex">Token Index(Hex value)</FormLabel>
+                <FormLabel htmlFor="startIndex">Start Token Index(In Hex)</FormLabel>
                 <Input {...field} id="startIndex" placeholder="0x00000000" />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
               </FormControl>
