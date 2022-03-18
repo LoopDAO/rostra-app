@@ -23,90 +23,23 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import { getSecp256k1CellDep } from "@lib/utils/ckb"
 import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 import { Collector, Aggregator, generateDefineCotaTx, generateIssuerInfoTx, CotaInfo, IssuerInfo, Service } from '@nervina-labs/cota-sdk'
-import CKB from '@nervosnetwork/ckb-sdk-core'
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
 
-const secp256k1CellDep = async (ckb: CKB): Promise<CKBComponents.CellDep> => {
-  const secp256k1Dep = (await ckb.loadDeps()).secp256k1Dep
-  return { outPoint: secp256k1Dep?.outPoint || null, depType: 'depGroup' }
-}
+
+const secp256k1Dep = getSecp256k1CellDep(false)
 
 const service: Service = {
-  // collector: new Collector({ ckbNodeUrl: 'https://mainnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://mainnet.ckbapp.dev/indexer' }),
   collector: new Collector({
-    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer' }),
-    // ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://ckb-testnet.rebase.network/indexer_rpc' }),
+    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
+  }),
   aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
 }
 const ckb = service.collector.getCkb()
-
-const run = async () => {
-  const defineLock = addressToScript(TEST_ADDRESS)
-
-  const cotaInfo: CotaInfo = {
-    name: "Rostra launched",
-    description: "Rostra launched, new age comes",
-    image: "https://i.loli.net/2021/04/29/qyJNSE4iHAas7GL.png",
-  }
-
-  let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
-  console.log(` ======> cotaId: ${cotaId}`)
-  let secp256k1Dep = await secp256k1CellDep(ckb)
-  console.log(' ===================== secp256k1Dep ===================== ')
-  rawTx.cellDeps.push(secp256k1Dep)
-  try {
-    const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-    console.log(JSON.stringify(signedTx))
-    let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
-    console.info(`Define cota nft tx has been sent with tx hash ${txHash}`)
-  } catch (error) {
-    console.error('error happened:', error)
-  }
-}
-
-const setIssuer = async () => {
-  const cotaLock = addressToScript(TEST_ADDRESS)
-
-  const issuer: IssuerInfo = {
-    name: "Rostra",
-    description: "Community building protocol",
-    avatar: "https://i.loli.net/2021/04/29/IigbpOWP8fw9qDn.png",
-  }
-
-  let rawTx = await generateIssuerInfoTx(service, cotaLock, issuer)
-
-  const secp256k1Dep = await secp256k1CellDep(ckb)
-  rawTx.cellDeps.push(secp256k1Dep)
-
-  const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-  console.log(JSON.stringify(signedTx))
-  let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
-  console.info(`Set issuer information tx has been sent with tx hash ${txHash}`)
-}
-
-
-const getNftInfo = async () => {
-  const aggregator = service.aggregator
-  const holds = await aggregator.getHoldCotaNft({
-    lockScript:
-      '0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000dc70f33de86fdf381b4fc5bf092bb23d02774801',
-    page: 0,
-    pageSize: 10,
-  })
-  console.log('======= holds: ', JSON.stringify(holds))
-
-  const senderLockHash = await aggregator.getCotaNftSender({
-    lockScript:
-      '0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000dc70f33de86fdf381b4fc5bf092bb23d02774801',
-    cotaId: '0xb22585a8053af3fed0fd39127f5b1487ce08b756',
-    tokenIndex: '0x00000000',
-  })
-  console.log('======= senderLockHash: ', JSON.stringify(senderLockHash))
-}
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -146,7 +79,7 @@ const FileUpload = (props: FileUploadProps) => {
   )
 }
 
-export default function CreateRedPacket() {
+export default function CreateTicket() {
   const {
     register,
     handleSubmit,
@@ -168,13 +101,6 @@ export default function CreateRedPacket() {
       }
     }
     return true
-  }
-  function validateGuildName(value: string) {
-    let error
-    if (!value) {
-      error = "Guild Name is required"
-    }
-    return error
   }
 
   function validateName(value: string) {
@@ -204,8 +130,29 @@ export default function CreateRedPacket() {
   // @ts-expect-error TODO: Add typings
   const onSubmit = async (values, actions) => {
     console.log("values...", values)
-    await run();
-    console.log("========> run finished...")
+
+    const defineLock = addressToScript(TEST_ADDRESS)
+
+    const cotaInfo: CotaInfo = {
+      name: values.name,
+      description: values.description,
+      image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+    }
+
+    let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+    console.log(` ======> cotaId: ${cotaId}`)
+    console.log(' ===================== secp256k1Dep ===================== ')
+    rawTx.cellDeps.push(secp256k1Dep)
+    try {
+      const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
+      console.log(JSON.stringify(signedTx))
+      let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
+      console.info(`Define cota nft tx has been sent with tx hash ${txHash}`)
+    } catch (error) {
+      console.error('error happened:', error)
+    }
+
+    console.log("========> createNFT finished...")
 
     // const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
     // if (!apiKey) return
@@ -237,18 +184,6 @@ export default function CreateRedPacket() {
     >
       {(props) => (
         <Form>
-          <Field name="guildName" validate={validateGuildName}>
-            {({ field, form }: FieldProps) => (
-              <FormControl
-                isRequired
-                isInvalid={!!(form.errors.guildName && form.touched.guildName)}
-              >
-                <FormLabel htmlFor="guildName">Guild Name</FormLabel>
-                <Input {...field} id="guildName" placeholder="Guild Name" />
-                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
           <Field name="name" validate={validateName}>
             {({ field, form }: FieldProps) => (
               <FormControl
@@ -315,28 +250,9 @@ export default function CreateRedPacket() {
             mt={4}
             colorScheme="teal"
             isLoading={props.isSubmitting}
-            // type="submit"
-            onClick={run}
+            type="submit"
           >
             Confirm
-          </Button>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={props.isSubmitting}
-            // type="submit"
-            onClick={setIssuer}
-          >
-            Set Issuer
-          </Button>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={props.isSubmitting}
-            // type="submit"
-            onClick={getNftInfo}
-          >
-            getNftInfo
           </Button>
         </Form>
       )}
