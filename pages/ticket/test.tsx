@@ -45,7 +45,7 @@ const service: Service = {
 }
 const ckb = service.collector.getCkb()
 
-let cotaId: string = '0x3c7a0ff1c0331c46b84696595eab954613fbf2f3'
+let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
 
 const registerCota = async (address = TEST_ADDRESS, privateKey = TEST_PRIVATE_KEY) => {
   const provideCKBLock = addressToScript(address)
@@ -127,17 +127,20 @@ const setIssuer = async () => {
 
 const getNFTInfo = async () => {
   const aggregator = service.aggregator
+  // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000d5f13ab18e9f6b55eae6535b6ec141865437854d
+  // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000360b9423a2f5b551489d4550b27fde126e4afe0b
+  // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000023b0d920d959f07592bd6586354edd3e74aee100
+  const lockScript = serializeScript(addressToScript(RECEIVER_ADDRESS))
+  console.log('lockScript: ', lockScript)
   const holds = await aggregator.getHoldCotaNft({
-    lockScript:
-      '0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000dc70f33de86fdf381b4fc5bf092bb23d02774801',
+    lockScript,
     page: 0,
     pageSize: 10,
   })
   console.log('======= holds: ', JSON.stringify(holds))
 
   const senderLockHash = await aggregator.getCotaNftSender({
-    lockScript:
-      '0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000dc70f33de86fdf381b4fc5bf092bb23d02774801',
+    lockScript,
     cotaId,
     tokenIndex: '0x00000000',
   })
@@ -153,13 +156,13 @@ const mint = async () => {
     cotaId,
     withdrawals: [
       {
-        tokenIndex: '0x00000002', // can only increase from 0x00000000
+        tokenIndex: '0x00000000', // can only increase from 0x00000000
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
       },
       {
-        tokenIndex: '0x00000003',
+        tokenIndex: '0x00000001',
         state: '0x00',
         characteristic: '0x0505050505050505050505050505050505050505',
         toLockScript: serializeScript(addressToScript(RECEIVER_ADDRESS)),
@@ -177,6 +180,9 @@ const mint = async () => {
 }
 
 const claim = async () => {
+  const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
+  const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
+
   console.log(` ======> cotaId: ${cotaId}`)
   const claimLock = addressToScript(RECEIVER_ADDRESS)
   const withdrawLock = addressToScript(TEST_ADDRESS)
@@ -184,7 +190,7 @@ const claim = async () => {
   const claims: Claim[] = [
     {
       cotaId,
-      tokenIndex: '0x00000002',
+      tokenIndex: '0x00000000',
     }
   ]
   let rawTx = await generateClaimCotaTx(service, claimLock, withdrawLock, claims)
