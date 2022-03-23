@@ -10,6 +10,9 @@
     "getStarted": "开始使用",
     "startFree": "免费使用"
   },
+  "dashboard": {
+    "title": "控制面板"
+  },
   "problems": {
     "title": "Problems",
     "edu": {
@@ -125,12 +128,12 @@
     "requirement": "要求",
     "requirementInfo": "您可以添加加入公会的白名单、持有指定 NFT 的地址或指定公会中的成员。"
   },
-    "nft": {
-      "distribute": "发 NFT",
-      "claim": "领 NFT"
-    },
-    "redpacket": {
-      "create": "发红包",
-      "claim": "领红包"
-    }
+  "nft": {
+    "distribute": "发 NFT",
+    "claim": "领 NFT"
+  },
+  "redpacket": {
+    "create": "发红包",
+    "claim": "领红包"
+  }
 }

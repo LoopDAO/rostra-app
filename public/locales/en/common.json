@@ -10,6 +10,9 @@
     "getStarted": "Get Started",
     "startFree": "Starting for free"
   },
+  "dashboard": {
+    "title": "Dashboard"
+  },
   "problems": {
     "title": "Problems",
     "edu": {

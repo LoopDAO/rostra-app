@@ -8,10 +8,10 @@ import Account from "./Account"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "./Account/AccountFlashsigner"
 
-const Links = ["guild.guilds"] as const
+const Links = ["guild.guilds", "dashboard.title"] as const
 const hrefs = {
   "guild.guilds": "/guild",
-  "guild.create": "/guild/create",
+  "dashboard.title": "/dashboard",
 } as const
 
 const NavLink = ({ children, href }: { children: ReactNode; href: any }) => (
