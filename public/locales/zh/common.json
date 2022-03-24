@@ -127,7 +127,8 @@
   },
     "nft": {
       "distribute": "发 NFT",
-      "claim": "领 NFT"
+      "claim": "领 NFT",
+      "myNFTs": "我的NFT"
     },
     "redpacket": {
       "create": "发红包",
