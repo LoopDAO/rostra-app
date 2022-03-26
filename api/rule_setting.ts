@@ -3,8 +3,7 @@ export type RuleType = {
   name: string,
   desc: string,
   ipfsAddr?: string,
-  wallet_address?: string,
-  creator?: string,
+  creator: string,
   signature?: string,
   action: {
     // github_discussion, github_commit, github_star

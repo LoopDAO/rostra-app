@@ -136,6 +136,7 @@
   },
   "setting": {
     "RuleAction": "规则设定",
-    "RuleBase": "基本信息"
+    "RuleBase": "基本信息",
+    "RuleNFT": "NFT设定"
   }
 }

@@ -8,12 +8,12 @@ import Account from "./Account"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "./Account/AccountFlashsigner"
 
-const Links = ["guild.guilds", "nft.myNFTs", "setting.Action"] as const
+const Links = ["guild.guilds", "nft.myNFTs", "setting.RuleAction"] as const
 const hrefs = {
   "guild.guilds": "/guild",
   "guild.create": "/guild/create",
   "nft.myNFTs": "/mynfts",
-  "setting.Action": "/setting",
+  "setting.RuleAction": "/setting",
 } as const
 
 const NavLink = ({ children, href }: { children: ReactNode; href: any }) => (
