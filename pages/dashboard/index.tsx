@@ -6,6 +6,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { Flex, Heading, Stack, Container, Button } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../../components/Layout/Account/AccountFlashsigner"
+import Account from "../../components/Layout/Account"
 import {
   addressToScript,
   serializeScript,
@@ -101,14 +102,16 @@ export default function DashboardPage() {
   const [signedTx, setSignedTx] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await service.aggregator.checkReisteredLockHashes([
-        scriptToHash(addressToScript(account.address)),
-      ])
-      setStatus(res?.registered);
-      console.log('res: ', res)
+      if (isLoggedIn) {
+        const res = await service.aggregator.checkReisteredLockHashes([
+          scriptToHash(addressToScript(account.address)),
+        ])
+        setStatus(res?.registered);
+        console.log('res: ', res)
+      }
     };
     fetchData();
-  }, [account.address]);
+  }, [account.address, isLoggedIn]);
 
   const router = useRouter()
   console.log('router.query: ', router);
@@ -162,9 +165,13 @@ export default function DashboardPage() {
 
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         <Container>Address: {account.address}</Container>
-        <Container>Balance: {'todo'}</Container>
         <Container>CKB CoTA Registry: {status.toString()} {registryBtn}</Container>
       </Flex>
+
+      {/* <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+        <Container>ETH Address <Account /></Container>
+        <Container>Balance: {'todo'}</Container>
+      </Flex> */}
     </Stack>
   )
 }
