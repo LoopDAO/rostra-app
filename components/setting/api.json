@@ -1,0 +1,29 @@
+{
+    "name": "Github discussion",
+    "description": "Github discussion",
+    "version": "1.0",
+    "Action": {
+        "?A": "github_discussion, github_commit, github_star",
+        "?A": "twitter_tweet, twitter_follow, twitter_retweet, twitter_hashtag",
+        "?A": "discord_join, discord_message",
+        "type": "github_discussion",
+        "url": "https://github.com/rebase-network/hello-world/discussions/8",
+        "condition": [
+            {
+                "with": "Address", //Address,Keyword
+                "of": "Nervos" //Nervos,Ethernet
+            },
+            {
+                "with": "Keyword",
+                "of": "hello world"
+            }
+        ],
+        "duration_start": "2020-01-01T00:00:00Z",
+        "duration_end": "2020-01-01T00:00:00Z"
+    },
+    "NFT": {
+        "name": "NFT-test",
+        "description": "Github discussion",
+        "image": "ipfs://..."
+    }
+}
