@@ -66,9 +66,9 @@
     "title": "Rostra 想要带来哪些改变",
     "edu": {
       "title": "教育",
-      "knowledge":"促进公平获取知识的权利",
-      "diversity":"促进社会多样化",
-      "exploration":"鼓励和支持个体的探索",
+      "knowledge": "促进公平获取知识的权利",
+      "diversity": "促进社会多样化",
+      "exploration": "鼓励和支持个体的探索",
       "personalized": "让个性化教育真正可行",
       "acquire": "让学习者及时获取最新的知识",
       "decentralize": "将证书发放权力去中心化",
@@ -77,9 +77,9 @@
     },
     "research": {
       "title": "科研",
-      "ownership":"建立合理的所有权机制",
-      "reward":"让个人拥有自己的科研成果",
-      "evaluation":"改变科研成果的奖励机制",
+      "ownership": "建立合理的所有权机制",
+      "reward": "让个人拥有自己的科研成果",
+      "evaluation": "改变科研成果的奖励机制",
       "achievements": "形成去中心化的价值发现和评价体系",
       "access": "促进科研成果的开放获取"
     }
@@ -130,10 +130,16 @@
   },
   "nft": {
     "distribute": "发 NFT",
-    "claim": "领 NFT"
+    "claim": "领 NFT",
+    "myNFTs": "我的NFT"
   },
   "redpacket": {
     "create": "发红包",
     "claim": "领红包"
+  },
+  "setting": {
+    "RuleAction": "规则设定",
+    "RuleBase": "基本信息",
+    "RuleNFT": "NFT设定"
   }
 }
