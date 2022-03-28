@@ -1,30 +1,22 @@
 import {
-    Alert,
-    AlertDescription,
-    AlertIcon,
-    AlertTitle,
-    CloseButton,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
 } from "@chakra-ui/react"
-import Loading from "@components/Loading"
 import RuleAction from "@components/setting/RuleAction"
 import RuleBaseInfo from "@components/setting/RuleBaseInfo"
 import RuleNFT from "@components/setting/RuleNFT"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import fetchers from "api/fetchers"
 import { RuleType } from "api/rule_setting"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import router from "next/router"
 import ErrorPage from "pages/ErrorPage"
 import SuccessPage from "pages/SuccessPage"
 import React, { useState } from "react"
-import useSWR from "swr"
+import Sidebar from "@components/Layout/Sidebar"
 
 const initRuleInfo = {
     rule_id: undefined,
@@ -57,12 +49,6 @@ export default function SettingPage() {
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
 
-    const {
-        data: itemsData,
-        error: itemsError,
-        isValidating: isLoadingData,
-    } = useSWR(() => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`, fetchers.http)
-
     if (!isLoggedInFlash) {
         return <div>{"You need to login to create a rule"}</div>
     }
@@ -73,8 +59,6 @@ export default function SettingPage() {
     if (successMessage) {
         return <SuccessPage message={successMessage} title={"Success"} />
     }
-
-    if (isLoadingData) return <Loading />
 
     console.log("tabIndex: ", tabIndex)
     const handleTabsChange = (index: React.SetStateAction<number>) => {
@@ -104,6 +88,7 @@ export default function SettingPage() {
             .catch(console.log)
     }
     return (
+      <Sidebar>
         <Tabs onChange={handleTabsChange} index={tabIndex}>
             <TabList>
                 <Tab>{t("setting.RuleBase")}</Tab>
@@ -129,6 +114,7 @@ export default function SettingPage() {
                 </TabPanel>
             </TabPanels>
         </Tabs>
+      </Sidebar>
     )
 }
 
