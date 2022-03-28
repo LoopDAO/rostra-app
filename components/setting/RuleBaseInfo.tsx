@@ -27,52 +27,53 @@ const RuleBaseInfo: React.FunctionComponent<{ rule: RuleType, setTabIndex: any, 
   }
 
     return (
-      (<div>
-        <Formik initialValues={rule} onSubmit={onSubmit}>
-          {() => (
-            <Form>
-              <Field
-                name="name"
-                style={{ paddingTop: "10px" }}
-                validate={validateName}
-              >
-                {({ field, form }: FieldProps) => (
-                  <FormControl
-                    style={{ paddingTop: "10px" }}
-                    isRequired
-                    isInvalid={!!(form.errors.name && form.touched.name)}
-                  >
-                    <FormLabel htmlFor="name">{t("guild.name")}</FormLabel>
-                    <Input {...field} id="name" placeholder="Name" />
-                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                  </FormControl>
+        <div>
+            <Formik initialValues={rule} onSubmit={onSubmit}>
+                {() => (
+                    <Form>
+                        <Field name="name" style={{ paddingTop: "10px" }} validate={validateName}>
+                            {({ field, form }: FieldProps) => (
+                                <FormControl
+                                    style={{ paddingTop: "10px" }}
+                                    isRequired
+                                    isInvalid={!!(form.errors.name && form.touched.name)}
+                                >
+                                    <FormLabel htmlFor="name">{t("guild.name")}</FormLabel>
+                                    <Input {...field} id="name" placeholder="Name" />
+                                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="desc" validate={validateDescription}>
+                            {({ field, form }: FieldProps) => (
+                                <FormControl
+                                    style={{ paddingTop: "10px" }}
+                                    isRequired
+                                    isInvalid={!!(form.errors.desc && form.touched.desc)}
+                                >
+                                    <FormLabel htmlFor="desc">{t("guild.desc")}</FormLabel>
+                                    <Input {...field} id="desc" placeholder="Description" />
+                                    <FormErrorMessage>{form.errors.desc}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <br />
+                        <Button
+                            variant="with-shadow"
+                            bg="#3399ff"
+                            color="white"
+                            size="lg"
+                            height="60px"
+                            type="submit"
+                            width="200px"
+                        >
+                            {t("Save")}
+                        </Button>
+                    </Form>
                 )}
-              </Field>
-              <Field name="desc" validate={validateDescription}>
-                {({ field, form }: FieldProps) => (
-                  <FormControl
-                    style={{ paddingTop: "10px" }}
-                    isRequired
-                    isInvalid={!!(form.errors.name && form.touched.name)}
-                  >
-                    <FormLabel htmlFor="desc">{t("guild.desc")}</FormLabel>
-                    <Input {...field} id="desc" placeholder="Description" />
-                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <br />
-              <Button variant='with-shadow' bg="#3399ff" color='white'
-                size='lg'
-                height='60px'
-                type="submit"
-                width='200px'>{t('Save')}</Button>
-            </Form>
-          )}
-        </Formik>
-      </div>)
-
-  )
+            </Formik>
+        </div>
+    )
 }
 
 

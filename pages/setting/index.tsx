@@ -1,126 +1,141 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
+    CloseButton,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+} from "@chakra-ui/react"
 import Loading from "@components/Loading"
-import RuleAction from '@components/setting/RuleAction'
-import RuleBaseInfo from '@components/setting/RuleBaseInfo'
-import RuleNFT from '@components/setting/RuleNFT'
-import { useAccountFlashsigner } from '@lib/hooks/useAccount'
+import RuleAction from "@components/setting/RuleAction"
+import RuleBaseInfo from "@components/setting/RuleBaseInfo"
+import RuleNFT from "@components/setting/RuleNFT"
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import fetchers from "api/fetchers"
-import { RuleType } from 'api/rule_setting'
+import { RuleType } from "api/rule_setting"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import router from "next/router"
+import ErrorPage from "pages/ErrorPage"
+import SuccessPage from "pages/SuccessPage"
 import React, { useState } from "react"
 import useSWR from "swr"
 
-const initRuleInfo =
-{
-  rule_id: undefined,
-  name: '',
-  desc: '',
-  ipfsAddr: "",
-  wallet_address: undefined,
-  creator: "",
-  signature: undefined,
-  action: {
-    type: 'Comment on this discussion',
-    url: 'https://github.com',
-    condition: [{ "with": "Address", "of": "Nervos" }],
-    start_time: new Date(),
-    end_time: new Date(),
-  },
-  nft: {
-    name: '',
-    desc: '',
-    image: ''
-  }
+const initRuleInfo = {
+    rule_id: undefined,
+    name: "",
+    desc: "",
+    ipfsAddr: "",
+    wallet_address: undefined,
+    creator: "",
+    signature: undefined,
+    action: {
+        type: "Comment on this discussion",
+        url: "https://github.com",
+        condition: [{ with: "Address", of: "Nervos" }],
+        start_time: new Date(),
+        end_time: new Date(),
+    },
+    nft: {
+        name: "",
+        desc: "",
+        image: "",
+    },
 }
 export default function SettingPage() {
-  const { t } = useTranslation()
+    const { t } = useTranslation()
 
-  const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
-  const [checked, setChecked] = useState(false)
-  const [ruleInfo, setRuleInfo] = useState<RuleType>(initRuleInfo)
-  const [tabIndex, setTabIndex] = useState(0)
-  const [errorMessage, setErrorMessage] = useState('')
+    const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
 
-  const {
-    data: itemsData,
-    error: itemsError,
-    isValidating: isLoadingData,
-  } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
-    fetchers.http
-  )
+    const [ruleInfo, setRuleInfo] = useState<RuleType>(initRuleInfo)
+    const [tabIndex, setTabIndex] = useState(0)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
 
-  if (!isLoggedInFlash) {
-    return <div>{'You need to login to create a rule'}</div>
-  } 
+    const {
+        data: itemsData,
+        error: itemsError,
+        isValidating: isLoadingData,
+    } = useSWR(() => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`, fetchers.http)
 
-  if (errorMessage)
-    return <div>{errorMessage}</div>
+    if (!isLoggedInFlash) {
+        return <div>{"You need to login to create a rule"}</div>
+    }
 
-  if (isLoadingData) return <Loading />
+    if (errorMessage) {
+        return <ErrorPage message={JSON.parse(errorMessage).message} />
+    }
+    if (successMessage) {
+        return <SuccessPage message={successMessage} title={"Success"} />
+    }
 
-  console.log("tabIndex: ", tabIndex)
-  const handleTabsChange = (index: React.SetStateAction<number>) => {
-    // setTabIndex(index)
-  }
-  const postRule2Rostra = async (ruleInfo: RuleType) => {
-    ruleInfo.creator = accountFlash.address
-    ruleInfo.signature = "test"
+    if (isLoadingData) return <Loading />
 
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/rule/add/`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ruleInfo),
-    })
-      .then(async (resp) => {
-        console.log("resp:", resp)
-        if (resp.status === 200) {
-          setRuleInfo(initRuleInfo)
-          setChecked(false)
-          router.push({
-            pathname: '/guild',
-          })
-        } else {
-          setErrorMessage(await resp.text())
-        }
+    console.log("tabIndex: ", tabIndex)
+    const handleTabsChange = (index: React.SetStateAction<number>) => {
+        // setTabIndex(index)
+    }
+    const postRule2Rostra = async (ruleInfo: RuleType) => {
+        ruleInfo.creator = accountFlash.address
+        ruleInfo.signature = "test"
 
-      })
-      .then(console.log)
-      .catch(console.log)
-  }
-  return (
-    <Tabs onChange={handleTabsChange} index={tabIndex} >
-      <TabList>
-        <Tab>{t('setting.RuleBase')}</Tab>
-        <Tab>{t('setting.RuleAction')}</Tab>
-        <Tab>{t('setting.RuleNFT')}</Tab>
-      </TabList>
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/rule/add/`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ruleInfo),
+        })
+            .then(async (resp) => {
+                console.log("resp:", resp)
+                if (resp.status === 200 || resp.status === 201) {
+                    setSuccessMessage("设置新规则成功!")
+                } else {
+                    setErrorMessage(await resp.text())
+                }
+            })
+            .then(console.log)
+            .catch(console.log)
+    }
+    return (
+        <Tabs onChange={handleTabsChange} index={tabIndex}>
+            <TabList>
+                <Tab>{t("setting.RuleBase")}</Tab>
+                <Tab>{t("setting.RuleAction")}</Tab>
+                <Tab>{t("setting.RuleNFT")}</Tab>
+            </TabList>
 
-      <TabPanels>
-        <TabPanel>
-          <p><RuleBaseInfo rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} /></p>
-        </TabPanel>
-        <TabPanel>
-          <p><RuleAction rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} /></p>
-        </TabPanel>
-        <TabPanel>
-          <p><RuleNFT rule={ruleInfo} postRule={postRule2Rostra} /></p>
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-  )
+            <TabPanels>
+                <TabPanel>
+                    <p>
+                        <RuleBaseInfo rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
+                    </p>
+                </TabPanel>
+                <TabPanel>
+                    <p>
+                        <RuleAction rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
+                    </p>
+                </TabPanel>
+                <TabPanel>
+                    <p>
+                        <RuleNFT rule={ruleInfo} postRule={postRule2Rostra} />
+                    </p>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    )
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale!, ["common"])),
-    },
-  }
+    return {
+        props: {
+            ...(await serverSideTranslations(locale!, ["common"])),
+        },
+    }
 }
