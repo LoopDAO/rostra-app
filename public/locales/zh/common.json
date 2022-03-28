@@ -10,6 +10,9 @@
     "getStarted": "开始使用",
     "startFree": "免费使用"
   },
+  "dashboard": {
+    "title": "控制面板"
+  },
   "problems": {
     "title": "Problems",
     "edu": {
