@@ -1,7 +1,6 @@
 import { AddIcon, DeleteIcon, TimeIcon } from "@chakra-ui/icons"
 import { Alert, Box, Button, Center, Flex, FormControl, Heading, HStack, IconButton, Image, Input, InputGroup, InputLeftAddon, Select, Spacer } from "@chakra-ui/react"
 import { RuleType } from "api/rule_setting"
-import { Field, Form } from "formik"
 import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
@@ -24,8 +23,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
   const router = useRouter()
   const [startDate, setStartDate] = useState(new Date(ruleInfo.action.start_time))
   const [endDate, setEndDate] = useState(new Date(ruleInfo.action.end_time))
-  const [withList, setWithList] = useState([] as string[])
-  const [withListId, setWithListId] = useState(1)
+  const [withList, setWithList] = useState(['0'] as string[])
   //const { action: rule_action } = action
   const [typeValue, setTypeValue] = React.useState("discussion")
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,21 +54,25 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
   }
 
   const addRuleItem = () => {
-    const list = [...withList, '']
+    const list = [...withList, withList.length.toString()]
     console.log("list", list)
     setWithList(list)
-    setWithListId(list.length)
   }
 
-  const removeRuleItem = (i: number) => {
+  const removeRuleItem = (i: any) => {
+    console.log('i: ', i)
     let list = [...withList];
+    console.log("111 list", list)
     list.splice(i, 1);
+    console.log("222 list", list)
     setWithList(list)
   }
 
   const listElem = withList.map((data, index) => {
+    const isLastItem = withList.length - 1 === index
+    const addBtn = isLastItem ? <AddIcon w={6} h={6} width="10%" onClick={() => addRuleItem()} /> : null
     return (
-      <Box key={index}>
+      <Box key={`${data}~${'rostra'}`}>
       <HStack spacing="2px" width="60%">
         <InputGroup size="md">
           <InputLeftAddon bg="white" width="70px" color="black" border="0px">
@@ -83,7 +85,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             placeholder="Address"
             size="md"
             fontSize="xl"
-            width="100%"
+            width="150px"
           >
             <option value="Address">Address</option>
             <option value="Keyword">Keyword</option>
@@ -98,14 +100,14 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             {...index}
             size="md"
             fontSize="xl"
-            width="100%"
+            width="200px"
           />
         </InputGroup>
+        {!!index && <DeleteIcon w={7} h={7} color="black" onClick={() => removeRuleItem(index) } />}
       </HStack>
+      {addBtn}
     </Box>)
   })
-
-
 
   const submitContact = async (event: any) => {
     event.preventDefault()
@@ -258,9 +260,6 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
                 />
               </Center>
             </InputGroup>
-          </HStack>
-          <HStack spacing="2px" width="67%">
-            <AddIcon w={6} h={6} width="10%" onClick={() => addRuleItem()} />
           </HStack>
           {listElem}
           <br />
