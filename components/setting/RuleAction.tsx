@@ -12,8 +12,9 @@ import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 
-const RuleAction: React.FunctionComponent<{ rule: RuleType; setRuleInfo: any }> = ({
+const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; setRuleInfo: any }> = ({
   rule,
+  setTabIndex,
   setRuleInfo,
 }) => {
   const { t } = useTranslation()
@@ -82,6 +83,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setRuleInfo: any }> 
     ruleInfo.action.end_time = endDate
     console.log("rule", rule)
     setRuleInfo(rule)
+    setTabIndex(2)
   }
 
   console.log("withList", withList)
@@ -321,10 +323,22 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setRuleInfo: any }> 
               color="white"
               size="lg"
               height="60px"
+              width="200px"
+              onClick={setTabIndex.bind(null, 0)}
+            >
+              {t("Prev")}
+            </Button>
+
+            <Button
+              variant="with-shadow"
+              bg="#3399ff"
+              color="white"
+              size="lg"
+              height="60px"
               type="submit"
               width="200px"
             >
-              {t("Save")}
+              {t("Next")}
             </Button>
           </HStack>
 

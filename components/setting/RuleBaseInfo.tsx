@@ -3,11 +3,12 @@ import { RuleType } from "api/rule_setting"
 import { Field, FieldProps, Form, Formik } from "formik"
 import { useTranslation } from "next-i18next"
 
-const RuleBaseInfo: React.FunctionComponent<{ rule: RuleType, setRuleInfo: any }> =
-  ({ rule, setRuleInfo }) => {
+const RuleBaseInfo: React.FunctionComponent<{ rule: RuleType, setTabIndex: any, setRuleInfo: any }> =
+  ({ rule, setTabIndex, setRuleInfo }) => {
     const { t } = useTranslation()
     const onSubmit = async (values: RuleType) => {
       console.log("values: ", values)
+      setTabIndex(1)
       setRuleInfo(values)
     }
     function validateName(value: string) {
@@ -66,7 +67,7 @@ const RuleBaseInfo: React.FunctionComponent<{ rule: RuleType, setRuleInfo: any }
                 type="submit"
                 width="200px"
               >
-                {t("Save")}
+                {t("Next")}
               </Button>
             </Form>
           )}

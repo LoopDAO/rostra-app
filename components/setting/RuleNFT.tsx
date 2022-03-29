@@ -6,7 +6,7 @@ import React, { ReactNode, useRef, useState } from "react"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
 
-const RuleNFT: React.FunctionComponent<{ rule: RuleType; postRule: any }> = ({ rule, postRule }) => {
+const RuleNFT: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; postRule: any }> = ({ rule, setTabIndex, postRule }) => {
   const { t } = useTranslation()
   const ruleInfo = rule
   const [ipfsUrl, setIpfsUrl] = useState("")
@@ -143,6 +143,17 @@ const RuleNFT: React.FunctionComponent<{ rule: RuleType; postRule: any }> = ({ r
             </FormControl>
 
             <br />
+            <Button
+              variant="with-shadow"
+              bg="#3399ff"
+              color="white"
+              size="lg"
+              height="60px"
+              width="200px"
+              onClick={setTabIndex.bind(null, 1)}
+            >
+              {t("Prev")}
+            </Button>
 
             <Button
               variant="with-shadow"

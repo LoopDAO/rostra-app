@@ -88,7 +88,7 @@ export default function SettingPage() {
     <Sidebar>
       {errorMessageElem}
       {successMessageElem}
-      <Tabs>
+      <Tabs index={tabIndex}>
         <TabList>
           <Tab _selected={tabStyle}>{t("setting.RuleBase")}</Tab>
           <Tab _selected={tabStyle}>{t("setting.RuleAction")}</Tab>
@@ -98,17 +98,17 @@ export default function SettingPage() {
         <TabPanels>
           <TabPanel>
             <p>
-              <RuleBaseInfo rule={ruleInfo} setRuleInfo={setRuleInfo} />
+              <RuleBaseInfo rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
             </p>
           </TabPanel>
           <TabPanel>
             <p>
-              <RuleAction rule={ruleInfo} setRuleInfo={setRuleInfo} />
+              <RuleAction rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
             </p>
           </TabPanel>
           <TabPanel>
             <p>
-              <RuleNFT rule={ruleInfo} postRule={postRule2Rostra} />
+              <RuleNFT rule={ruleInfo} setTabIndex={setTabIndex} postRule={postRule2Rostra} />
             </p>
           </TabPanel>
         </TabPanels>
