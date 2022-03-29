@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 import "react-datepicker/dist/react-datepicker.css"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { Field, FieldProps, Form, Formik } from "formik"
 
 
 const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; setRuleInfo: any }> = ({
@@ -54,15 +55,57 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
     }
   }
 
-  const withListClick = () => {
-    const list = withList
-    console.log("list", list)
-    list.push("")
+  const addRuleItem = () => {
+    const list = [...withList, '']
     console.log("list", list)
     setWithList(list)
     setWithListId(list.length)
-    return list
   }
+
+  const removeRuleItem = (i: number) => {
+    let list = [...withList];
+    list.splice(i, 1);
+    setWithList(list)
+  }
+
+  const listElem = withList.map((data, index) => {
+    return (
+      <Box key={index}>
+      <HStack spacing="2px" width="60%">
+        <InputGroup size="md">
+          <InputLeftAddon bg="white" width="70px" color="black" border="0px">
+            With
+          </InputLeftAddon>
+          <Select
+            defaultValue={"Address"}
+            id={`with-${index}`}
+            {...index}
+            placeholder="Address"
+            size="md"
+            fontSize="xl"
+            width="100%"
+          >
+            <option value="Address">Address</option>
+            <option value="Keyword">Keyword</option>
+          </Select>
+        </InputGroup>
+        <InputGroup size="md">
+          <InputLeftAddon bg="white" width="50px" color="black" border="0px">
+            of
+          </InputLeftAddon>
+          <Input
+            id="of-"
+            {...index}
+            size="md"
+            fontSize="xl"
+            width="100%"
+          />
+        </InputGroup>
+      </HStack>
+    </Box>)
+  })
+
+
 
   const submitContact = async (event: any) => {
     event.preventDefault()
@@ -88,6 +131,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
 
   console.log("withList", withList)
   console.log("typeValue", typeValue)
+
   return (
     <>
       <form id="formAction" onSubmit={submitContact}>
@@ -100,7 +144,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             onChange={handleChange}
             variant="flushed"
             placeholder="Github"
-            size="lg"
+            size="md"
             fontSize="xl"
             border="0px"
           >
@@ -118,7 +162,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             onChange={handleChange}
             placeholder="Twritter"
             variant="flushed"
-            size="lg"
+            size="md"
             fontSize="xl"
             width="100%"
             border="0px"
@@ -136,7 +180,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             onChange={handleChange}
             variant="flushed"
             placeholder="Discord"
-            size="lg"
+            size="md"
             fontSize="xl"
             width="100%"
             border="0px"
@@ -146,7 +190,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
           </Select>
         </HStack>
         <br />
-        <FormControl as="fieldset" border="1px" color="gray" borderRadius="lg" overflow="hidden">
+        <FormControl as="fieldset" border="1px" color="gray" borderRadius="md" overflow="hidden">
           <Flex bg="black" h="80px" alignContent="center">
             <Box p={3} />
             <Center>
@@ -174,114 +218,15 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
           </Flex>
 
           <br />
-          <InputGroup size="lg">
+          <InputGroup size="md">
             <InputLeftAddon bg="white" width="70px" color="black" border="0px">
-              RUL
+              URL
             </InputLeftAddon>
             <Input id="url" placeholder="input discussion url" defaultValue={ruleInfo.action.url} />
           </InputGroup>
-          <br />
-          <HStack spacing="2px" width="60%">
-            <InputGroup size="lg">
-              <InputLeftAddon bg="white" width="70px" color="black" border="0px">
-                With
-              </InputLeftAddon>
-              <Select
-                id="with1"
-                defaultValue={"Address"}
-                placeholder="Address"
-                size="lg"
-                fontSize="xl"
-                width="100%"
-              >
-                <option value="Address">Address</option>
-                <option value="Keyword">Keyword</option>
-              </Select>
-            </InputGroup>
-            <InputGroup size="lg">
-              <InputLeftAddon bg="white" width="50px" color="black" border="0px">
-                of
-              </InputLeftAddon>
-              <Select
-                id="of1"
-                placeholder="Nervos"
-                defaultValue={"Nervos"}
-                size="lg"
-                fontSize="xl"
-                width="100%"
-              >
-                <option value="Nervos">Nervos</option>
-                <option value="Ethereum">Ethereum</option>
-              </Select>
-            </InputGroup>
-          </HStack>
-          <br />
-          <HStack spacing="2px" width="67%">
-            <InputGroup size="lg">
-              <InputLeftAddon bg="white" width="70px" color="black" border="0px">
-                With
-              </InputLeftAddon>
-              <Select
-                defaultValue="Keyword"
-                id="with2"
-                placeholder=""
-                size="lg"
-                fontSize="xl"
-                width="100%"
-              >
-                <option value="Address">Address</option>
-                <option value="Keyword">Keyword</option>
-              </Select>
-            </InputGroup>
-            <InputGroup size="lg">
-              <InputLeftAddon bg="white" width="50px" color="black" border="0px">
-                of
-              </InputLeftAddon>
-              <Input id="of2" defaultValue={"GM"} placeholder="GM" size="lg" fontSize="xl" width="100%" />
-            </InputGroup>
-            <AddIcon w={6} h={6} width="10%" onClick={() => withListClick()} />
-          </HStack>
-          {withList.map((data, index) => (
-            <>
-              <br />
-              <HStack spacing="2px" width="60%">
-                <InputGroup size="lg">
-                  <InputLeftAddon bg="white" width="70px" color="black" border="0px">
-                    With
-                  </InputLeftAddon>
-                  <Select
-                    defaultValue={"Address"}
-                    id="with-"
-                    {...index}
-                    placeholder="Address"
-                    size="lg"
-                    fontSize="xl"
-                    width="100%"
-                  >
-                    <option value="Address">Address</option>
-                    <option value="Keyword">Keyword</option>
-                  </Select>
-                </InputGroup>
-                <InputGroup size="lg">
-                  <InputLeftAddon bg="white" width="50px" color="black" border="0px">
-                    of
-                  </InputLeftAddon>
-                  <Input
-                    id="of-"
-                    {...index}
-                    placeholder={data}
-                    size="lg"
-                    fontSize="xl"
-                    width="100%"
-                  />
-                </InputGroup>
-              </HStack>
-            </>
-          ))}
-          <br />
 
           <HStack spacing="2px" width="60%">
-            <InputGroup size="lg">
+            <InputGroup size="md">
               <InputLeftAddon bg="white" width="145px" color="black" border="0px">
                 With Duration
               </InputLeftAddon>
@@ -289,7 +234,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
                 colorScheme="white"
                 color={"gray.300"}
                 aria-label="Call Segun"
-                size="lg"
+                size="md"
                 icon={<TimeIcon />}
               />
               <Center>
@@ -300,7 +245,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
                 />
               </Center>
             </InputGroup>
-            <InputGroup size="lg">
+            <InputGroup size="md">
               <InputLeftAddon bg="white" width="50px" color="black" border="0px">
                 {" "}
                 -{" "}
@@ -314,6 +259,10 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
               </Center>
             </InputGroup>
           </HStack>
+          <HStack spacing="2px" width="67%">
+            <AddIcon w={6} h={6} width="10%" onClick={() => addRuleItem()} />
+          </HStack>
+          {listElem}
           <br />
           <HStack spacing="2px" width="60%">
             <Box p="2" />
