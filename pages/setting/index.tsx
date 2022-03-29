@@ -52,18 +52,14 @@ export default function SettingPage() {
   if (!isLoggedInFlash) {
     return <div>{"You need to login to create a rule"}</div>
   }
-
+  let errorMessageElem, successMessageElem
   if (errorMessage) {
-    return <ErrorPage message={JSON.parse(errorMessage).message} />
+    errorMessageElem = <ErrorPage message={JSON.parse(errorMessage).message} />
   }
   if (successMessage) {
-    return <SuccessPage message={successMessage} title={"Success"} />
+    successMessageElem = <SuccessPage message={successMessage} title={"Success"} />
   }
 
-  console.log("tabIndex: ", tabIndex)
-  const handleTabsChange = (index: React.SetStateAction<number>) => {
-    // setTabIndex(index)
-  }
   const postRule2Rostra = async (ruleInfo: RuleType) => {
     ruleInfo.creator = accountFlash.address
     ruleInfo.signature = "test"
@@ -90,7 +86,9 @@ export default function SettingPage() {
   const tabStyle = { color: 'white', bg: 'blue.500' }
   return (
     <Sidebar>
-      <Tabs onChange={handleTabsChange}>
+      {errorMessageElem}
+      {successMessageElem}
+      <Tabs>
         <TabList>
           <Tab _selected={tabStyle}>{t("setting.RuleBase")}</Tab>
           <Tab _selected={tabStyle}>{t("setting.RuleAction")}</Tab>

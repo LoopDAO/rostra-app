@@ -14,7 +14,7 @@ const ErrorPage: React.FunctionComponent<{ message: String }> = ({ message }) =>
                 top="8px"
                 onClick={() => {
                     router.push({
-                        pathname: "/guild",
+                        pathname: "/setting",
                     })
                 }}
             />
