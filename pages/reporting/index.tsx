@@ -8,6 +8,7 @@ import {
   Th,
   Td,
   TableCaption,
+  Box,
 } from '@chakra-ui/react'
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { GetStaticProps } from "next"
@@ -29,7 +30,9 @@ export default function SettingPage() {
   const trElems = addressList.map((address, index) => {
     return (
       <Tr key={address}>
-        <Td>{address}</Td>
+        <Td>
+          <Box w='400px'>{address}</Box>
+          </Td>
         <Td>Delete</Td>
       </Tr>
     )
