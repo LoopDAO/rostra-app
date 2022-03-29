@@ -73,7 +73,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     <Box
       borderRight="1px"
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
+      w={{ base: 'full', md: 48 }}
       pos="fixed"
       {...rest}>
       <Flex h="20" alignItems="center" justifyContent="space-between">
@@ -133,7 +133,7 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
+      ml={{ base: 0, md: 48 }}
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
