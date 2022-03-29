@@ -12,9 +12,8 @@ import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 
-const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; setRuleInfo: any }> = ({
+const RuleAction: React.FunctionComponent<{ rule: RuleType; setRuleInfo: any }> = ({
     rule,
-    setTabIndex,
     setRuleInfo,
 }) => {
     const { t } = useTranslation()
@@ -83,7 +82,6 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
         ruleInfo.action.end_time = endDate
         console.log("rule", rule)
         setRuleInfo(rule)
-        setTabIndex(2)
     }
 
     console.log("withList", withList)

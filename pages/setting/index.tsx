@@ -87,24 +87,25 @@ export default function SettingPage() {
       .then(console.log)
       .catch(console.log)
   }
+  const tabStyle = { color: 'white', bg: 'blue.500' }
   return (
     <Sidebar>
-      <Tabs onChange={handleTabsChange} index={tabIndex}>
+      <Tabs onChange={handleTabsChange}>
         <TabList>
-          <Tab>{t("setting.RuleBase")}</Tab>
-          <Tab>{t("setting.RuleAction")}</Tab>
-          <Tab>{t("setting.RuleNFT")}</Tab>
+          <Tab _selected={tabStyle}>{t("setting.RuleBase")}</Tab>
+          <Tab _selected={tabStyle}>{t("setting.RuleAction")}</Tab>
+          <Tab _selected={tabStyle}>{t("setting.RuleNFT")}</Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
             <p>
-              <RuleBaseInfo rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
+              <RuleBaseInfo rule={ruleInfo} setRuleInfo={setRuleInfo} />
             </p>
           </TabPanel>
           <TabPanel>
             <p>
-              <RuleAction rule={ruleInfo} setTabIndex={setTabIndex} setRuleInfo={setRuleInfo} />
+              <RuleAction rule={ruleInfo} setRuleInfo={setRuleInfo} />
             </p>
           </TabPanel>
           <TabPanel>
