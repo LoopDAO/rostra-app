@@ -62,10 +62,10 @@ const RuleBaseInfo: React.FunctionComponent<{ rule: RuleType, setTabIndex: any, 
                 variant="with-shadow"
                 bg="#3399ff"
                 color="white"
-                size="lg"
-                height="60px"
+                size="sm"
+                height="40px"
+                width="100px"
                 type="submit"
-                width="200px"
               >
                 {t("Next")}
               </Button>

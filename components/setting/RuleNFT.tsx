@@ -145,11 +145,12 @@ const RuleNFT: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; postR
             <br />
             <Button
               variant="with-shadow"
-              bg="#3399ff"
+              bg="grey"
               color="white"
-              size="lg"
-              height="60px"
-              width="200px"
+              size="sm"
+              height="40px"
+              width="100px"
+              mr="1"
               onClick={setTabIndex.bind(null, 1)}
             >
               {t("Prev")}
@@ -159,10 +160,10 @@ const RuleNFT: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; postR
               variant="with-shadow"
               bg="#3399ff"
               color="white"
-              size="lg"
-              height="60px"
+              size="sm"
+              height="40px"
+              width="100px"
               type="submit"
-              width="200px"
             >
               {t("Save")}
             </Button>

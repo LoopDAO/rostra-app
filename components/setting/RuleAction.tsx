@@ -319,11 +319,12 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             <Box p="2" />
             <Button
               variant="with-shadow"
-              bg="#3399ff"
+              bg="grey"
               color="white"
-              size="lg"
-              height="60px"
-              width="200px"
+              size="sm"
+              height="40px"
+              width="100px"
+              mr="1"
               onClick={setTabIndex.bind(null, 0)}
             >
               {t("Prev")}
@@ -333,10 +334,10 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
               variant="with-shadow"
               bg="#3399ff"
               color="white"
-              size="lg"
-              height="60px"
+              size="sm"
+              height="40px"
+              width="100px"
               type="submit"
-              width="200px"
             >
               {t("Next")}
             </Button>
