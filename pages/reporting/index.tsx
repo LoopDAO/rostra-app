@@ -3,11 +3,9 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   Heading,
   Box,
   Button,
@@ -17,33 +15,11 @@ import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import Sidebar from "@components/Layout/Sidebar"
-import {
-  addressToScript,
-  serializeScript,
-  scriptToHash,
-  rawTransactionToHash,
-  serializeWitnessArgs
-} from '@nervosnetwork/ckb-sdk-utils'
-import {
-  Service,
-  Collector,
-  Aggregator,
-  generateDefineCotaTx,
-  generateIssuerInfoTx,
-  generateMintCotaTx,
-  generateClaimCotaTx,
-  generateWithdrawCotaTx,
-  generateTransferCotaTx,
-  generateRegisterCotaTx,
-  getAlwaysSuccessLock,
-  Claim,
-  CotaInfo,
-  IssuerInfo,
-  MintCotaInfo,
-  TransferWithdrawal,
-  IsClaimedReq
-} from '@nervina-labs/cota-sdk'
+import { addressToScript, serializeScript, } from '@nervosnetwork/ckb-sdk-utils'
+import { generateMintCotaTx, MintCotaInfo, } from '@nervina-labs/cota-sdk'
 import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+import fetchers from "api/fetchers"
+import useSWR from "swr"
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
@@ -56,6 +32,22 @@ export default function SettingPage() {
   const { t } = useTranslation()
   const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const [totalSupply, setTotalSupply] = React.useState(0)
+
+  const {
+    data: runnerResultListData,
+    error: runnerResultListError,
+    isValidating: isLoadingUserGuilds,
+  } = useSWR(
+    () =>
+      accountFlash.address
+        // ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/${accountFlash.address}`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/`
+        : null,
+    fetchers.http
+  )
+
+  const { result: runnerResultList } = runnerResultListData || {}
+  console.log('runnerResultList: ', runnerResultList)
   useEffect(() => {
     const aggregator = cotaService.aggregator
     const fetchData = async () => {
@@ -69,9 +61,9 @@ export default function SettingPage() {
   }, [])
 
   const addressList = [
-    'ckt1qyqfwyghxgvf3522cgutpaqruyy3gqugk3zqa8yddf',
-    'ckt1qpth5hjexr3wehtzqpm97dzzucgemjv7sl05wnez7y72hqvuszeyyqt90590gs808qzwq8uj2z6hhr4wrs70vrgmamexx',
-    'ckt1qqypm0l63rdt2jayymfrrjnyadmqe630a8skwcdpmfqqmgdje0sjsqt90590gs808qzwq8uj2z6hhr4wrs70vrg7wyejq',
+    "ckt1qyqfwyghxgvf3522cgutpaqruyy3gqugk3zqa8yddf",
+    "ckt1qpth5hjexr3wehtzqpm97dzzucgemjv7sl05wnez7y72hqvuszeyyqt90590gs808qzwq8uj2z6hhr4wrs70vrgmamexx",
+    "ckt1qqypm0l63rdt2jayymfrrjnyadmqe630a8skwcdpmfqqmgdje0sjsqt90590gs808qzwq8uj2z6hhr4wrs70vrg7wyejq",
   ]
 
   const sendNFT = async () => {
@@ -117,9 +109,23 @@ export default function SettingPage() {
     )
   })
 
+  const runnerListElem = runnerResultList && runnerResultList.map((result: any) => {
+    return (
+      <Box key={result.rule_id}>
+        Rule ID: {result.rule_id}
+      </Box>
+    )
+  })
+
   return (
     <>
       <Sidebar>
+        <Heading as='h4' size='md' my='15px'>
+          Results
+        </Heading>
+        <Box>
+          {runnerListElem}
+        </Box>
         <Heading as='h4' size='md' my='15px'>
           Data
         </Heading>
