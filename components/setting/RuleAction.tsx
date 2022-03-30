@@ -60,8 +60,10 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
     setTabIndex(2)
   }
 
+  const initialValues = { url: "", keyword: "", address: "Nervos", startDate: new Date(), endDate: new Date() }
+
   const formElem = (
-    <Formik initialValues={{ url: "", keyword: "", address: "Nervos" }} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(props) => (
         <Form>
           <Field
@@ -130,7 +132,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
                 <FormLabel htmlFor="startDate">{t("Start Date")}</FormLabel>
                 <DatePicker
                   {...field}
-                  selected={(field.value && new Date(field.value)) || null}
+                  selected={field.value}
                   onChange={val => {
                     form.setFieldValue(field.name, val);
                   }}
