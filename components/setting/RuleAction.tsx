@@ -61,7 +61,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
   }
 
   const formElem = (
-    <Formik initialValues={{ url: "", keyword: "" }} onSubmit={onSubmit}>
+    <Formik initialValues={{ url: "", keyword: "", address: "Nervos" }} onSubmit={onSubmit}>
       {(props) => (
         <Form>
           <Field
