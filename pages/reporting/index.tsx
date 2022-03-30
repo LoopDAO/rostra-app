@@ -32,6 +32,7 @@ export default function SettingPage() {
   const { t } = useTranslation()
   const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const [totalSupply, setTotalSupply] = React.useState(0)
+  const [runnerId, setRunnerId] = React.useState('')
 
   const {
     data: runnerResultListData,
@@ -108,11 +109,17 @@ export default function SettingPage() {
       </Tr>
     )
   })
+  const queryId = runnerId || runnerResultList[0]?.rule_id
+  const { data: resultDetail } = useSWR(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/${queryId}`, fetchers.http);
+  const getResultById = (id: string) => {
+    setRunnerId(id);
+  }
 
-  const runnerListElem = runnerResultList && runnerResultList.map((result: any) => {
+  const runnerListElem = runnerResultList?.map((result: any) => {
     return (
       <Box key={result.rule_id}>
         Rule ID: {result.rule_id}
+        <Button onClick={() => getResultById(result.rule_id)}>Show Result</Button>
       </Box>
     )
   })
