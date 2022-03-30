@@ -23,23 +23,12 @@ import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
 import { ZERO_GUILD_ID } from "@lib/utils/constants"
-import { getSecp256k1CellDep } from "@lib/utils/ckb"
 import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 import { Collector, Aggregator, generateDefineCotaTx, generateIssuerInfoTx, CotaInfo, IssuerInfo, Service } from '@nervina-labs/cota-sdk'
+import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
-
-
-const secp256k1Dep = getSecp256k1CellDep(false)
-
-const service: Service = {
-  collector: new Collector({
-    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-  }),
-  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
-}
-const ckb = service.collector.getCkb()
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -139,7 +128,7 @@ export default function CreateTicket() {
       image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     }
 
-    let { rawTx, cotaId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+    let { rawTx, cotaId } = await generateDefineCotaTx(cotaService, defineLock, 100, '0x00', cotaInfo)
     console.log(` ======> cotaId: ${cotaId}`)
     console.log(' ===================== secp256k1Dep ===================== ')
     rawTx.cellDeps.push(secp256k1Dep)

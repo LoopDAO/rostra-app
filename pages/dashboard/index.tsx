@@ -37,22 +37,15 @@ import signWitnesses from '@nervosnetwork/ckb-sdk-core/lib/signWitnesses'
 import { signMessageWithRedirect, signTransactionWithRedirect, appendSignatureToTransaction, Config } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
+import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 Config.setChainType('testnet')
-
-const service: Service = {
-  collector: new Collector({
-    ckbNodeUrl: 'https://testnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-  }),
-  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
-}
-const ckb = service.collector.getCkb()
 
 const registerCota = async () => {
   const address = 'ckt1qpth5hjexr3wehtzqpm97dzzucgemjv7sl05wnez7y72hqvuszeyyqt90590gs808qzwq8uj2z6hhr4wrs70vrgmamexx'
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
-  let rawTx = await generateRegisterCotaTx(service, [unregisteredCotaLock], provideCKBLock)
+  let rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
   // const flashsingerDep = Config.getCellDep()
   const flashsingerDep: CKBComponents.CellDep = {
     outPoint: {
@@ -103,7 +96,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
-        const res = await service.aggregator.checkReisteredLockHashes([
+        const res = await cotaService.aggregator.checkReisteredLockHashes([
           scriptToHash(addressToScript(account.address)),
         ])
         setStatus(res?.registered);

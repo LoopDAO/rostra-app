@@ -17,7 +17,6 @@ import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import Sidebar from "@components/Layout/Sidebar"
-import SendNFT from './transfer'
 import {
   addressToScript,
   serializeScript,
@@ -44,20 +43,12 @@ import {
   TransferWithdrawal,
   IsClaimedReq
 } from '@nervina-labs/cota-sdk'
-import { getSecp256k1CellDep, padStr } from "@lib/utils/ckb"
+import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
 
 const secp256k1Dep = getSecp256k1CellDep(false)
-
-const service: Service = {
-  collector: new Collector({
-    ckbNodeUrl: 'https://testnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-  }),
-  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
-}
-const ckb = service.collector.getCkb()
 
 let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
 
@@ -66,7 +57,7 @@ export default function SettingPage() {
   const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const [totalSupply, setTotalSupply] = React.useState(0)
   useEffect(() => {
-    const aggregator = service.aggregator
+    const aggregator = cotaService.aggregator
     const fetchData = async () => {
       const nftInfo = await aggregator.getDefineInfo({
         cotaId,
@@ -105,7 +96,7 @@ export default function SettingPage() {
       withdrawals,
     }
     console.log('mintCotaInfo: ', mintCotaInfo)
-    let rawTx = await generateMintCotaTx(service, mintLock, mintCotaInfo)
+    let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
     rawTx.cellDeps.push(secp256k1Dep)
 

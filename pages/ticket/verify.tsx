@@ -25,7 +25,7 @@ import {
 } from '@nervina-labs/cota-sdk'
 import CKB from '@nervosnetwork/ckb-sdk-core'
 import signWitnesses from '@nervosnetwork/ckb-sdk-core/lib/signWitnesses'
-import { getSecp256k1CellDep } from "@lib/utils/ckb"
+import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 const TEST_PRIVATE_KEY = '0xd4537602bd78139bfde0771f43f7c007ea1bbb858507055d2ef6225d4ebec23e'
 const TEST_ADDRESS = 'ckt1qyqdtuf6kx8f7664atn9xkmwc9qcv4phs4xsackhmh'
@@ -36,22 +36,12 @@ const OTHER_ADDRESS = 'ckt1qyqz8vxeyrv4nur4j27ktp34fmwnua9wuyqqggd748'
 const secp256k1Dep = getSecp256k1CellDep(false)
 var url = ''
 
-const service: Service = {
-  collector: new Collector({
-    ckbNodeUrl: 'https://ckb-testnet.rebase.network/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-    // ckbNodeUrl: 'https://testnet.ckb.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-    // ckbNodeUrl: 'https://testnet.ckbapp.dev/rpc', ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
-  }),
-  aggregator: new Aggregator({ registryUrl: 'http://cota-registry-aggregator.rostra.xyz', cotaUrl: 'http://cota-aggregator.rostra.xyz' }),
-}
-const ckb = service.collector.getCkb()
-
 let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
 
 const registerCota = async (address = TEST_ADDRESS, privateKey = TEST_PRIVATE_KEY) => {
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
-  let rawTx = await generateRegisterCotaTx(service, [unregisteredCotaLock], provideCKBLock)
+  let rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
   rawTx.cellDeps.push(secp256k1Dep)
 
   const registryLock = getAlwaysSuccessLock(false)
@@ -91,7 +81,7 @@ const defineNFT = async () => {
     image: "https://i.loli.net/2021/04/29/qyJNSE4iHAas7GL.png",
   }
 
-  let { rawTx, cotaId: cId } = await generateDefineCotaTx(service, defineLock, 100, '0x00', cotaInfo)
+  let { rawTx, cotaId: cId } = await generateDefineCotaTx(cotaService, defineLock, 100, '0x00', cotaInfo)
   cotaId = cId
   console.log(` ======> cotaId: ${cotaId}`)
   console.log(' ===================== secp256k1Dep ===================== ')
@@ -116,7 +106,7 @@ const setIssuer = async () => {
     avatar: "https://i.loli.net/2021/04/29/IigbpOWP8fw9qDn.png",
   }
 
-  let rawTx = await generateIssuerInfoTx(service, cotaLock, issuer)
+  let rawTx = await generateIssuerInfoTx(cotaService, cotaLock, issuer)
 
   rawTx.cellDeps.push(secp256k1Dep)
 
@@ -127,7 +117,7 @@ const setIssuer = async () => {
 }
 
 const getNFTInfo = async () => {
-  const aggregator = service.aggregator
+  const aggregator = cotaService.aggregator
   // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000d5f13ab18e9f6b55eae6535b6ec141865437854d
   // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000360b9423a2f5b551489d4550b27fde126e4afe0b
   // 0x490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000023b0d920d959f07592bd6586354edd3e74aee100
@@ -170,7 +160,7 @@ const mint = async () => {
       },
     ],
   }
-  let rawTx = await generateMintCotaTx(service, mintLock, mintCotaInfo)
+  let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
   rawTx.cellDeps.push(secp256k1Dep)
 
@@ -191,7 +181,7 @@ const claim = async () => {
       tokenIndex: '0x00000000',
     }
   ]
-  let rawTx = await generateClaimCotaTx(service, claimLock, withdrawLock, claims)
+  let rawTx = await generateClaimCotaTx(cotaService, claimLock, withdrawLock, claims)
 
   rawTx.cellDeps.push(secp256k1Dep)
 
@@ -213,7 +203,7 @@ const withdraw = async () => {
       toLockScript: serializeScript(toLock),
     },
   ]
-  let rawTx = await generateWithdrawCotaTx(service, withdrawLock, withdrawals)
+  let rawTx = await generateWithdrawCotaTx(cotaService, withdrawLock, withdrawals)
 
   rawTx.cellDeps.push(secp256k1Dep)
 
@@ -235,7 +225,7 @@ const transfer = async () => {
       toLockScript: serializeScript(addressToScript(OTHER_ADDRESS)),
     },
   ]
-  let rawTx = await generateTransferCotaTx(service, cotaLock, withdrawLock, transfers)
+  let rawTx = await generateTransferCotaTx(cotaService, cotaLock, withdrawLock, transfers)
 
   rawTx.cellDeps.push(secp256k1Dep)
 
@@ -270,7 +260,7 @@ const verify = async () => {
       // },
     ],
   }
-  let rawTx = await generateMintCotaTx(service, mintLock, mintCotaInfo)
+  let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
   rawTx.cellDeps.push(secp256k1Dep)
 

@@ -1,3 +1,9 @@
+import {
+  Service,
+  Collector,
+  Aggregator,
+} from '@nervina-labs/cota-sdk'
+
 export const getSecp256k1CellDep = (isMainnet: boolean): CKBComponents.CellDep => {
   if (isMainnet) {
     return {
@@ -17,3 +23,15 @@ export const getSecp256k1CellDep = (isMainnet: boolean): CKBComponents.CellDep =
 
 export const padStr = (str: string) => '0x' + str.padStart(8, '0');
 
+export const cotaService: Service = {
+  collector: new Collector({
+    ckbNodeUrl: 'https://testnet.ckbapp.dev/rpc',
+    ckbIndexerUrl: 'https://testnet.ckbapp.dev/indexer'
+  }),
+  aggregator: new Aggregator({
+    registryUrl: 'https://cota.nervina.dev/registry-aggregator',
+    cotaUrl: 'https://cota.nervina.dev/aggregator'
+  }),
+}
+
+export const ckb = cotaService.collector.getCkb()
