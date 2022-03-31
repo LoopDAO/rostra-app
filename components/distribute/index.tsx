@@ -9,23 +9,22 @@ import {
   Icon,
   InputGroup,
 } from "@chakra-ui/react"
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
-import { NFTStorage, File } from "nft.storage"
-import { GetStaticProps } from "next"
-import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { NFTStorage } from "nft.storage"
 import { useWeb3React } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
 import { getNftManagerContract } from "@lib/utils/contracts"
-import { ZERO_GUILD_ID } from "@lib/utils/constants"
+import { GuildType } from "api/guild"
+import Image from "next/image"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
   accept?: string
   multiple?: boolean
   children?: ReactNode
-  onChange?: Function
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 const FileUpload = (props: FileUploadProps) => {
@@ -58,8 +57,8 @@ const FileUpload = (props: FileUploadProps) => {
   )
 }
 
-export default function FormikExample() {
-  // TODO: Add typing
+export default function DistributeNFT(props: { guild: GuildType }) {
+  const { guild } = props
   const {
     register,
     handleSubmit,
@@ -68,6 +67,12 @@ export default function FormikExample() {
 
   const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
+  const [image, setImage] = useState("")
+
+  let imageElem: ReactNode = null
+  if (image) {
+    imageElem = <Image src={image} alt="NFT image" width={300} height={300} />
+  }
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
@@ -82,15 +87,8 @@ export default function FormikExample() {
     }
     return true
   }
-  function validateGuildName(value) {
-    let error
-    if (!value) {
-      error = "Guild Name is required"
-    }
-    return error
-  }
 
-  function validateName(value) {
+  function validateName(value?: string) {
     let error
     if (!value) {
       error = "Name is required"
@@ -98,7 +96,7 @@ export default function FormikExample() {
     return error
   }
 
-  function validateDescription(value) {
+  function validateDescription(value?: string) {
     let error
     if (!value) {
       error = "Description is required"
@@ -106,15 +104,7 @@ export default function FormikExample() {
     return error
   }
 
-  function validateImage(value) {
-    let error
-    if (!value) {
-      error = "Image is required"
-    }
-    return error
-  }
-
-  function validateAddress(value) {
+  function validateAddress(value?: string) {
     let error
     if (!value) {
       error = "Address is required"
@@ -122,17 +112,24 @@ export default function FormikExample() {
     return error
   }
 
-  async function onFileChanged(e) {
+  async function onFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.files)
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
     console.log(file.name, file.type)
-    setFileObj(e.target.files[0])
+    setFileObj(file)
+    setImage(URL.createObjectURL(file))
   }
 
   const { account, library, chainId } = useWeb3React<Web3Provider>()
-  const onSubmit = async (values, actions) => {
-    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ''
+  // TODO: Add typing
+  const onSubmit = async (values: any, actions: any) => {
+    const { name, description, addresses } = values
+    const guildId = guild.guild_id
+    if (!guildId || !name || !description) {
+      return
+    }
+    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
     if (!apiKey) return
     const client = new NFTStorage({ token: apiKey })
 
@@ -140,60 +137,42 @@ export default function FormikExample() {
     const signer = await library.getSigner(account)
     const nftManager = getNftManagerContract(signer, chainId)
     if (!nftManager) return
-    console.log("values: ", values)
     const metadata = await client.store({
       name: values.name,
       description: values.description,
-      image: fileObj as File
+      image: fileObj as File,
     })
     // const metadata = {
     //   url: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     // }
-    console.log("metadata.url: ", metadata.url)
     setIpfsUrl(metadata.url)
-    const addresses = values.address.split("\n")
-    const guildName = values.guildName
-    console.log("guildName: ", guildName)
-    console.log("nftManager.address: ", nftManager.address)
+    const addressesList = addresses.split("\n")
 
-    const guildId = await nftManager.guildNameToGuildId(guildName);
-    console.log("guildId: ", guildId)
-    if (guildId === ZERO_GUILD_ID) {
-      alert(`No guild id found for guild name: ${guildName}`);
-      return;
-    }
-    await nftManager.connect(signer).mintNewNFT(guildId, metadata.url, addresses);
+    await nftManager
+      .connect(signer)
+      .mintNewNFT(guildId, metadata.url, addressesList)
 
     setTimeout(() => {
-      setIpfsUrl('')
+      setIpfsUrl("")
+      setImage("")
+      actions.resetForm()
       actions.setSubmitting(false)
     }, 1000)
   }
 
   return (
     <Formik
-      initialValues={{ guildName: "", name: "", description: "", address: "" }}
+      initialValues={{ name: "", description: "", addresses: "" }}
       onSubmit={onSubmit}
     >
       {(props) => (
         <Form>
-          <Field name="guildName" validate={validateGuildName}>
-            {({ field, form }) => (
-              <FormControl
-                isRequired
-                isInvalid={form.errors.guildName && form.touched.guildName}
-              >
-                <FormLabel htmlFor="guildName">Guild Name</FormLabel>
-                <Input {...field} id="guildName" placeholder="Guild Name" />
-                <FormErrorMessage>{form.errors.guildName}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
           <Field name="name" validate={validateName}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
+                style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <Input {...field} id="name" placeholder="Name" />
@@ -202,10 +181,11 @@ export default function FormikExample() {
             )}
           </Field>
           <Field name="description" validate={validateDescription}>
-            {({ field, form }) => (
+            {({ field, form }: FieldProps) => (
               <FormControl
+                style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
                 <FormLabel htmlFor="description">Description</FormLabel>
                 <Input {...field} id="description" placeholder="Description" />
@@ -213,7 +193,11 @@ export default function FormikExample() {
               </FormControl>
             )}
           </Field>
-          <FormControl isInvalid={!!errors.file_} isRequired>
+          <FormControl
+            style={{ paddingTop: "10px" }}
+            isInvalid={!!errors.file_}
+            isRequired
+          >
             <FormLabel>{"Image"}</FormLabel>
             <FileUpload
               accept={"image/*"}
@@ -223,24 +207,26 @@ export default function FormikExample() {
                 onFileChanged(e)
               }}
             >
-              <Button leftIcon={<Icon as={FiFile} />}>Upload {ipfsUrl}</Button>
+              {imageElem}
+              <Button leftIcon={<Icon as={FiFile} />}>Upload </Button>
             </FileUpload>
 
             <FormErrorMessage>
               {errors.file_ && errors?.file_.message}
             </FormErrorMessage>
           </FormControl>
-          <Field name="address" validate={validateAddress}>
-            {({ field, form }) => (
+          <Field name="addresses" validate={validateAddress}>
+            {({ field, form }: FieldProps) => (
               <FormControl
+                style={{ paddingTop: "10px" }}
                 isRequired
-                isInvalid={form.errors.name && form.touched.name}
+                isInvalid={!!(form.errors.name && form.touched.name)}
               >
-                <FormLabel htmlFor="address">Address</FormLabel>
+                <FormLabel htmlFor="addresses">Addresses</FormLabel>
                 <Textarea
                   {...field}
-                  id="address"
-                  placeholder="address1,address2,address3"
+                  id="addresses"
+                  placeholder="Split by new line"
                 />
                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
               </FormControl>
@@ -258,12 +244,4 @@ export default function FormikExample() {
       )}
     </Formik>
   )
-}
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale!, ["common"])),
-    },
-  }
 }

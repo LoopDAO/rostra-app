@@ -1,8 +1,17 @@
 {
   "title": "Rostra",
-  "mission": "Rostra is dedicted to build a decentralized education and research system, so as to promoto the open access and innovation of knowledge.",
+  "hero": {
+    "title1": "Build your",
+    "title2": "web3 community",
+    "line1": "Rostra is a web3 community building protocol. ",
+    "line2": "Help build belonging into communities by providing a complete set of NFT and identity solutions."
+  },
   "action": {
-    "gotoapp": "Begin to Try"
+    "getStarted": "Get Started",
+    "startFree": "Starting for free"
+  },
+  "dashboard": {
+    "title": "Dashboard"
   },
   "problems": {
     "title": "Problems",
@@ -108,7 +117,8 @@
   "guild": {
     "create": "Create guild",
     "list": "Guild List",
-    "guilds": "My guilds",
+    "myGuilds": "My guilds",
+    "guilds": "Guilds",
     "name": "Name",
     "desc": "Description",
     "creator": "Creator",
@@ -117,5 +127,13 @@
     "confirm": "Confirm",
     "requirement": "Requirement",
     "requirementInfo": "You can add whitelist for joining the guild, addresses that hold specified NFTs or members in specified guilds."
+  },
+  "nft": {
+    "distribute": "Distribute NFT",
+    "claim": "Claim NFT"
+  },
+  "redpacket": {
+    "create": "Create Redpacket",
+    "claim": "Claim Redpacket"
   }
 }

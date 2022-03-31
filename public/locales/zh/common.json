@@ -1,8 +1,17 @@
 {
   "title": "Rostra",
-  "mission": "Rostra 致力于构建去中心化的教育和研究体系，促进知识开放和创新。",
+  "hero": {
+    "title1": "构建你的",
+    "title2": "web3 社区",
+    "line1": "Rostra 是一个 web3 社区构建协议。",
+    "line2": "通过提供一套完整的 NFT 和身份解决方案， 帮助各种组织构建有归属感的社区。"
+  },
   "action": {
-    "gotoapp": "开始尝试"
+    "getStarted": "开始使用",
+    "startFree": "免费使用"
+  },
+  "dashboard": {
+    "title": "控制面板"
   },
   "problems": {
     "title": "Problems",
@@ -57,9 +66,9 @@
     "title": "Rostra 想要带来哪些改变",
     "edu": {
       "title": "教育",
-      "knowledge":"促进公平获取知识的权利",
-      "diversity":"促进社会多样化",
-      "exploration":"鼓励和支持个体的探索",
+      "knowledge": "促进公平获取知识的权利",
+      "diversity": "促进社会多样化",
+      "exploration": "鼓励和支持个体的探索",
       "personalized": "让个性化教育真正可行",
       "acquire": "让学习者及时获取最新的知识",
       "decentralize": "将证书发放权力去中心化",
@@ -68,9 +77,9 @@
     },
     "research": {
       "title": "科研",
-      "ownership":"建立合理的所有权机制",
-      "reward":"让个人拥有自己的科研成果",
-      "evaluation":"改变科研成果的奖励机制",
+      "ownership": "建立合理的所有权机制",
+      "reward": "让个人拥有自己的科研成果",
+      "evaluation": "改变科研成果的奖励机制",
       "achievements": "形成去中心化的价值发现和评价体系",
       "access": "促进科研成果的开放获取"
     }
@@ -108,7 +117,8 @@
   "guild": {
     "create": "创建公会",
     "list": "公会列表",
-    "guilds": "我的公会",
+    "myGuilds": "我的公会",
+    "guilds": "公会",
     "name": "名称",
     "desc": "简介",
     "creator": "创造者",
@@ -117,5 +127,19 @@
     "confirm": "确认",
     "requirement": "要求",
     "requirementInfo": "您可以添加加入公会的白名单、持有指定 NFT 的地址或指定公会中的成员。"
+  },
+  "nft": {
+    "distribute": "发 NFT",
+    "claim": "领 NFT",
+    "myNFTs": "我的NFT"
+  },
+  "redpacket": {
+    "create": "发红包",
+    "claim": "领红包"
+  },
+  "setting": {
+    "RuleAction": "规则设定",
+    "RuleBase": "基本信息",
+    "RuleNFT": "NFT设定"
   }
 }
