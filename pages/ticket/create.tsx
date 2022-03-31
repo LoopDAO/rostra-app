@@ -1,4 +1,5 @@
 import React, { useRef, ReactNode, useState } from "react"
+import { cotaNFTType } from "../../api/nft"
 import {
   FormControl,
   FormLabel,
@@ -114,6 +115,27 @@ export default function CreateTicket() {
     return error
   }
 
+  async function postNft2Rostra(nftInfo:cotaNFTType) {
+    console.log("call create nft api!!")
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/nft/add/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(nftInfo),
+    })
+      .then(async (resp) => {
+        console.log("resp:", resp)
+        const data = await resp.json()
+        if (data.message == "SUCCESS") {
+          console.log("values.name:", nftInfo.name)
+        } else {
+          throw Error("create new nft faild!")
+        }
+  })
+}
+
   async function onFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.files)
     const file = e.target.files?.[0]
@@ -137,6 +159,14 @@ export default function CreateTicket() {
     let { rawTx, cotaId } = await generateDefineCotaTx(cotaService, defineLock, 100, '0x00', cotaInfo)
     console.log(` ======> cotaId: ${cotaId}`)
     console.log(' ===================== secp256k1Dep ===================== ')
+    const nftInfo: cotaNFTType = {
+      name: values.name.trim(),
+      desc: values.description.trim(),
+      image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json',
+      cota_id: cotaId
+    }
+
+    postNft2Rostra(nftInfo)
     rawTx.cellDeps.push(secp256k1Dep)
     try {
       const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
@@ -147,29 +177,13 @@ export default function CreateTicket() {
       console.error('error happened:', error)
     }
 
+
+
     console.log("========> createNFT finished...")
-    const MongoClient = require('mongodb').MongoClient
+  }
 
 
-    MongoClient.connect('mongodb://localhost:27017/guild', (err:any, database:any) => {
-    if (err) {
-      console.log(err)
-      process.exit(1)
-    }
-    
-    console.log('mongodb connect success')
-    const nftCollection = database.collection('nft')
-    // 插入一条数据， 插入多条可以选择 insertMany()
-    const res = nftCollection.insertOne({
-      name: values.name,
-      description: values.description,
-      image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json',
-      cotaId: cotaId
-    })
-    console.log(res)
-    })
-   
-    //client.close()
+  
     
 
     // const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
@@ -193,7 +207,7 @@ export default function CreateTicket() {
     //   setIpfsUrl("")
     //   actions.setSubmitting(false)
     // }, 1000)
-  }
+  
 
   return (
     <Formik
@@ -275,6 +289,8 @@ export default function CreateTicket() {
         </Form>
       )}
     </Formik>
+  
+  
   )
 }
 
@@ -285,3 +301,5 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
   }
 }
+
+
