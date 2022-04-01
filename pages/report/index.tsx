@@ -39,7 +39,7 @@ export default function ReportingPage() {
   const [runnerId, setRunnerId] = React.useState('')
   const [ruleId, setRuleId] = React.useState('')
   const [addressList, setAddressList] = React.useState([])
-  const [currentRule, setCurrentRule] = React.useState<any>()
+  const [currentRunner, setCurrentRunner] = React.useState<any>()
 
   const {
     data: runnerResultListData,
@@ -62,7 +62,7 @@ export default function ReportingPage() {
     setRunnerId(id);
     setRuleId(ruleId)
     await getResultAddressList(id)
-    const rule = await getRuleInfo(ruleId)
+    const rule = await getRunnerInfo(ruleId)
     const aggregator = cotaService.aggregator
     const nftInfo = await aggregator.getDefineInfo({
       cotaId: rule.nft,
@@ -70,18 +70,14 @@ export default function ReportingPage() {
     setTotalSupply(nftInfo.issued)
   }
 
-  const runRunner = async () => {
-    await httpPost('/runresult/refresh', { rule_id: ruleId })
-  }
-
   const getResultAddressList = async (id: string) => {
     const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/runresult/${id}`)
     setAddressList(res?.result?.result)
   }
 
-  const getRuleInfo = async (id: string) => {
+  const getRunnerInfo = async (id: string) => {
     const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/rule/${id}`)
-    setCurrentRule(res?.result)
+    setCurrentRunner(res?.result)
     return res?.result
   }
 
@@ -105,7 +101,7 @@ export default function ReportingPage() {
     })
 
     const mintCotaInfo: MintCotaInfo = {
-      cotaId: currentRule?.nft,
+      cotaId: currentRunner?.nft,
       withdrawals,
     }
     let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
@@ -157,7 +153,6 @@ export default function ReportingPage() {
         {menu}
         <Heading as='h4' size='md' my='15px'>
           Data ({addressList.length})
-          <Button onClick={runRunner}>Refetch</Button>
         </Heading>
         <Table size='sm'>
           <Thead>
