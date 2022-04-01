@@ -41,8 +41,8 @@ export default function SettingPage() {
   } = useSWR(
     () =>
       accountFlash.address
-        // ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/${accountFlash.address}`
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/`
+        // ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get/${accountFlash.address}`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get/`
         : null,
     fetchers.http
   )
@@ -61,11 +61,13 @@ export default function SettingPage() {
     fetchData()
   }, [])
 
-  const addressList = [
-    "ckt1qyqfwyghxgvf3522cgutpaqruyy3gqugk3zqa8yddf",
-    "ckt1qpth5hjexr3wehtzqpm97dzzucgemjv7sl05wnez7y72hqvuszeyyqt90590gs808qzwq8uj2z6hhr4wrs70vrgmamexx",
-    "ckt1qqypm0l63rdt2jayymfrrjnyadmqe630a8skwcdpmfqqmgdje0sjsqt90590gs808qzwq8uj2z6hhr4wrs70vrg7wyejq",
-  ]
+  const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/${runnerId}` : null
+  const { data: resultDetail } = useSWR(detailURL, fetchers.http);
+  const getResultById = (id: string) => {
+    setRunnerId(id);
+  }
+
+  const addressList: string[] = resultDetail?.result?.result || []
 
   const sendNFT = async () => {
     let startIndex = totalSupply
@@ -109,17 +111,12 @@ export default function SettingPage() {
       </Tr>
     )
   })
-  const queryId = runnerId || runnerResultList[0]?.rule_id
-  const { data: resultDetail } = useSWR(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/runresult/get/${queryId}`, fetchers.http);
-  const getResultById = (id: string) => {
-    setRunnerId(id);
-  }
 
   const runnerListElem = runnerResultList?.map((result: any) => {
     return (
-      <Box key={result.rule_id}>
-        Rule ID: {result.rule_id}
-        <Button onClick={() => getResultById(result.rule_id)}>Show Result</Button>
+      <Box key={result._id.$oid}>
+        ID: {result._id.$oid}
+        <Button onClick={() => getResultById(result._id.$oid)}>Show Result</Button>
       </Box>
     )
   })
