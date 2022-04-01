@@ -16,11 +16,7 @@ export default function GuildPage() {
   const { account } = useWeb3React<Web3Provider>()
   const [checked, setChecked] = useState(false)
 
-  const {
-    data: guildsData,
-    error: guildsError,
-    isValidating: isLoadingGuildData,
-  } = useSWR(
+  const { data: guildsData, error: guildsError } = useSWR(
     () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
     fetchers.http
   )
@@ -41,6 +37,7 @@ export default function GuildPage() {
 
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
+  if (!guildsData || !userGuildsData) return <div>Loading...</div>
 
   if (isLoadingGuildData || isLoadingUserGuilds) return <Loading />
 

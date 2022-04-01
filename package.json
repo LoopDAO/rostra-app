@@ -40,11 +40,10 @@
     "ethers": "^5.5.3",
     "formik": "^2.2.9",
     "framer-motion": "^5",
-    "fs": "^0.0.1-security",
     "ipfs-core": "^0.14.1",
     "jotai": "1.4.7",
     "lodash.merge": "^4.6.2",
-    "next": "12.0.3",
+    "next": "^12.1.2",
     "next-i18next": "^8.8.0",
     "next-plausible": "^3.1.4",
     "next-themes": "^0.0.15",
@@ -55,6 +54,7 @@
     "react-hook-form": "^7.25.1",
     "react-icons": "^4.3.1",
     "swr": "^1.1.2",
+    "tls": "^0.0.1",
     "use-clipboard-copy": "^0.2.0"
   },
   "devDependencies": {

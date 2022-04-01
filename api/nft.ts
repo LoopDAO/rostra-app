@@ -21,3 +21,10 @@ export type NFTAPIType = {
   result: string
   error: string
 }
+
+export type cotaNFTType= {
+  cota_id:string,
+  name:string,
+  desc:string,
+  image:string
+}
