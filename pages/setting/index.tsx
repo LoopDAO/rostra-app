@@ -64,7 +64,7 @@ export default function SettingPage() {
     ruleInfo.creator = accountFlash.address
     ruleInfo.signature = "test"
 
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/rule/add/`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rule/add/`, {
       method: "POST",
       headers: {
         Accept: "application/json",

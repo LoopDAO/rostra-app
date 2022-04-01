@@ -7,8 +7,8 @@ const config = withPlausibleProxy()({
   async rewrites() {
     return [
       {
-        source: "/rostra/:path*",
-        destination: process.env.NEXT_PUBLIC_API_BASE + "/rostra/:path*",
+        source: "/api/:path*",
+        destination: process.env.NEXT_PUBLIC_API_BASE + "/:path*",
       }
     ]
   }

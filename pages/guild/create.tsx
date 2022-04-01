@@ -72,7 +72,7 @@ export default function CreateGuild() {
   }
 
   function postGuild2Rostra(guildInfo: GuildType) {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/add/`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE}/guild/add/`, {
       method: "POST",
       headers: {
         Accept: "application/json",

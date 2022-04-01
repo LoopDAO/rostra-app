@@ -21,7 +21,7 @@ export default function MyNFTsPage() {
     error: itemsError,
     isValidating: isLoadingData,
   } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/`,
     fetchers.http
   )
 
@@ -32,7 +32,7 @@ export default function MyNFTsPage() {
   } = useSWR(
     () =>
       account
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/${account}`
         : null,
     fetchers.http
   )

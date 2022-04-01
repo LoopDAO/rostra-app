@@ -17,7 +17,7 @@ export default function GuildPage() {
   const [checked, setChecked] = useState(false)
 
   const { data: guildsData, error: guildsError } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/`,
     fetchers.http
   )
 
@@ -28,7 +28,7 @@ export default function GuildPage() {
   } = useSWR(
     () =>
       account
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/get/${account}`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/${account}`
         : null,
     fetchers.http
   )

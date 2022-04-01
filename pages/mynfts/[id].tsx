@@ -21,7 +21,7 @@ export default function NFTDetails() {
   const { account, library, chainId } = useWeb3React<Web3Provider>()
   const { query } = useRouter()
   const { data, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/rostra/guild/${query.id}`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/guild/${query.id}`,
     fetchers.http
   )
   const guild: GuildType = data?.result
