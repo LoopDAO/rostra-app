@@ -32,8 +32,6 @@ const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
 
 const secp256k1Dep = getSecp256k1CellDep(false)
 
-let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
-
 export default function ReportingPage() {
   const { t } = useTranslation()
   const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
@@ -41,6 +39,7 @@ export default function ReportingPage() {
   const [runnerId, setRunnerId] = React.useState('')
   const [ruleId, setRuleId] = React.useState('')
   const [addressList, setAddressList] = React.useState([])
+  const [currentRule, setCurrentRule] = React.useState<any>()
 
   const {
     data: runnerResultListData,
@@ -56,25 +55,19 @@ export default function ReportingPage() {
   )
 
   const { result: runnerResultList } = runnerResultListData || {}
-  console.log('runnerResultList: ', runnerResultList)
-  useEffect(() => {
-    const aggregator = cotaService.aggregator
-    const fetchData = async () => {
-      const nftInfo = await aggregator.getDefineInfo({
-        cotaId,
-      })
-      setTotalSupply(nftInfo.issued)
-      console.log('nftInfo: ', nftInfo)
-    }
-    fetchData()
-  }, [])
 
   // const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/${runnerId}` : null
   // let { data: currentResult } = useSWR(detailURL, fetchers.http);
-  const getResultById = (id: string, ruleId: string) => {
+  const getResultById = async (id: string, ruleId: string) => {
     setRunnerId(id);
     setRuleId(ruleId)
-    getResultAddressList(id)
+    await getResultAddressList(id)
+    const rule = await getRuleInfo(ruleId)
+    const aggregator = cotaService.aggregator
+    const nftInfo = await aggregator.getDefineInfo({
+      cotaId: rule.nft,
+    })
+    setTotalSupply(nftInfo.issued)
   }
 
   const runRunner = async () => {
@@ -86,6 +79,12 @@ export default function ReportingPage() {
     setAddressList(res?.result?.result)
   }
 
+  const getRuleInfo = async (id: string) => {
+    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/rule/${id}`)
+    setCurrentRule(res?.result)
+    return res?.result
+  }
+
   const deleteResult = async (address: string) => {
     await httpPost('/runresult/delete', { rule_id: ruleId, address })
     await getResultAddressList(runnerId)
@@ -94,13 +93,9 @@ export default function ReportingPage() {
 
   const sendNFT = async () => {
     let startIndex = totalSupply
-    console.log(` ======> cotaId: ${cotaId}`)
     const mintLock = addressToScript(TEST_ADDRESS)
-    console.log(` ======> addressList: ${addressList}`)
-    console.log('startIndex: ', startIndex)
     const withdrawals = addressList.map((address, index) => {
       const tokenIndex = padStr((startIndex++).toString(16))
-      console.log('tokenIndex: ', tokenIndex)
       return {
         tokenIndex,
         state: '0x00',
@@ -110,16 +105,14 @@ export default function ReportingPage() {
     })
 
     const mintCotaInfo: MintCotaInfo = {
-      cotaId,
+      cotaId: currentRule?.nft,
       withdrawals,
     }
-    console.log('mintCotaInfo: ', mintCotaInfo)
     let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
     rawTx.cellDeps.push(secp256k1Dep)
 
     const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-    // console.log('signedTx: ', JSON.stringify(signedTx))
     let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
     console.info(`Mint cota nft tx has been sent with tx hash ${txHash}`)
   }
@@ -142,7 +135,6 @@ export default function ReportingPage() {
         {/* MenuItems are not rendered unless Menu is open */}
         {
           runnerResultList?.map((result: any) => {
-            console.log('result: ', result)
             return (
               <MenuItem key={result._id.$oid}>
                 <Box onClick={() => getResultById(result._id.$oid, result.rule_id)}>
@@ -156,7 +148,6 @@ export default function ReportingPage() {
       </MenuList>
     </Menu >
   )
-
   return (
     <>
       <Sidebar>
