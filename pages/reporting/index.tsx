@@ -9,7 +9,16 @@ import {
   Heading,
   Box,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from '@chakra-ui/react'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
@@ -28,7 +37,7 @@ const secp256k1Dep = getSecp256k1CellDep(false)
 
 let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
 
-export default function SettingPage() {
+export default function ReportingPage() {
   const { t } = useTranslation()
   const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
   const [totalSupply, setTotalSupply] = React.useState(0)
@@ -112,14 +121,27 @@ export default function SettingPage() {
     )
   })
 
-  const runnerListElem = runnerResultList?.map((result: any) => {
-    return (
-      <Box key={result._id.$oid}>
-        ID: {result._id.$oid}
-        <Button onClick={() => getResultById(result._id.$oid)}>Show Result</Button>
-      </Box>
-    )
-  })
+  const menu = (
+    <Menu isLazy>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{runnerResultList?.[0]._id.$oid}</MenuButton>
+      <MenuList>
+        {/* MenuItems are not rendered unless Menu is open */}
+        {
+          runnerResultList?.map((result: any) => {
+            console.log('result: ', result)
+            return (
+              <MenuItem key={result._id.$oid}>
+                <Box onClick={() => getResultById(result._id.$oid)}>
+                  {result._id.$oid}
+                </Box>
+              </MenuItem>
+            )
+          })
+        }
+
+      </MenuList>
+    </Menu >
+  )
 
   return (
     <>
@@ -127,9 +149,7 @@ export default function SettingPage() {
         <Heading as='h4' size='md' my='15px'>
           Results
         </Heading>
-        <Box>
-          {runnerListElem}
-        </Box>
+        {menu}
         <Heading as='h4' size='md' my='15px'>
           Data
         </Heading>
