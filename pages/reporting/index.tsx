@@ -123,7 +123,7 @@ export default function ReportingPage() {
 
   const menu = (
     <Menu isLazy>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{runnerResultList?.[0]._id.$oid}</MenuButton>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{runnerId || 'Select runner'}</MenuButton>
       <MenuList>
         {/* MenuItems are not rendered unless Menu is open */}
         {
