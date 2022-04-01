@@ -14,25 +14,24 @@ import {
   FlexProps,
 } from '@chakra-ui/react';
 import {
-  FiHome,
   FiTrendingUp,
-  FiCompass,
-  FiStar,
   FiSettings,
   FiMenu,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
+import { RepeatClockIcon } from '@chakra-ui/icons';
 import { ReactText } from 'react';
 import Link from "next/link"
 
 interface LinkItemProps {
   name: string;
   link: string;
-  icon: IconType;
+  icon: ReactNode;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Settings', icon: FiSettings, link: '/setting' },
-  { name: 'Reporting', icon: FiTrendingUp, link: '/reporting' },
+  { name: 'Setting', icon: FiSettings, link: '/setting' },
+  { name: 'Runner', icon: RepeatClockIcon, link: '/runner' },
+  { name: 'Report', icon: FiTrendingUp, link: '/report' },
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
