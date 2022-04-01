@@ -37,11 +37,8 @@ export default function GuildPage() {
 
   if (guildsError || userGuildsError)
     return <div>{guildsError?.message || userGuildsError?.message}</div>
-  if (!guildsData || !userGuildsData) return <div>Loading...</div>
 
-  if (isLoadingGuildData || isLoadingUserGuilds) return <Loading />
-
-  
+  if (isLoadingUserGuilds) return <Loading />
 
   return (
     <Stack spacing={2} p={4}>
