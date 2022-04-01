@@ -4,7 +4,6 @@ const post = async (url: string, params: any) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "Access-Control-Max-Age": "3600",
     },
     body: JSON.stringify(params),
   })

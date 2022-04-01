@@ -13,12 +13,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
 } from '@chakra-ui/react'
-import { Field, FieldProps, Form, Formik } from "formik"
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { GetStaticProps } from "next"
@@ -30,7 +25,7 @@ import { generateMintCotaTx, MintCotaInfo, } from '@nervina-labs/cota-sdk'
 import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 import fetchers from "api/fetchers"
 import httpPost from 'api/post'
-import useSWR from "swr"
+import useSWR from 'swr'
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
@@ -45,6 +40,7 @@ export default function ReportingPage() {
   const [totalSupply, setTotalSupply] = React.useState(0)
   const [runnerId, setRunnerId] = React.useState('')
   const [ruleId, setRuleId] = React.useState('')
+  const [addressList, setAddressList] = React.useState([])
 
   const {
     data: runnerResultListData,
@@ -54,7 +50,7 @@ export default function ReportingPage() {
     () =>
       accountFlash.address
         // ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get/${accountFlash.address}`
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get/`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get`
         : null,
     fetchers.http
   )
@@ -73,14 +69,28 @@ export default function ReportingPage() {
     fetchData()
   }, [])
 
-  const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/${runnerId}` : null
-  const { data: resultDetail } = useSWR(detailURL, fetchers.http);
+  // const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/${runnerId}` : null
+  // let { data: currentResult } = useSWR(detailURL, fetchers.http);
   const getResultById = (id: string, ruleId: string) => {
     setRunnerId(id);
     setRuleId(ruleId)
+    getResultAddressList(id)
   }
 
-  const addressList: string[] = resultDetail?.result?.result || []
+  const runRunner = async () => {
+    await httpPost('/runresult/refresh', { rule_id: ruleId })
+  }
+
+  const getResultAddressList = async (id: string) => {
+    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/runresult/${id}`)
+    setAddressList(res?.result?.result)
+  }
+
+  const deleteResult = async (address: string) => {
+    await httpPost('/runresult/delete', { rule_id: ruleId, address })
+    await getResultAddressList(runnerId)
+  }
+
 
   const sendNFT = async () => {
     let startIndex = totalSupply
@@ -120,7 +130,7 @@ export default function ReportingPage() {
         <Td>
           <Box w='400px'>{address}</Box>
           </Td>
-        <Td>Delete</Td>
+        <Td><Button onClick={() => deleteResult(address)}>Delete</Button></Td>
       </Tr>
     )
   })
@@ -147,11 +157,6 @@ export default function ReportingPage() {
     </Menu >
   )
 
-  const refetchData = async () => {
-    await httpPost('/runresult/refresh/', { rule_id: ruleId })
-    console.log('finished to refetchData: ', ruleId)
-  }
-
   return (
     <>
       <Sidebar>
@@ -160,8 +165,8 @@ export default function ReportingPage() {
         </Heading>
         {menu}
         <Heading as='h4' size='md' my='15px'>
-          Data
-          <Button onClick={refetchData}>Refetch</Button>
+          Data ({addressList.length})
+          <Button onClick={runRunner}>Refetch</Button>
         </Heading>
         <Table size='sm'>
           <Thead>
