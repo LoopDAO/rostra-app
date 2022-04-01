@@ -19,25 +19,19 @@ import React, { useState } from "react"
 import Sidebar from "@components/Layout/Sidebar"
 
 const initRuleInfo = {
-  rule_id: undefined,
   name: "",
   desc: "",
-  ipfsAddr: "",
   wallet_address: undefined,
   creator: "",
   signature: undefined,
   action: {
     type: "Comment on this discussion",
-    url: "https://github.com",
+    url: "",
     condition: [{ with: "Address", of: "Nervos" }],
     start_time: new Date(),
     end_time: new Date(),
   },
-  nft: {
-    name: "",
-    desc: "",
-    image: "",
-  },
+  nft: "",
 }
 export default function SettingPage() {
   const { t } = useTranslation()

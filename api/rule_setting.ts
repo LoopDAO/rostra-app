@@ -1,8 +1,6 @@
 export type RuleType = {
-  rule_id?: string
   name: string,
   desc: string,
-  ipfsAddr?: string,
   creator: string,
   signature?: string,
   action: {
@@ -15,12 +13,7 @@ export type RuleType = {
     start_time: Date,
     end_time: Date,
   }
-  nft: {
-    name: string,
-    desc: string,
-    image: string,
-  }
-
+  nft: string,
 }
 
 export type RuleConditionType = {

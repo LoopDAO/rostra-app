@@ -113,7 +113,6 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
             {({ field, form }: FieldProps) => (
               <FormControl
                 style={{ paddingTop: "10px" }}
-                isRequired
                 isInvalid={!!(form.errors.keyword && form.touched.keyword)}
               >
                 <FormLabel htmlFor="keyword">{t("Keyword")}</FormLabel>
