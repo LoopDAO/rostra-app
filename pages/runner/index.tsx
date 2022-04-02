@@ -47,8 +47,7 @@ export default function ReportingPage() {
   } = useSWR(
     () =>
       accountFlash.address
-        // ? `${process.env.NEXT_PUBLIC_API_BASE}/rule/get/${accountFlash.address}`
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/rule/get`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/rule/walletaddr/${accountFlash.address}`
         : null,
     fetchers.http
   )
@@ -73,7 +72,7 @@ export default function ReportingPage() {
   }
 
   const runRunner = async () => {
-    await httpPost('/rule/refresh', { rule_id: runnerId })
+    await httpPost('/result/refresh', { rule_id: runnerId })
   }
 
   const getRunnerAddressList = async (id: string) => {

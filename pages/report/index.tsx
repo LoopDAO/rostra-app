@@ -48,15 +48,14 @@ export default function ReportingPage() {
   } = useSWR(
     () =>
       accountFlash.address
-        // ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get/${accountFlash.address}`
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/get`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/result/get/walletaddr/${accountFlash.address}`
         : null,
     fetchers.http
   )
 
   const { result: runnerResultList } = runnerResultListData || {}
 
-  // const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/runresult/${runnerId}` : null
+  // const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/result/${runnerId}` : null
   // let { data: currentResult } = useSWR(detailURL, fetchers.http);
   const getResultById = async (id: string, ruleId: string) => {
     setRunnerId(id);
@@ -71,7 +70,7 @@ export default function ReportingPage() {
   }
 
   const getResultAddressList = async (id: string) => {
-    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/runresult/${id}`)
+    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/result/${id}`)
     setAddressList(res?.result?.result)
   }
 
@@ -82,10 +81,9 @@ export default function ReportingPage() {
   }
 
   const deleteResult = async (address: string) => {
-    await httpPost('/runresult/delete', { rule_id: ruleId, address })
+    await httpPost('/result/delete', { rule_id: ruleId, address })
     await getResultAddressList(runnerId)
   }
-
 
   const sendNFT = async () => {
     let startIndex = totalSupply
@@ -126,14 +124,14 @@ export default function ReportingPage() {
 
   const menu = (
     <Menu isLazy>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{runnerId || 'Select runner'}</MenuButton>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{currentRunner?.rule_name || 'Select runner'}</MenuButton>
       <MenuList>
         {/* MenuItems are not rendered unless Menu is open */}
         {
           runnerResultList?.map((result: any) => {
             return (
               <MenuItem key={result._id.$oid} onClick={() => getResultById(result._id.$oid, result.rule_id)}>
-                {result._id.$oid}
+                {result.rule_name}
               </MenuItem>
             )
           })
