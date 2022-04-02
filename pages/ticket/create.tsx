@@ -30,6 +30,8 @@ import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
 const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
+let cotaId: string = '0xd3b2bc022b52ce7282b354d97f9e5e5baf6698d7'
+const secp256k1Dep = getSecp256k1CellDep(false)
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -156,14 +158,16 @@ export default function CreateTicket() {
       image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
     }
 
-    let { rawTx, cotaId } = await generateDefineCotaTx(cotaService, defineLock, 100, '0x00', cotaInfo)
+    let { rawTx, cotaId: cId } = await generateDefineCotaTx(cotaService, defineLock, 100, '0x00', cotaInfo)
+    cotaId = cId
     console.log(` ======> cotaId: ${cotaId}`)
     console.log(' ===================== secp256k1Dep ===================== ')
     const nftInfo: cotaNFTType = {
       name: values.name.trim(),
       desc: values.description.trim(),
       image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json',
-      cota_id: cotaId
+      cota_id: cotaId,
+      type: 1 // 1 - nft 2-ticket
     }
 
     postNft2Rostra(nftInfo)

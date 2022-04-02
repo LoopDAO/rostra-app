@@ -26,5 +26,6 @@ export type cotaNFTType= {
   cota_id:string,
   name:string,
   desc:string,
-  image:string
+  image:string,
+  type:number
 }
