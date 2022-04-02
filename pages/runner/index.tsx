@@ -123,16 +123,17 @@ export default function ReportingPage() {
       </MenuList>
     </Menu >
   )
-  return (
-    <>
-      <Sidebar>
+
+  let detail
+  if (currentRunner) {
+    const runBtn = currentRunner.finished === false ? <Button onClick={() => runRunner()}>{t('Execute')}</Button> : null
+    console.log('currentRunner.finished: ', currentRunner?.finished)
+
+    detail = (
+      <Box>
         <Heading as='h4' size='md' my='15px'>
-          Runners
-        </Heading>
-        {menu}
-        <Heading as='h4' size='md' my='15px'>
-          {currentRunner?.name}
-          <Button onClick={runRunner}>Run</Button>
+          Rules
+          {runBtn}
         </Heading>
         <Table size='sm'>
           <Thead>
@@ -149,6 +150,18 @@ export default function ReportingPage() {
           NFT
         </Heading>
         <Box>Issued: {totalSupply}</Box>
+      </Box>
+    )
+  }
+
+  return (
+    <>
+      <Sidebar>
+        <Heading as='h4' size='md' my='15px'>
+          Runners
+        </Heading>
+        {menu}
+        {detail}
       </Sidebar>
     </>
   )
