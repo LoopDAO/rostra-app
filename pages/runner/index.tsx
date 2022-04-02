@@ -114,10 +114,8 @@ export default function ReportingPage() {
         {
           runnerList?.map((runner: any) => {
             return (
-              <MenuItem key={runner._id.$oid}>
-                <Box onClick={() => getRunnerById(runner._id.$oid)}>
-                  {runner.name}
-                </Box>
+              <MenuItem key={runner._id.$oid} onClick={() => getRunnerById(runner._id.$oid)}>
+                {runner.name}
               </MenuItem>
             )
           })
