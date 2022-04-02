@@ -68,7 +68,7 @@ export default function ReportingPage() {
     const nftInfo = await aggregator.getDefineInfo({
       cotaId: runner.nft,
     })
-    setTotalSupply(nftInfo.issued)
+    setTotalSupply(nftInfo?.issued)
   }
 
   const runRunner = async () => {

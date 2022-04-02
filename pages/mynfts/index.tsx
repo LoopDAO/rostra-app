@@ -10,58 +10,46 @@ import { Flex, Heading, Stack, Text, Box } from "@chakra-ui/react"
 import NFTInfo from "@components/nft/NFTInfo"
 import Loading from "@components/Loading"
 import { GuildType } from "api/guild"
+import { cotaNFTType, NFTType } from "api/nft"
+import TicketNFTInfo from "@components/nft/TicketNFTInfo"
+import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 
 export default function MyNFTsPage() {
   const { t } = useTranslation()
-  const { account } = useWeb3React<Web3Provider>()
+  const { account: accountFlashsigner, logout: logoutFlashsigner, isLoggedIn } = useAccountFlashsigner()
   const [checked, setChecked] = useState(false)
 
   const {
     data: itemsData,
     error: itemsError,
     isValidating: isLoadingData,
-  } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/`,
-    fetchers.http
-  )
+  } = useSWR(() => `${process.env.NEXT_PUBLIC_API_BASE}/nft/get/`, fetchers.http)
 
   const {
     data: userItemsData,
     error: userItemsError,
     isValidating: isLoadingUserItems,
   } = useSWR(
-    () =>
-      account
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/guild/get/${account}`
-        : null,
+    () => (isLoggedIn ? `${process.env.NEXT_PUBLIC_API_BASE}/nft/get/${accountFlashsigner.address}` : null),
     fetchers.http
   )
 
   const itemList = checked ? userItemsData?.result : itemsData?.result
 
-  if (itemsError || userItemsError)
-    return <div>{itemsError?.message || userItemsError?.message}</div>
+  if (itemsError || userItemsError) return <div>{itemsError?.message || userItemsError?.message}</div>
 
   if (isLoadingData || isLoadingUserItems) return <Loading />
-
-
 
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("nft.myNFTs")}</Heading>
       <Text>Membership</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {itemList &&
-          itemList?.map((guild: GuildType) => (
-            <NFTInfo guild={guild} key={guild.guild_id} />
-          ))}
+        {userItemsData && userItemsData.result.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cota_id} />)}
       </Flex>
       <Text>Tickets</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {itemList &&
-          itemList?.map((guild: GuildType) => (
-            <NFTInfo guild={guild} key={guild.guild_id} />
-          ))}
+        {itemsData && itemsData.result.map((nft: cotaNFTType) => <TicketNFTInfo nft={nft} key={nft.cota_id} />)}
       </Flex>
     </Stack>
   )

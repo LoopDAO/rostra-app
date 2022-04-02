@@ -66,7 +66,7 @@ export default function ReportingPage() {
     const nftInfo = await aggregator.getDefineInfo({
       cotaId: rule.nft,
     })
-    setTotalSupply(nftInfo.issued)
+    setTotalSupply(nftInfo?.issued)
   }
 
   const getResultAddressList = async (id: string) => {
