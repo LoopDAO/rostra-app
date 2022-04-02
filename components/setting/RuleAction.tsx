@@ -26,21 +26,21 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
       case "github_commit":
       case "github_project":
         console.log("event.target.value: ", event.target.value)
-        document.getElementById("twitter").value = ""
-        document.getElementById("discord").value = ""
+        // document.getElementById("twitter").value = ""
+        // document.getElementById("discord").value = ""
 
         break
       case "Tweet":
       case "Retweet":
       case "Follow":
       case "Hastag":
-        document.getElementById("github").value = ""
-        document.getElementById("discord").value = ""
+        // document.getElementById("github").value = ""
+        // document.getElementById("discord").value = ""
         break
       case "Join":
       case "Send":
-        document.getElementById("twitter")?.value = ""
-        document.getElementById("github").value = ""
+        // document.getElementById("twitter")?.value = ""
+        // document.getElementById("github").value = ""
         break
     }
   }
