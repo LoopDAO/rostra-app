@@ -19,19 +19,21 @@ import {
   generateRegisterCotaTx,
   getAlwaysSuccessLock,
 } from '@nervina-labs/cota-sdk'
-import signWitnesses from '@nervosnetwork/ckb-sdk-core/lib/signWitnesses'
 import {
   signMessageWithRedirect,
   signTransactionWithRedirect,
   appendSignatureToTransaction,
   Config,
-  transactionToMessage
+  transactionToMessage,
+  generateFlashsignerAddress,
+  ChainType
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
 import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
-Config.setChainType('testnet')
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 const registerCota = async (address: string) => {
   console.log('address: ', address)
@@ -86,21 +88,21 @@ const registerCota = async (address: string) => {
 export default function DashboardPage() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
 
   const [status, setStatus] = useState(false);
-  const [signedTx, setSignedTx] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
         const res = await cotaService.aggregator.checkReisteredLockHashes([
-          scriptToHash(addressToScript(account.address)),
+          scriptToHash(addressToScript(cotaAddress)),
         ])
         setStatus(res?.registered);
         console.log('res: ', res)
       }
     };
     fetchData();
-  }, [account.address, isLoggedIn]);
+  }, [cotaAddress, isLoggedIn]);
 
   const router = useRouter()
   console.log('router.query: ', router);
@@ -163,7 +165,7 @@ export default function DashboardPage() {
 
   let registryBtn
   if(!status) {
-    registryBtn = <Button onClick={() => { registerCota(account.address) }}>Register</Button>
+    registryBtn = <Button onClick={() => { registerCota(cotaAddress) }}>Register</Button>
   }
 
   return (
@@ -171,7 +173,7 @@ export default function DashboardPage() {
       <Heading>{t("dashboard.title")}</Heading>
 
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        <Container>Address: {account.address}</Container>
+        <Container>Address: {cotaAddress}</Container>
         <Container>CKB CoTA Registry: {status.toString()} {registryBtn}</Container>
       </Flex>
 
