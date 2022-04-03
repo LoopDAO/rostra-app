@@ -34,7 +34,13 @@ import {
   TransferWithdrawal,
 } from '@nervina-labs/cota-sdk'
 import signWitnesses from '@nervosnetwork/ckb-sdk-core/lib/signWitnesses'
-import { signMessageWithRedirect, signTransactionWithRedirect, appendSignatureToTransaction, Config } from '@nervina-labs/flashsigner'
+import {
+  signMessageWithRedirect,
+  signTransactionWithRedirect,
+  appendSignatureToTransaction,
+  Config,
+  transactionToMessage
+} from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
 import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
@@ -46,14 +52,14 @@ const registerCota = async () => {
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
   let rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
-  // const flashsingerDep = Config.getCellDep()
-  const flashsingerDep: CKBComponents.CellDep = {
-    outPoint: {
-      txHash: '0xb66776ff3244033fcd15312ae8b17d384c11bebbb923fce3bd896d89f4744d48',
-      index: '0x0',
-    },
-    depType: 'depGroup',
-  }
+  const flashsingerDep = Config.getCellDep()
+  // const flashsingerDep: CKBComponents.CellDep = {
+  //   outPoint: {
+  //     txHash: '0xb66776ff3244033fcd15312ae8b17d384c11bebbb923fce3bd896d89f4744d48',
+  //     index: '0x0',
+  //   },
+  //   depType: 'depGroup',
+  // }
   console.log('celldep: ', flashsingerDep)
   rawTx.cellDeps.push(flashsingerDep)
 
@@ -81,10 +87,23 @@ const registerCota = async () => {
       typeof witness === 'string' ? witness : serializeWitnessArgs(witness)
     )
   })
-  signTransactionWithRedirect(
+  // signTransactionWithRedirect(
+  //   'http://localhost:3000/dashboard?sig=',
+  //   { tx }
+  // )
+  signMessageWithRedirect(
     'http://localhost:3000/dashboard?sig=',
-    { tx }
+      {
+      isRaw: false,
+      message: transactionToMessage(tx, 1),
+      extra: {
+        txToSign: tx,
+        action: 'cota-registry'
+      },
+    }
   )
+
+
 }
 
 export default function DashboardPage() {
@@ -108,7 +127,8 @@ export default function DashboardPage() {
 
   const router = useRouter()
   console.log('router.query: ', router);
-  if (router.query.action === 'sign-transaction') {
+  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
+    console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
       onLogin(res) {
         const {
@@ -125,6 +145,19 @@ export default function DashboardPage() {
         } = res
         console.log('onLogin res: ', res)
 
+      },
+      async onSignMessage(result) {
+        const action = result.extra?.action
+        console.log(' ====== action: ', action);
+
+        if (action === 'cota-registry') {
+          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.sig, 1)
+          console.log('signedTx: ', signedTx)
+          // do something with tx
+          let txHash = await ckb.rpc.sendTransaction(signedTx as any, 'passthrough')
+          console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
+
+        }
       },
       async onSignTransaction(res) {
         const {
