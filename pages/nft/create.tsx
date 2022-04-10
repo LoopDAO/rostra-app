@@ -21,46 +21,23 @@ import { FiFile } from "react-icons/fi"
 import { NFTStorage, File } from "nft.storage"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useWeb3React } from "@web3-react/core"
-import { Web3Provider } from "@ethersproject/providers"
-import { getNftManagerContract } from "@lib/utils/contracts"
-import { ZERO_GUILD_ID } from "@lib/utils/constants"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import {
-  addressToScript,
-  serializeScript,
-  scriptToHash,
-  rawTransactionToHash,
-  serializeWitnessArgs,
-  serializeWitnesses
-} from '@nervosnetwork/ckb-sdk-utils'
+import { addressToScript, serializeWitnessArgs, } from '@nervosnetwork/ckb-sdk-utils'
 import {
   signMessageWithRedirect,
-  signTransactionWithRedirect,
   appendSignatureToTransaction,
   Config,
   transactionToMessage,
   generateFlashsignerAddress,
   ChainType,
-  getResultFromURL, FlashsignerAction
+  getResultFromURL
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
-import {
-  Collector,
-  Aggregator,
-  generateDefineCotaTx,
-  generateIssuerInfoTx,
-  CotaInfo,
-  IssuerInfo,
-  Service
-} from '@nervina-labs/cota-sdk'
-import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
+import { cotaService, ckb } from "@lib/utils/ckb"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
-
-const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
-const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -108,7 +85,6 @@ export default function CreateNFT() {
   } = useForm()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
-  console.log(' ===== cotaAddress: ', cotaAddress)
   const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
 
@@ -193,20 +169,7 @@ export default function CreateNFT() {
     console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
       onLogin(res) {
-        const {
-          // 当登录成功时，flashsigner 会对 dapp 网站地址和时间戳进行签名，
-          // 并把要签名的信息和签名返回
-          message,
-          signature,
-          // 已授权账户的公钥
-          pubkey,
-          // 已授权账户的地址
-          address,
-          // 请求登录时的额外数据
-          extra,
-        } = res
         console.log('onLogin res: ', res)
-
       },
       async onSignMessage(result) {
         const action = result.extra?.action
@@ -224,22 +187,6 @@ export default function CreateNFT() {
             console.log('error: ', error)
           }
         }
-      },
-      async onSignTransaction(res) {
-        const {
-
-          // 已签名的交易
-          transaction,
-          // 已签名账户的地址
-          address,
-          // 请求签名时的额外数据
-          extra,
-        } = res
-        console.log('onSignTransaction res.transaction: ', res.transaction)
-        console.log('onSignTransaction res.transaction: ', JSON.stringify(res.transaction))
-        const signedTx = ckb.rpc.resultFormatter.toTransaction(res.transaction as any)
-        let txHash = await ckb.rpc.sendTransaction(signedTx as any, 'passthrough')
-        console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
       }
     })
   }

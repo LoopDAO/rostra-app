@@ -68,10 +68,7 @@ const registerCota = async (address: string) => {
       typeof witness === 'string' ? witness : serializeWitnessArgs(witness)
     )
   })
-  // signTransactionWithRedirect(
-  //   'http://localhost:3000/dashboard?sig=',
-  //   { tx }
-  // )
+
   signMessageWithRedirect(
     'http://localhost:3000/dashboard?sig=',
       {
@@ -110,25 +107,11 @@ export default function DashboardPage() {
     console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
       onLogin(res) {
-        const {
-          // 当登录成功时，flashsigner 会对 dapp 网站地址和时间戳进行签名，
-          // 并把要签名的信息和签名返回
-          message,
-          signature,
-          // 已授权账户的公钥
-          pubkey,
-          // 已授权账户的地址
-          address,
-          // 请求登录时的额外数据
-          extra,
-        } = res
         console.log('onLogin res: ', res)
-
       },
       async onSignMessage(result) {
         const action = result.extra?.action
         console.log(' ====== action: ', action);
-
         if (action === 'cota-registry') {
           const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
           console.log('signedTx: ', signedTx)
@@ -141,22 +124,6 @@ export default function DashboardPage() {
             console.log('error: ', error)
           }
         }
-      },
-      async onSignTransaction(res) {
-        const {
-
-          // 已签名的交易
-          transaction,
-          // 已签名账户的地址
-          address,
-          // 请求签名时的额外数据
-          extra,
-        } = res
-        console.log('onSignTransaction res.transaction: ', res.transaction)
-        console.log('onSignTransaction res.transaction: ', JSON.stringify(res.transaction))
-        const signedTx = ckb.rpc.resultFormatter.toTransaction(res.transaction as any)
-        let txHash = await ckb.rpc.sendTransaction(signedTx as any, 'passthrough')
-        console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
       }
     })
   }
