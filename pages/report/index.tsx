@@ -70,8 +70,9 @@ export default function ReportingPage() {
   }
 
   const getResultAddressList = async (id: string) => {
-    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/result/${id}`)
-    setAddressList(res?.result?.result)
+    const url = `${process.env.NEXT_PUBLIC_API_BASE}/address_list/result_id/${id}?page=1&per_page=20`
+    const res = await fetchers.http(url)
+    setAddressList(res)
   }
 
   const getRunnerInfo = async (id: string) => {
