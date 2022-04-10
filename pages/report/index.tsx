@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import { useRouter } from 'next/router'
 import {
   Table,
   Thead,
@@ -20,26 +21,42 @@ import { GetStaticProps } from "next"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import Sidebar from "@components/Layout/Sidebar"
-import { addressToScript, serializeScript, } from '@nervosnetwork/ckb-sdk-utils'
 import { generateMintCotaTx, MintCotaInfo, } from '@nervina-labs/cota-sdk'
 import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 import fetchers from "api/fetchers"
 import httpPost from 'api/post'
 import useSWR from 'swr'
+import {
+  addressToScript,
+  serializeScript,
+  serializeWitnessArgs,
+} from '@nervosnetwork/ckb-sdk-utils'
+import {
+  signMessageWithRedirect,
+  appendSignatureToTransaction,
+  Config,
+  transactionToMessage,
+  generateFlashsignerAddress,
+  ChainType
+} from '@nervina-labs/flashsigner'
+import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
+import { getResultFromURL } from '@nervina-labs/flashsigner'
 
-const TEST_PRIVATE_KEY = '0xc5bd09c9b954559c70a77d68bde95369e2ce910556ddc20f739080cde3b62ef2'
-const TEST_ADDRESS = 'ckt1qyq0scej4vn0uka238m63azcel7cmcme7f2sxj5ska'
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 const secp256k1Dep = getSecp256k1CellDep(false)
 
 export default function ReportingPage() {
   const { t } = useTranslation()
-  const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
+  const { account, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [totalSupply, setTotalSupply] = React.useState(0)
   const [runnerId, setRunnerId] = React.useState('')
   const [ruleId, setRuleId] = React.useState('')
   const [addressList, setAddressList] = React.useState([])
   const [currentRunner, setCurrentRunner] = React.useState<any>()
+  const [nftInfo, setNftInfo] = React.useState<any>()
 
   const {
     data: runnerResultListData,
@@ -47,8 +64,8 @@ export default function ReportingPage() {
     isValidating: isLoadingUserGuilds,
   } = useSWR(
     () =>
-      accountFlash.address
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/result/get/walletaddr/${accountFlash.address}`
+      account.address
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/result/get/walletaddr/${account.address}`
         : null,
     fetchers.http
   )
@@ -66,6 +83,7 @@ export default function ReportingPage() {
     const nftInfo = await aggregator.getDefineInfo({
       cotaId: rule.nft,
     })
+    setNftInfo(nftInfo)
     setTotalSupply(nftInfo?.issued)
   }
 
@@ -86,9 +104,9 @@ export default function ReportingPage() {
     await getResultAddressList(runnerId)
   }
 
-  const sendNFT = async () => {
+  const mintNFT = async () => {
     let startIndex = totalSupply
-    const mintLock = addressToScript(TEST_ADDRESS)
+    const mintLock = addressToScript(cotaAddress)
     const withdrawals = addressList.map((address, index) => {
       const tokenIndex = padStr((startIndex++).toString(16))
       return {
@@ -105,11 +123,52 @@ export default function ReportingPage() {
     }
     let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
-    rawTx.cellDeps.push(secp256k1Dep)
+    const tx: any = paramsFormatter.toRawTransaction({
+      ...rawTx,
+      witnesses: rawTx.witnesses.map((witness) =>
+        typeof witness === 'string' ? witness : serializeWitnessArgs(witness)
+      )
+    })
 
-    const signedTx = ckb.signTransaction(TEST_PRIVATE_KEY)(rawTx)
-    let txHash = await ckb.rpc.sendTransaction(signedTx, 'passthrough')
-    console.info(`Mint cota nft tx has been sent with tx hash ${txHash}`)
+    signMessageWithRedirect(
+      'http://localhost:3000/report?sig=',
+      {
+        isRaw: false,
+        message: transactionToMessage(tx as any),
+        extra: {
+          txToSign: tx,
+          action: 'mint-nft'
+        },
+      }
+    )
+  }
+
+  const router = useRouter()
+  console.log('router.query: ', router);
+  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
+    console.log('router.query.action: ', router.query.action);
+    getResultFromURL(router.asPath, {
+      onLogin(res) {
+        console.log('onLogin res: ', res)
+      },
+      async onSignMessage(result) {
+        const action = result.extra?.action
+        console.log(' ====== action: ', action);
+
+        if (action === 'mint-nft') {
+          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
+          console.log('signedTx: ', signedTx)
+          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+          try {
+            const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
+            console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
+            window.location.replace('/report')
+          } catch (error) {
+            console.log('error: ', error)
+          }
+        }
+      }
+    })
   }
 
   const trElems = addressList.map((address, index) => {
@@ -165,11 +224,15 @@ export default function ReportingPage() {
         <Heading as='h4' size='md' my='15px'>
           NFT
         </Heading>
+        <Box>Name: {nftInfo?.name}</Box>
+        <Box>Description: {nftInfo?.description}</Box>
+        <Box>Image: {nftInfo?.image}</Box>
+        <Box>Total Supply: {nftInfo?.total}</Box>
         <Box>Issued: {totalSupply}</Box>
         <Button
           mt={4}
           colorScheme="teal"
-          onClick={sendNFT}
+          onClick={mintNFT}
         >
           Send NFT
         </Button>
