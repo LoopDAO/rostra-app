@@ -130,7 +130,8 @@
   },
   "nft": {
     "distribute": "Distribute NFT",
-    "claim": "Claim NFT"
+    "claim": "Claim NFT",
+    "createNFT": "Create NFT"
   },
   "redpacket": {
     "create": "Create Redpacket",
