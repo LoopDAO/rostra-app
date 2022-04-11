@@ -63,8 +63,8 @@ export default function Header() {
               >
                 Guild
               </Button>
-            </Link>
-            {isLoggedIn ? <AccountFlashsigner /> : <Account />}
+            </Link> */}
+            <AccountFlashsigner />
           </Flex>
         </Flex>
       </Box>
