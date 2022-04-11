@@ -13,81 +13,6 @@
   "dashboard": {
     "title": "Dashboard"
   },
-  "problems": {
-    "title": "Problems",
-    "edu": {
-      "title": "The problems of the current education system",
-      "admittance": {
-        "title": "Access Mechanism",
-        "description": "Use score as the single dimension to measure whether a person can obtain good education resources"
-      },
-      "system": {
-        "title": "Education System",
-        "description": "The idea of education is outdated. People are treated as line products, everyone is learning at the same pace, diversified and individualized education cannot be provided \n The knowledge system is updating slow, while not keeping up with the change of times"
-      },
-      "evaluation": {
-        "title": "Competency Assessment System",
-        "description": "Centralization of power of the certification authority\n Certificate is only one-sided, can not show individual ability and character stereoscopically"
-      },
-      "autonomy": {
-        "title": "Governance Mechanism",
-        "description": "For those students who are most concerned about their future, on the contrary, they have no right to govern"
-      },
-      "reward": {
-        "title": "Reward Mechanism",
-        "description": "Students have to pay high tuition fees in advance for several years, while cannot apply what they learned to related area, even hard to find suitable job safter graduation"
-      }
-    },
-    "research": {
-      "title": "Problems of the existing scientific research system",
-      "ownership": {
-        "title": "Ownership",
-        "description": "Some People’s scientific research/first byline does not belong to them, or even can not be publicly accessed"
-      },
-      "reward": {
-        "title": "Reward System",
-        "description": "After the publication of scientific research papers, the interests are monopolized by the publishing group\nAfter the scientific research achievement forms the product, the enterprise has obtained the maximum benefit, but the scientific research personnel has not obtained with the contribution matching reward"
-      },
-      "creative": {
-        "title": "Innovation promotion mechanism",
-        "description": "Many valuable research results are not open, which affects the speed of knowledge transformation into products and hinders the progress of society to some extent"
-      },
-      "rating": {
-        "title": "Value evaluation",
-        "description": "Centralization of scientific research achievements rating system\nUnder the current grading system, papers can only be published in a limited number of journals"
-      },
-      "funding": {
-        "title": "Funding distribution",
-        "description": "The power to distribute research funding is centralized, even by a few people who do not understand the latest social developments"
-      }
-    }
-  },
-  "changes": {
-    "title": "What Can Rostra Bring to Change",
-    "edu": {
-      "title": "Education",
-      "knowledge":"Promote equitable access to knowledge",
-      "diversity":"Promote social diversity",
-      "exploration":"encourage and support self-exploration",
-      "personalized": "Make personalized education truly viable",
-      "acquire": "Make learners acquire the lastest knowledge in time",
-      "decentralize": "Decentralize the authority of certificate issuance",
-      "evaluation": "Form a decentralized capability evaluation system",
-      "earn": "Learn to earn"
-    },
-    "research": {
-      "title": "Research",
-      "ownership":"Establish reasonable ownership mechanisms,  so as to let individuals have the ownership of their own scientific research",
-      "reward":"Change the reward mechanism of scientific research",
-      "evaluation":"Form a decentralized system of value discovery and evaluation",
-      "achievements": "peed up the transformation process of scientific research achievements",
-      "access": "Promote the open access to scientific research"
-    }
-  },
-  "how": {
-    "title": "How to achieve?",
-    "description": "Open Source + Block Chain\nRostra will ultilize open source softwares and block chain technology to provide a new model of knowledge governance, thus to lead the innovation of education and research"
-  },
   "contribute": {
     "title": "How to contribute?",
     "detail": {
@@ -136,5 +61,12 @@
   "redpacket": {
     "create": "Create Redpacket",
     "claim": "Claim Redpacket"
+  },
+  "setting": {
+    "airdropNFT": "Airdrop NFT",
+    "RuleAction": "Rule",
+    "RuleBase": "Basic",
+    "RuleNFT": "NFT setting"
   }
+
 }

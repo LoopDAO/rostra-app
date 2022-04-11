@@ -8,13 +8,20 @@ import Account from "./Account"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "./Account/AccountFlashsigner"
 
-const Links = ["guild.guilds", "nft.myNFTs", "nft.createNFT", "setting.RuleAction", "dashboard.title"] as const
+const Links = [
+  // "guild.guilds",
+  "nft.myNFTs",
+  "nft.createNFT",
+  "setting.airdropNFT",
+  "dashboard.title"
+] as const
+
 const hrefs = {
-  "guild.guilds": "/guild",
+  // "guild.guilds": "/guild",
   "guild.create": "/guild/create",
   "nft.myNFTs": "/mynfts",
   "nft.createNFT": "/nft/create",
-  "setting.RuleAction": "/setting",
+  "setting.airdropNFT": "/setting",
   "dashboard.title": "/dashboard",
 } as const
 

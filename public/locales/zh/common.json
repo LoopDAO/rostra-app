@@ -13,81 +13,6 @@
   "dashboard": {
     "title": "控制面板"
   },
-  "problems": {
-    "title": "Problems",
-    "edu": {
-      "title": "当前教育系统的问题",
-      "admittance": {
-        "title": "准入机制",
-        "description": "用分数这个单一维度来衡量一个人是否可以获得好的教育资源。"
-      },
-      "system": {
-        "title": "教育体系",
-        "description": "教育理念过时，把人当做流水线产品来对待，所有人学习进度保持一致，无法做到个性化教学\n知识体系更新慢，没有跟上时代变化"
-      },
-      "evaluation": {
-        "title": "能力评估体系",
-        "description": "证书颁发机构权力中心化\n证书是单一和片面的，不能立体的展现个人能力和个性"
-      },
-      "autonomy": {
-        "title": "治理机制",
-        "description": "对于最关注自己未来的学生，他们反而没有治理权"
-      },
-      "reward": {
-        "title": "奖励机制",
-        "description": "学生要提前付出几年的高额学费，无法在学习的同时将知识及时应用到相关领域，毕业后甚至很难找到合适的工作"
-      }
-    },
-    "research": {
-      "title": "当前科研系统的问题",
-      "ownership": {
-        "title": "所有权机制",
-        "description": "部分人的科研成果/第一署名不属于自己，甚至无法公开访问"
-      },
-      "reward": {
-        "title": "奖励机制",
-        "description": "科研论文发表后，利益被出版集团垄断\n科研成果形成产品后，企业获得了最大的利益，而科研人员没有获得与贡献相匹配的报酬"
-      },
-      "creative": {
-        "title": "创新促进机制",
-        "description": "很多有价值的研究成果不公开，影响了知识转换为产品的创新速度，一定程度上阻碍了社会的进步"
-      },
-      "rating": {
-        "title": "评级体系",
-        "description": "科研成果评级体系中心化\n现有的评级体系，论文只能发表在一些有限的期刊上"
-      },
-      "funding": {
-        "title": "资金分配",
-        "description": "科研资金的发放权力中心化，甚至是由几个无法理解当前社会最新进展的人来决定"
-      }
-    }
-  },
-  "changes": {
-    "title": "Rostra 想要带来哪些改变",
-    "edu": {
-      "title": "教育",
-      "knowledge": "促进公平获取知识的权利",
-      "diversity": "促进社会多样化",
-      "exploration": "鼓励和支持个体的探索",
-      "personalized": "让个性化教育真正可行",
-      "acquire": "让学习者及时获取最新的知识",
-      "decentralize": "将证书发放权力去中心化",
-      "evaluation": "形成去中心化的能力评估体系",
-      "earn": "可以 Learn to earn"
-    },
-    "research": {
-      "title": "科研",
-      "ownership": "建立合理的所有权机制",
-      "reward": "让个人拥有自己的科研成果",
-      "evaluation": "改变科研成果的奖励机制",
-      "achievements": "形成去中心化的价值发现和评价体系",
-      "access": "促进科研成果的开放获取"
-    }
-  },
-  "how": {
-    "title": "如何实现？",
-    "description": "Open Source + 区块链\nRostra 选择利用开源软件和区块链技术探索出一套新的治理模式，引导教育和科研的变革。"
-  },
   "contribute": {
     "title": "How to contribute？",
     "detail": {
@@ -140,6 +65,7 @@
   },
   "setting": {
     "RuleAction": "规则设定",
+    "airdropNFT": "空投 NFT",
     "RuleBase": "基本信息",
     "RuleNFT": "NFT设定"
   }
