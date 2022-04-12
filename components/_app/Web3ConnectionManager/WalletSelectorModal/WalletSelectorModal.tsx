@@ -83,7 +83,7 @@ const WalletSelectorModal = ({
         <DialogClose onClick={closeModal} />
         {/* <Error error={error} processError={processConnectionError} /> */}
         <Flex css={{ gap: "$4", fd: "column" }}>
-          <ConnectorButton
+          {/* <ConnectorButton
             name={
               typeof window !== "undefined" &&
               MetaMaskOnboarding.isMetaMaskInstalled()
@@ -109,7 +109,7 @@ const WalletSelectorModal = ({
             }
             isActive={connector === injected}
             isLoading={activatingConnector === injected}
-          />
+          /> */}
           <ConnectorButton
             name="Flashsigner"
             onClick={() => handleConnectFlashsigner()}

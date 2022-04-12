@@ -50,9 +50,9 @@ const AccountModal = ({
             <Button size="1" onClick={logoutFlashsigner}>
               Logout
             </Button>) : null}
-          <Button size="1" onClick={handleWalletProviderSwitch}>
+          {/* <Button size="1" onClick={handleWalletProviderSwitch}>
             Switch
-          </Button>
+          </Button> */}
 
         </Flex>
       </DialogContent>
