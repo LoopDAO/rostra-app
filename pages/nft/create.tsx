@@ -1,4 +1,5 @@
-import React, { useRef, ReactNode, useState } from "react"
+import React, { useRef, ReactNode, useState, useEffect } from "react"
+import { useTranslation } from "next-i18next"
 import { useRouter } from 'next/router'
 import {
   FormControl,
@@ -22,7 +23,7 @@ import { NFTStorage, File } from "nft.storage"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { addressToScript, serializeWitnessArgs, } from '@nervosnetwork/ckb-sdk-utils'
+import { addressToScript, serializeWitnessArgs, scriptToHash } from '@nervosnetwork/ckb-sdk-utils'
 import {
   signMessageWithRedirect,
   appendSignatureToTransaction,
@@ -35,6 +36,7 @@ import {
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
 import { cotaService, ckb } from "@lib/utils/ckb"
+import Link from "next/link"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -78,15 +80,34 @@ const FileUpload = (props: FileUploadProps) => {
 }
 
 export default function CreateNFT() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const { t } = useTranslation()
+  const { register, handleSubmit, formState: { errors }, } = useForm()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
+
+  const [registered, setRegistered] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoggedIn) {
+        const res = await cotaService.aggregator.checkReisteredLockHashes([
+          scriptToHash(addressToScript(cotaAddress)),
+        ])
+        setRegistered(res?.registered);
+        console.log('res: ', res)
+      }
+    };
+    fetchData();
+  }, [cotaAddress, isLoggedIn]);
+
+  if (!registered) {
+    return (
+      <>
+        <Link href={'/dashboard'}>{t('nft.resitryWarning')}</Link>
+      </>
+    )
+  }
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {

@@ -15,8 +15,25 @@ import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import ErrorPage from "pages/ErrorPage"
 import SuccessPage from "pages/SuccessPage"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Sidebar from "@components/Layout/Sidebar"
+import { addressToScript, serializeWitnessArgs, scriptToHash } from '@nervosnetwork/ckb-sdk-utils'
+import {
+  signMessageWithRedirect,
+  appendSignatureToTransaction,
+  Config,
+  transactionToMessage,
+  generateFlashsignerAddress,
+  ChainType,
+  getResultFromURL
+} from '@nervina-labs/flashsigner'
+import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
+import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
+import Link from "next/link"
+import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 const initRuleInfo = {
   name: "",
@@ -35,17 +52,39 @@ const initRuleInfo = {
 }
 export default function SettingPage() {
   const { t } = useTranslation()
-
-  const { isLoggedIn: isLoggedInFlash, account: accountFlash } = useAccountFlashsigner()
-
+  const { isLoggedIn, account } = useAccountFlashsigner()
   const [ruleInfo, setRuleInfo] = useState<RuleType>(initRuleInfo)
   const [tabIndex, setTabIndex] = useState(0)
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [registered, setRegistered] = useState(false)
 
-  if (!isLoggedInFlash) {
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoggedIn) {
+        const res = await cotaService.aggregator.checkReisteredLockHashes([
+          scriptToHash(addressToScript(cotaAddress)),
+        ])
+        setRegistered(res?.registered);
+        console.log('res: ', res)
+      }
+    };
+    fetchData();
+  }, [cotaAddress, isLoggedIn]);
+
+  if (!isLoggedIn) {
     return <div>{"You need to login to create a rule"}</div>
   }
+
+  if (!registered) {
+    return (
+      <>
+        <Link href={'/dashboard'}>{t('nft.resitryWarning')}</Link>
+      </>
+    )
+  }
+
   let errorMessageElem, successMessageElem
   if (errorMessage) {
     errorMessageElem = <ErrorPage message={JSON.parse(errorMessage).message} />
@@ -55,7 +94,7 @@ export default function SettingPage() {
   }
 
   const postRule2Rostra = async (ruleInfo: RuleType) => {
-    ruleInfo.creator = accountFlash.address
+    ruleInfo.creator = account.address
     ruleInfo.signature = "test"
 
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rule/add/`, {

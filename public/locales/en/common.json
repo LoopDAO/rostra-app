@@ -57,7 +57,8 @@
     "distribute": "Distribute NFT",
     "myNFTs": "My NFT",
     "claim": "Claim NFT",
-    "createNFT": "Create NFT"
+    "createNFT": "Create NFT",
+    "resitryWarning": "Please register yor account on Dashboard page(Need to hold at least 150 CKB)"
   },
   "redpacket": {
     "create": "Create Redpacket",
