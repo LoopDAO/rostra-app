@@ -1,53 +1,65 @@
-import {
-  Grid, Heading,
-  Image,
-  Text
-} from "@chakra-ui/react"
-import { Web3Provider } from "@ethersproject/providers"
+import { Box, Heading, Image, Text, Stack } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { useWeb3React } from "@web3-react/core"
-import fetchers from "api/fetchers"
-import { GuildType } from "api/guild"
 import Loading from "components/Loading/index"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
-import React from "react"
-import useSWR from "swr"
-import { NFTType } from "api/nft"
+import React, { useState, useEffect } from "react"
+import { generateFlashsignerAddress, ChainType, Config } from '@nervina-labs/flashsigner'
+import { cotaService } from "@lib/utils/ckb"
+import { addressToScript, serializeScript, } from '@nervosnetwork/ckb-sdk-utils'
+
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 export default function NFTDetails() {
-  const { isLoggedIn: isLoggedInFlash } = useAccountFlashsigner()
-  const { account, library, chainId } = useWeb3React<Web3Provider>()
   const { query } = useRouter()
-  const { data, error } = useSWR(() => `${process.env.NEXT_PUBLIC_API_BASE}/nft/get/${query.id}`, fetchers.http)
-  const nft: NFTType = data?.result[0]
+  const { account, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
+  const [nftInfo, setNFTInfo] = useState({})
 
-  console.log("query", query)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoggedIn) {
+        const lockScript = serializeScript(addressToScript(cotaAddress))
+        const nft = await cotaService.aggregator.getDefineInfo({
+          cotaId: query.id || '',
+        })
+        setNFTInfo(nft)
+      }
+    };
+    fetchData();
+  }, [cotaAddress, isLoggedIn, query.id]);
 
-  if (error) return <div>{error.message}</div>
-  if (!nft) return <Loading />
-  if (!isLoggedInFlash && (!account || !library || !chainId)) return <Loading />
+  if (!isLoggedIn) return <Loading />
 
-  const { name, desc } = nft
+  const { name, description, issued, total, image } = nftInfo
 
   let guildInfoElem
 
   return (
-    <Grid>
-      <Grid css={{ fd: "row", ai: "center", gap: "$2" }}>
-        <Heading size="2xl">{name}</Heading>
-        <br />
-        <Text size="lg">{desc}</Text>
-        <br />
-        <Text size="lg">25.00</Text>
-        <br />
-        <Text size="lg">30.00</Text>
-        <br />
-        <Image borderRadius="full" boxSize="150px" src={nft.image} alt="Dan Abramov" />
-      </Grid>
-      {guildInfoElem}
-    </Grid>
+    <Stack pt={10} align={'center'}>
+      <Box>
+        <Image
+          height={230}
+          width={282}
+          objectFit={'cover'}
+          src={image}
+          alt={name}
+        />
+      </Box>
+      <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
+        {name}
+      </Heading>
+      <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
+        {description}
+      </Text>
+      <Stack direction={'row'} align={'center'}>
+        <Text fontSize={'xl'}>
+          {issued} issued / {total} total
+        </Text>
+      </Stack>
+    </Stack>
   )
 }
 
