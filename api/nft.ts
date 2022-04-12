@@ -6,7 +6,7 @@ export type cotaNFTType = {
 }
 export type NFTType = {
     _id: string,
-  cota_id:string,
+  cotaId:string,
   name:string,
   desc:string,
   image:string

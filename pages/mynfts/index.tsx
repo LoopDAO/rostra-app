@@ -1,55 +1,64 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useTranslation } from "next-i18next"
-import { useWeb3React } from "@web3-react/core"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import useSWR from "swr"
-import fetchers from "api/fetchers"
-import { Web3Provider } from "@ethersproject/providers"
 import { Flex, Heading, Stack, Text, Box } from "@chakra-ui/react"
 import NFTInfo from "@components/nft/NFTInfo"
-import Loading from "@components/Loading"
-import { GuildType } from "api/guild"
-import { cotaNFTType, NFTType } from "api/nft"
-import TicketNFTInfo from "@components/nft/TicketNFTInfo"
+import { NFTType } from "api/nft"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
+import {
+  generateFlashsignerAddress,
+  ChainType,
+  Config
+} from '@nervina-labs/flashsigner'
+import { cotaService } from "@lib/utils/ckb"
+import {
+  addressToScript,
+  serializeScript,
+} from '@nervosnetwork/ckb-sdk-utils'
+
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 export default function MyNFTsPage() {
   const { t } = useTranslation()
-  const { account: accountFlashsigner, logout: logoutFlashsigner, isLoggedIn } = useAccountFlashsigner()
-  const [checked, setChecked] = useState(false)
+  const { account, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
+  const [holdingNFTs, setHoldingNFTs] = useState([])
+  const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
 
-  const {
-    data: itemsData,
-    error: itemsError,
-    isValidating: isLoadingData,
-  } = useSWR(() => `${process.env.NEXT_PUBLIC_API_BASE}/nft/get/`, fetchers.http)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoggedIn) {
+        const lockScript = serializeScript(addressToScript(cotaAddress))
+        const holds = await cotaService.aggregator.getHoldCotaNft({
+          lockScript,
+          page: 0,
+          pageSize: 10,
+        })
+        setHoldingNFTs(holds.nfts as any)
 
-  const {
-    data: userItemsData,
-    error: userItemsError,
-    isValidating: isLoadingUserItems,
-  } = useSWR(
-    () => (isLoggedIn ? `${process.env.NEXT_PUBLIC_API_BASE}/nft/get/${accountFlashsigner.address}` : null),
-    fetchers.http
-  )
-
-  const itemList = checked ? userItemsData?.result : itemsData?.result
-
-  if (itemsError || userItemsError) return <div>{itemsError?.message || userItemsError?.message}</div>
-
-  if (isLoadingData || isLoadingUserItems) return <Loading />
+        const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
+          lockScript,
+          page: 0,
+          pageSize: 10,
+        })
+        setWithdrawableNFTs(withdraws.nfts as any)
+      }
+    };
+    fetchData();
+  }, [cotaAddress, isLoggedIn]);
 
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("nft.myNFTs")}</Heading>
-      <Text>Membership</Text>
+      <Text>Holding</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {userItemsData && userItemsData.result.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cota_id} />)}
+        {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId} />)}
       </Flex>
-      <Text>Tickets</Text>
+      <Text>Withdrawable</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {itemsData && itemsData.result.map((nft: cotaNFTType) => <TicketNFTInfo nft={nft} key={nft.cota_id} />)}
+        {withdrawableNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId} />)}
       </Flex>
     </Stack>
   )
