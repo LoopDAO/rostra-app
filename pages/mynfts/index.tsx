@@ -52,11 +52,9 @@ export default function MyNFTsPage() {
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("nft.myNFTs")}</Heading>
-      <Text>Holding</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId} />)}
       </Flex>
-      <Text>Withdrawable</Text>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {withdrawableNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId} />)}
       </Flex>
