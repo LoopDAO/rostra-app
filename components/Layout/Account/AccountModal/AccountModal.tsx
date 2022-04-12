@@ -13,7 +13,14 @@ import { Text } from "@components/common/Text"
 import { Button } from "@components/common/Button"
 import CopyableAddress from "@components/Layout/Account/CopyableAddress"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { FiLogOut } from "react-icons/fi"
+import {
+  generateFlashsignerAddress,
+  ChainType,
+  Config
+} from '@nervina-labs/flashsigner'
+
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 const AccountModal = ({
   isOpen,
@@ -26,6 +33,7 @@ const AccountModal = ({
   const { openWalletSelectorModal } = useContext(Web3Connection)
   //flashsigner
   const { account: accountFlashsigner, logout: logoutFlashsigner, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(accountFlashsigner.auth.pubkey)
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -39,7 +47,7 @@ const AccountModal = ({
         <DialogTitle>Account</DialogTitle>
         <DialogClose onClick={onClose} />
         <Flex css={{ my: "$6", gap: "$4", ai: "center" }}>
-          <CopyableAddress address={isLoggedIn ? accountFlashsigner?.address : account!} decimals={5} />
+          <CopyableAddress address={isLoggedIn ? cotaAddress : account!} decimals={5} />
         </Flex>
         <Flex css={{ ai: "center", jc: "space-between", mb: "-$1" }}>
           <Text color="$gray">

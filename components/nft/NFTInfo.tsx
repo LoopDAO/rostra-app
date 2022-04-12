@@ -14,11 +14,13 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
   console.log('nft; ', nft)
 
   return (
-    <Flex alignItems="center" justifyContent="center">
+    <Flex alignItems="flex-start">
       <Box>
-        <Image borderRadius="full" boxSize="150px" src={nft.image} alt="nft" onClick={() => handleClick(nft)} />
+        <Image boxSize="150px" src={nft.image} alt="nft" onClick={() => handleClick(nft)} />
       </Box>
       <Box>{nft.name}</Box>
+      <Box>{nft.cotaId}</Box>
     </Flex>
   )
 }
+0x6d18f5caf638139bed31636ade45e3f6004fff40

@@ -13,10 +13,18 @@ import { FC, useContext } from "react"
 import AccountButton from "./AccountButton"
 import AccountCard from "./AccountCard"
 import AccountModal from "./AccountModal"
+import {
+  generateFlashsignerAddress,
+  ChainType,
+  Config
+} from '@nervina-labs/flashsigner'
 
+const chainType = process.env.CHAIN_TYPE || 'testnet'
+Config.setChainType(chainType as ChainType)
 
 const AccountFlashsigner: FC = () => {
   const { account, isLoggedIn } = useAccountFlashsigner()
+  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
 
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
@@ -72,7 +80,7 @@ const AccountFlashsigner: FC = () => {
           <Flex css={{ gap: "$3" }}>
             <Flex css={{ gap: 0, fd: "column", ai: "flex-end" }}>
               <Text as="span" css={{ fontSize: "$2", fontWeight: "500" }}>
-                {`${shortenHex(account.address, 3)}`}
+                {`${shortenHex(cotaAddress, 3)}`}
               </Text>
             </Flex>
           </Flex>

@@ -84,8 +84,8 @@ export default function CreateNFT() {
   const { register, handleSubmit, formState: { errors }, } = useForm()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
-  const [ipfsUrl, setIpfsUrl] = useState("")
   const [fileObj, setFileObj] = useState<File>()
+  const router = useRouter()
 
   const [registered, setRegistered] = useState(false);
   useEffect(() => {
@@ -150,18 +150,20 @@ export default function CreateNFT() {
   // @ts-expect-error TODO: Add typings
   const onSubmit = async (values, actions) => {
     console.log("values...", values)
-
+    const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
+    if (!apiKey) return
+    const client = new NFTStorage({ token: apiKey })
+    const metadata = await client.storeBlob(fileObj as File)
     const defineLock = addressToScript(cotaAddress)
 
     const cotaInfo: CotaInfo = {
       name: values.name,
       description: values.description,
-      image: 'ipfs://bafyreidq5eujpiq5fkygqtmiy7ansuyeujsvpnwieagekmr4y6gllzdsq4/metadata.json'
+      image: `https://ipfs.io/ipfs/${metadata}`,
     }
     const totalSupply = values.totalSupply
     let { rawTx, cotaId } = await generateDefineCotaTx(cotaService, defineLock, totalSupply, '0x00', cotaInfo)
     console.log(` ======> cotaId: ${cotaId}`)
-    console.log('======> rawTx:', JSON.stringify(rawTx, null, 2))
 
     const tx: any = paramsFormatter.toRawTransaction({
       ...rawTx,
@@ -184,8 +186,6 @@ export default function CreateNFT() {
     )
   }
 
-  const router = useRouter()
-  console.log('router.query: ', router);
   if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
     console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
@@ -194,15 +194,12 @@ export default function CreateNFT() {
       },
       async onSignMessage(result) {
         const action = result.extra?.action
-        console.log(' ====== action: ', action);
 
         if (action === 'create-nft') {
           const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
-          console.log('signedTx: ', signedTx)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
             window.location.replace('/nft/create?cotaId=' + result.extra?.cotaId)
           } catch (error) {
             console.log('error: ', error)
@@ -276,7 +273,7 @@ export default function CreateNFT() {
                 onFileChanged(e)
               }}
             >
-              <Button leftIcon={<Icon as={FiFile} />}>Upload {ipfsUrl}</Button>
+              <Button leftIcon={<Icon as={FiFile} />}>Upload {fileObj?.name}</Button>
             </FileUpload>
 
             <FormErrorMessage>

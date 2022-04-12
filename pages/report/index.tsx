@@ -14,6 +14,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Image
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
@@ -111,7 +112,7 @@ export default function ReportingPage() {
         tokenIndex,
         state: '0x00',
         characteristic: '0x0000000000000000000000000000000000000000',
-        toLockScript: serializeScript(addressToScript(address)),
+        toLockScript: serializeScript(addressToScript('ckb1qpth5hjexr3wehtzqpm97dzzucgemjv7sl05wnez7y72hqvuszeyyqt90590gs808qzwq8uj2z6hhr4wrs70vrg40skv7')),
       }
     })
 
@@ -198,6 +199,42 @@ export default function ReportingPage() {
       </MenuList>
     </Menu >
   )
+
+  let resultInfoElem = (
+    <Box>
+      <Table size='sm'>
+        <Thead>
+          <Tr>
+            <Th>Address</Th>
+            <Th>Action</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {trElems}
+        </Tbody>
+      </Table>
+      <Heading as='h4' size='md' my='15px'>
+        NFT
+      </Heading>
+      <Box>Name: {nftInfo?.name}</Box>
+      <Box>Description: {nftInfo?.description}</Box>
+      <Box>Total Supply: {nftInfo?.total}</Box>
+      <Box>Issued: {totalSupply}</Box>
+      <Box><Image boxSize="150px" src={nftInfo?.image} alt="nft" /></Box>
+      <Button
+        mt={4}
+        colorScheme="teal"
+        onClick={mintNFT}
+      >
+        Send NFT
+      </Button>
+    </Box>
+  )
+
+  if (!currentRunner) {
+    resultInfoElem = <></>
+  }
+
   return (
     <>
       <Sidebar>
@@ -208,32 +245,7 @@ export default function ReportingPage() {
         <Heading as='h4' size='md' my='15px'>
           Data ({addressList.length})
         </Heading>
-        <Table size='sm'>
-          <Thead>
-            <Tr>
-              <Th>Address</Th>
-              <Th>Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {trElems}
-          </Tbody>
-        </Table>
-        <Heading as='h4' size='md' my='15px'>
-          NFT
-        </Heading>
-        <Box>Name: {nftInfo?.name}</Box>
-        <Box>Description: {nftInfo?.description}</Box>
-        <Box>Image: {nftInfo?.image}</Box>
-        <Box>Total Supply: {nftInfo?.total}</Box>
-        <Box>Issued: {totalSupply}</Box>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          onClick={mintNFT}
-        >
-          Send NFT
-        </Button>
+        {resultInfoElem}
       </Sidebar>
     </>
   )
