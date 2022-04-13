@@ -16,7 +16,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
 import "@fontsource/source-code-pro/600.css"
-
+import './app.global.css'
 import { darkTheme } from "stitches.config"
 import { globalStyles } from "@styles/global"
 import { Web3ConnectionManager } from "@components/_app/Web3ConnectionManager"

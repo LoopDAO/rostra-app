@@ -21,15 +21,15 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
   }
 
   return (
-    <Center py={12}>
+    <Center py={2}>
       <Box
         role={'group'}
         p={6}
         maxW={'330px'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.800')}
-        boxShadow={'2xl'}
-        rounded={'lg'}
+        boxShadow={'xl'}
+        rounded={'sm'}
         pos={'relative'}
         zIndex={1}>
         <Box onClick={() => handleClick(nft)} cursor="pointer">
@@ -41,15 +41,15 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
             alt={nft.name}
           />
         </Box>
-        <Stack pt={10} align={'center'}>
-          <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
+        <Stack pt={5} align={'center'}>
+          <Heading fontSize={'lg'} fontFamily={'body'} fontWeight={500}>
             {nft.name}
           </Heading>
           <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
             {nft.description}
           </Text>
-          <Stack direction={'row'} align={'center'}>
-            <Text fontWeight={800} fontSize={'xl'}>
+          <Stack color={'gray.500'} direction={'row'} align={'center'}>
+            <Text fontSize={'sm'}>
               {nft.tokenIndex}
             </Text>
           </Stack>

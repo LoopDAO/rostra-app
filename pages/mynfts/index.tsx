@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useTranslation } from "next-i18next"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Flex, Heading, Stack } from "@chakra-ui/react"
+import { Flex, Heading, Box } from "@chakra-ui/react"
 import NFTInfo from "@components/nft/NFTInfo"
 import { NFTType } from "api/nft"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
@@ -82,8 +82,8 @@ export default function MyNFTsPage() {
   );
 
   return (
-    <Stack spacing={2} p={4}>
-      <Heading>{t("nft.myNFTs")}</Heading>
+    <Box>
+      <Heading py={5}>{t("nft.myNFTs")}</Heading>
       {PaginatedItems}
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
@@ -91,7 +91,7 @@ export default function MyNFTsPage() {
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {withdrawableNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
       </Flex>
-    </Stack>
+    </Box>
   )
 }
 
