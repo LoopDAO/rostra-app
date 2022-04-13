@@ -73,7 +73,7 @@ const registerCota = async (address: string) => {
     'http://localhost:3000/dashboard?sig=',
       {
       isRaw: false,
-      message: transactionToMessage(tx, 1),
+      message: transactionToMessage(tx),
       extra: {
         txToSign: tx,
         action: 'cota-registry'
@@ -113,7 +113,7 @@ export default function DashboardPage() {
         const action = result.extra?.action
         console.log(' ====== action: ', action);
         if (action === 'cota-registry') {
-          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
+          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
           console.log('signedTx: ', signedTx)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
