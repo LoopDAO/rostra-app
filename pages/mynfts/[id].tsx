@@ -21,7 +21,6 @@ export default function NFTDetails() {
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
-        const lockScript = serializeScript(addressToScript(cotaAddress))
         const nft = await cotaService.aggregator.getDefineInfo({
           cotaId: query.id || '',
         })
