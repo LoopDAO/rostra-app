@@ -194,7 +194,7 @@ export default function CreateNFT() {
       },
       async onSignMessage(result) {
         const action = result.extra?.action
-
+        console.log("onSignMessage result: ", result)
         if (action === 'create-nft') {
           const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)

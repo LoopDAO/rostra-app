@@ -1,8 +1,9 @@
 import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton } from "@chakra-ui/react"
 import router from "next/router"
 import React from "react"
+import { FaWindows } from "react-icons/fa"
 
-const ErrorPage: React.FunctionComponent<{ message: String }> = ({ message }) => {
+const ErrorPage: React.FunctionComponent<{ message: String ,replaceUrl:string|URL}> = ({ message,replaceUrl }) => {
     return (
         <Alert status="error">
             <AlertIcon />
@@ -13,9 +14,10 @@ const ErrorPage: React.FunctionComponent<{ message: String }> = ({ message }) =>
                 right="8px"
                 top="8px"
                 onClick={() => {
-                    router.push({
-                        pathname: "/setting",
-                    })
+                    window.location.replace(replaceUrl)
+                    // router.push({
+                    //     pathname: "/setting",
+                    // })
                 }}
             />
         </Alert>
