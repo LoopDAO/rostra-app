@@ -27,7 +27,7 @@ export default function MyNFTsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const holds = await cotaService.aggregator.getHoldCotaNft({
+      const holds = await cotaService.aggregator.getMintCotaNft({
         lockScript,
         page: pageOffset,
         pageSize: itemsPerPage,

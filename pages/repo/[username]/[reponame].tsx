@@ -56,6 +56,11 @@ export default function ReportingPage() {
   const [addressList, setAddressList] = React.useState([])
   const [currentRunner, setCurrentRunner] = React.useState<any>()
   const [nftInfo, setNftInfo] = React.useState<any>()
+  const { query, asPath } = useRouter()
+  console.log('query: ', query)
+  const { username, reponame } = query;
+  console.log("username: ", username)
+  console.log("reponame: ", reponame)
 
   const {
     data: runnerResultListData,
@@ -64,45 +69,14 @@ export default function ReportingPage() {
   } = useSWR(
     () =>
       account.address
-        ? `${process.env.NEXT_PUBLIC_API_BASE}/result/get/walletaddr/${account.address}`
+        ? `${process.env.NEXT_PUBLIC_API_BASE}/github/getcommits/${username}/${reponame}`
         : null,
     fetchers.http
   )
 
   const { result: runnerResultList } = runnerResultListData || {}
 
-  // const detailURL = runnerId ? `${process.env.NEXT_PUBLIC_API_BASE}/result/${runnerId}` : null
-  // let { data: currentResult } = useSWR(detailURL, fetchers.http);
-  const getResultById = async (id: string, ruleId: string) => {
-    setRunnerId(id);
-    setRuleId(ruleId)
-    await getResultAddressList(id)
-    const rule = await getRunnerInfo(ruleId)
-    const aggregator = cotaService.aggregator
-    const nftInfo = await aggregator.getDefineInfo({
-      cotaId: rule.nft,
-    })
-    setNftInfo(nftInfo)
-    setTotalSupply(nftInfo?.issued)
-  }
-
-  const getResultAddressList = async (id: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_BASE}/address_list/result_id/${id}?page=1&per_page=20`
-    const res = await fetchers.http(url)
-    setAddressList(res)
-  }
-
-  const getRunnerInfo = async (id: string) => {
-    const res = await fetchers.http(`${process.env.NEXT_PUBLIC_API_BASE}/rule/${id}`)
-    setCurrentRunner(res?.result)
-    return res?.result
-  }
-
-  const deleteResult = async (address: string) => {
-    await httpPost('/result/delete', { rule_id: ruleId, address })
-    await getResultAddressList(runnerId)
-  }
-
+  console.log('runnerResultList: ', runnerResultList)
   const mintNFT = async () => {
     let startIndex = totalSupply
     const mintLock = addressToScript(cotaAddress)
@@ -142,11 +116,9 @@ export default function ReportingPage() {
     )
   }
 
-  const router = useRouter()
-  console.log('router.query: ', router);
-  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
-    console.log('router.query.action: ', router.query.action);
-    getResultFromURL(router.asPath, {
+  if (query.action === 'sign-transaction' || query.action === 'sign-message') {
+    console.log('query.action: ', query.action);
+    getResultFromURL(asPath, {
       onLogin(res) {
         console.log('onLogin res: ', res)
       },
@@ -170,91 +142,41 @@ export default function ReportingPage() {
     })
   }
 
-  const trElems = addressList.map((address, index) => {
-    return (
-      <Tr key={address}>
-        <Td>
-          <Box w='400px'>{address}</Box>
-          </Td>
-        <Td><Button onClick={() => deleteResult(address)}>Delete</Button></Td>
-      </Tr>
-    )
-  })
-
-  const menu = (
-    <Menu isLazy>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>{currentRunner?.rule_name || 'Select runner'}</MenuButton>
-      <MenuList>
-        {/* MenuItems are not rendered unless Menu is open */}
-        {
-          runnerResultList?.map((result: any) => {
-            return (
-              <MenuItem key={result._id.$oid} onClick={() => getResultById(result._id.$oid, result.rule_id)}>
-                {result.rule_name}
-              </MenuItem>
-            )
-          })
-        }
-
-      </MenuList>
-    </Menu >
-  )
-
-  let resultInfoElem = (
-    <Box>
-      <Table size='sm'>
-        <Thead>
-          <Tr>
-            <Th>Address</Th>
-            <Th>Action</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {trElems}
-        </Tbody>
-      </Table>
-      <Heading as='h4' size='md' my='15px'>
-        NFT
-      </Heading>
-      <Box>Name: {nftInfo?.name}</Box>
-      <Box>Description: {nftInfo?.description}</Box>
-      <Box>Total Supply: {nftInfo?.total}</Box>
-      <Box>Issued: {totalSupply}</Box>
-      <Box><Image boxSize="150px" src={nftInfo?.image} alt="nft" /></Box>
-      <Button
-        mt={4}
-        colorScheme="teal"
-        onClick={mintNFT}
-      >
-        Send NFT
-      </Button>
-    </Box>
-  )
-
-  if (!currentRunner) {
-    resultInfoElem = <></>
-  }
-
   return (
     <>
-      <Sidebar>
-        <Heading as='h4' size='md' my='15px'>
-          Results
-        </Heading>
-        {menu}
-        <Heading as='h4' size='md' my='15px'>
-          Data ({addressList.length})
-        </Heading>
-        {resultInfoElem}
-      </Sidebar>
+      <Heading as='h4' size='md' my='15px'>
+        Commits
+      </Heading>
+      {
+        runnerResultList?.map((result: any) => {
+          return (
+            <Box key={result.sha} my={8}>
+              <Box>{result.author}</Box>
+              {/* <Box>{new Date(result.date)}</Box> */}
+              <Box>{result.email}</Box>
+              <Box>{result.message}</Box>
+              <Box>{result.sha}</Box>
+            </Box>
+          )
+        })
+      }
     </>
   )
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale!, ["common"])),
-    },
-  }
+    return {
+        props: {
+            ...(await serverSideTranslations(locale!, ["common"])),
+        },
+    }
+}
+
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
 }
