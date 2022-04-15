@@ -42,6 +42,7 @@ import {
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
+import cookie from 'react-cookies'
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -97,10 +98,41 @@ export default function ReportingPage() {
     setCurrentRunner(res?.result)
     return res?.result
   }
-
+  function isOnTime(timestamp: number) {
+    const now = Date.now()
+    const diff = now - timestamp
+    return diff < 5*60*1000
+  }
+  async function postDelete2Rostra(ruleId: string, address: string,
+    signature: string, timestamp: number) {
+    const url = `/result/delete`
+    const data = {
+      rule_id:ruleId,
+      address,signature,timestamp
+    }
+    await httpPost(url, data)
+  }
   const deleteResult = async (address: string) => {
-    await httpPost('/result/delete', { rule_id: ruleId, address })
-    await getResultAddressList(runnerId)
+
+       
+    const timestamp = cookie.load('timestamp')
+    const signature = cookie.load('signature')
+    if (signature?.length&&timestamp&&isOnTime(timestamp)) {
+      postDelete2Rostra(ruleId, address, signature, timestamp)
+      await getResultAddressList(runnerId)
+    } else {
+      const timestamp = Date.now()
+      cookie.save('timestamp', timestamp, { path: '/' })
+      signMessageWithRedirect(`${window.location.origin}/report`, {
+        isRaw: true,
+        message: timestamp.toString(),
+        extra: {
+          action: "report",
+          ruleId: ruleId,
+          address: address
+        },
+      })
+    }
   }
 
   const mintNFT = async () => {
@@ -144,7 +176,7 @@ export default function ReportingPage() {
 
   const router = useRouter()
   console.log('router.query: ', router);
-  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
+  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message' ) {
     console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
       onLogin(res) {
@@ -169,8 +201,46 @@ export default function ReportingPage() {
       }
     })
   }
+  if (router.query.action === 'sign-raw-message') {
+    console.log('router.query.action: ', router.query.action);
+    getResultFromURL(router.asPath, {
+      onLogin(res) {
+        console.log('onLogin res: ', res)
+      },
+      async onSignRawMessage(result) {
+        const action = result.extra?.action
+        console.log(' ====== action: ', action);
+        if(action === 'report'){
+          cookie.save("signature", result.signature, { path: "/" })
+          console.log('report signedMessage: ', result)
+          const address = result.extra?.address
+          const ruleId = result.extra?.ruleId
+          //postDelete2Rostra(result.extra?.ruleId, result.extra?.address)
+          //report?action=sign-raw-message
+          window.location.replace('/report?action=post-delete-rostra&address='+address+'&ruleId='+ruleId)
+        }
+      }
+    })
+  }
+  if (router.query.action === 'post-delete-rostra') {
+    console.log('router.query.action: ', router.query.action)
+      const addr = router.query.address
+      console.log(' ====== action: ', router.query)
+    const ruleId = router.query.ruleId
 
-  const trElems = addressList.map((address, index) => {
+    const timestamp = cookie.load('timestamp')
+    const signature = cookie.load('signature')
+    postDelete2Rostra(ruleId, addr, signature, timestamp)
+    
+    window.location.replace('/report')
+  }
+
+  if (router.query.action === 'post-delete-rostra') {
+    console.log('router.query.action: ', router.query.action)
+   
+  }
+
+  const trElems = addressList?.length&&addressList?.map((address, index) => {
     return (
       <Tr key={address}>
         <Td>
@@ -187,7 +257,7 @@ export default function ReportingPage() {
       <MenuList>
         {/* MenuItems are not rendered unless Menu is open */}
         {
-          runnerResultList?.map((result: any) => {
+          runnerResultList?.length>0&& runnerResultList?.map((result: any) => {
             return (
               <MenuItem key={result._id.$oid} onClick={() => getResultById(result._id.$oid, result.rule_id)}>
                 {result.rule_name}

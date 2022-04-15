@@ -106,7 +106,7 @@ export default function ReportingPage() {
       <MenuList>
         {/* MenuItems are not rendered unless Menu is open */}
         {
-          runnerList?.map((runner: any) => {
+          runnerList?.length > 0 && runnerList?.map((runner: any) => {
             return (
               <MenuItem key={runner._id.$oid} onClick={() => getRunnerById(runner._id.$oid)}>
                 {runner.name}

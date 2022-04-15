@@ -119,8 +119,8 @@ export default function SettingPage() {
   function postRule2Rostra(ruleInfo: RuleType) {
     ruleInfo.creator = account.address
 
-    cookie.save("signature", ruleInfo.signature, { path: "/setting" })
-    cookie.save("timestamp", ruleInfo.timestamp, { path: "/setting" })
+    cookie.save("signature", ruleInfo.signature, { path: "/" })
+    cookie.save("timestamp", ruleInfo.timestamp, { path: "/" })
 
     console.log("postRule2Rostra: ", ruleInfo)
     fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rule/add/`, {
@@ -140,8 +140,8 @@ export default function SettingPage() {
           if (resp.status===402) {
             //cookie.remove("signature")
             //cookie.remove("timestamp")
-            cookie.save("signature", "", { path: "/setting" })
-            cookie.save("timestamp", "", { path: "/setting" })
+            cookie.save("signature", "", { path: "/" })
+            cookie.save("timestamp", "", { path: "/" })
           }
           setErrorMessage(await resp.text())
           setSuccessMessage("")
