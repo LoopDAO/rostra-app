@@ -49,7 +49,7 @@ export default function CallToActionWithAnnotation() {
             align={'center'}
             alignSelf={'center'}
             position={'relative'}>
-            <Link href='/guild' passHref>
+            <Link href='/nft/create' passHref>
               <Button
                 colorScheme={'green'}
                 bg={'green.400'}
