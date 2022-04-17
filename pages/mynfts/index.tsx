@@ -88,9 +88,9 @@ export default function MyNFTsPage() {
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
       </Flex>
-      {/* <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {withdrawableNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
-      </Flex> */}
+      </Flex>
       {PaginatedItems}
     </Box>
   )

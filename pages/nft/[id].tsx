@@ -17,9 +17,10 @@ export default function NFTDetails() {
   const { t } = useTranslation()
   const { query } = useRouter()
   const [nftInfo, setNFTInfo] = useState({})
-  const [mintedNFTs, setMintedNFTs] = useState([])
-  const [pageOffset, setPageOffset] = useState(0);
-  const [pageCount, setPageCount] = useState(10);
+  const [holdingNFTs, setHoldingNFTs] = useState([])
+  const [withdrawnNFTs, setWithdrawnNFTs] = useState([])
+  const [pageOffset, setPageOffset] = useState(0)
+  const [pageCount, setPageCount] = useState(10)
   const itemsPerPage = 10
   const { isLoggedIn, account } = useAccountFlashsigner()
 
@@ -43,16 +44,27 @@ export default function NFTDetails() {
       const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
       const lockScript = serializeScript(addressToScript(cotaAddress))
 
-      const mints = await cotaService.aggregator.getMintCotaNft({
+      const holds = await cotaService.aggregator.getHoldCotaNft({
         lockScript,
         page: pageOffset,
         pageSize: itemsPerPage,
       })
-      console.log('aaa mints: ', mints)
-      const thisMints = mints.nfts.filter(nft => nft.cotaId === cotaId)
-      setMintedNFTs(thisMints as any)
+      console.log('aaa holds: ', holds)
 
-      const newPageCount = thisMints.length
+      const thisHoldings = holds.nfts.filter(nft => nft.cotaId === cotaId)
+      setHoldingNFTs(thisHoldings as any)
+
+
+      const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
+        lockScript,
+        page: pageOffset,
+        pageSize: itemsPerPage,
+      })
+      console.log('aaa withdraws: ', withdraws)
+      const thisWithdrawss = withdraws.nfts.filter(nft => nft.cotaId === cotaId)
+      setWithdrawnNFTs(thisWithdrawss as any)
+
+      const newPageCount = thisHoldings.length + thisWithdrawss.length
       console.log('newPageCount: ', newPageCount)
       setPageCount(Math.ceil(newPageCount / itemsPerPage))
     }
@@ -121,7 +133,10 @@ export default function NFTDetails() {
           {t('nft.myNFTs')}
         </Heading>
         <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-          {mintedNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />)}
+          {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />)}
+        </Flex>
+        <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+          {withdrawnNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />)}
         </Flex>
         {PaginatedItems}
       </Stack>
