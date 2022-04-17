@@ -160,7 +160,7 @@ export default function ReportingPage() {
     })
 
     signMessageWithRedirect(
-      'http://localhost:3000/report?sig=',
+      '/report?sig=',
       {
         isRaw: false,
         message: transactionToMessage(tx as any),

@@ -70,7 +70,7 @@ const registerCota = async (address: string) => {
   })
 
   signMessageWithRedirect(
-    'http://localhost:3000/dashboard?sig=',
+    '/dashboard?sig=',
       {
       isRaw: false,
       message: transactionToMessage(tx, 1),

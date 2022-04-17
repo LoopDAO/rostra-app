@@ -86,7 +86,6 @@ export default function CreateNFT() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
-
   const [registered, setRegistered] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
@@ -173,7 +172,7 @@ export default function CreateNFT() {
     })
 
     signMessageWithRedirect(
-      'http://localhost:3000/nft/create?sig=',
+      '/nft/create?sig=',
       {
         isRaw: false,
         message: transactionToMessage(tx as any),
@@ -200,9 +199,10 @@ export default function CreateNFT() {
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            window.location.replace('/nft/create?cotaId=' + result.extra?.cotaId)
+            router.push(`/nft/${result.extra?.cotaId}`)
           } catch (error) {
             console.log('error: ', error)
+            router.push('/nft/create')
           }
         }
       }
