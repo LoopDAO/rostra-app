@@ -1,4 +1,4 @@
-import { Box, Heading, Image, Text, Stack, Flex } from "@chakra-ui/react"
+import { Box, Heading, Image, Text, Stack, Flex, Button } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import Loading from "components/Loading/index"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -12,6 +12,7 @@ import NFTInfo from "@components/nft/NFTInfo"
 import { NFTType } from "api/nft"
 import ReactPaginate from 'react-paginate';
 import { useTranslation } from "next-i18next"
+import Link from "next/link"
 
 export default function NFTDetails() {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ export default function NFTDetails() {
   const itemsPerPage = 10
   const { isLoggedIn, account } = useAccountFlashsigner()
 
-  const cotaId = query.id || ''
+  const cotaId = query.cotaId || ''
   const { name, description, issued, total, image } = nftInfo
   console.log('nftInfo: ', nftInfo)
 
@@ -125,8 +126,20 @@ export default function NFTDetails() {
           {issued} issued / {total} total
         </Text>
         <Text>
-          {query.id}
+          {cotaId}
         </Text>
+        <Link href={`/nft/${cotaId}/mint`} passHref>
+          <Button
+            colorScheme={'green'}
+            bg={'green.400'}
+            rounded={'full'}
+            px={6}
+            _hover={{
+              bg: 'green.500',
+            }}>
+            {t('nft.mint')}
+          </Button>
+        </Link>
       </Stack>
       <Stack direction={'column'} align={'center'} py={12}>
         <Heading fontSize={'2xl'} fontWeight={500}>
