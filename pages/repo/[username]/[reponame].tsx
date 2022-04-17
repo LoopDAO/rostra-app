@@ -46,21 +46,35 @@ import { getResultFromURL } from '@nervina-labs/flashsigner'
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
 
+interface Commit {
+    message: string;
+    sha: string;
+    author: string;
+    email: string;
+    date: string;
+    login?: string;
+    PublicKey?: string;
+}
+
 export default function ReportingPage() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
-  const [totalSupply, setTotalSupply] = React.useState(0)
+  const [issued, setIssued] = React.useState(0)
   const [runnerId, setRunnerId] = React.useState('')
   const [ruleId, setRuleId] = React.useState('')
   const [addressList, setAddressList] = React.useState([])
   const [currentRunner, setCurrentRunner] = React.useState<any>()
   const [nftInfo, setNftInfo] = React.useState<any>()
-  const { query, asPath } = useRouter()
+  const router = useRouter()
+  const { query, asPath } = router
+  console.log('router: ', router)
   console.log('query: ', query)
-  const { username, reponame } = query;
+  const { username, reponame, pathname } = query;
   console.log("username: ", username)
   console.log("reponame: ", reponame)
+  // todo
+  const cotaId = '0x9f4c9bbb5a56a5dfe9c95776ed334751f872c01d'
 
   const {
     data: runnerResultListData,
@@ -74,26 +88,40 @@ export default function ReportingPage() {
     fetchers.http
   )
 
-  const { result: runnerResultList } = runnerResultListData || {}
-
-  console.log('runnerResultList: ', runnerResultList)
-  const mintNFT = async () => {
-    let startIndex = totalSupply
-    const mintLock = addressToScript(cotaAddress)
-    const withdrawals = addressList.map((address, index) => {
-      const tokenIndex = padStr((startIndex++).toString(16))
-      return {
-        tokenIndex,
-        state: '0x00',
-        characteristic: '0x0000000000000000000000000000000000000000',
-        toLockScript: serializeScript(addressToScript(address)),
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoggedIn) {
+        const aggregator = cotaService.aggregator
+        const nftInfo = await aggregator.getDefineInfo({
+          cotaId,
+        })
+        setIssued(nftInfo?.issued)
       }
-    })
+    }
+    fetchData()
+  }, [cotaAddress, isLoggedIn])
+
+  const { result: commits } = runnerResultListData || {}
+
+  console.log('commits: ', commits)
+  const mintNFT = async (commit: Commit) => {
+    console.log('commit: ', commit)
+    let startIndex = issued
+    const mintLock = addressToScript(cotaAddress)
+    const tokenIndex = padStr((startIndex++).toString(16))
+    const withdrawalInfo = {
+      tokenIndex,
+      state: '0x00',
+      characteristic: `0x${commit.sha}`,
+      toLockScript: serializeScript(addressToScript(cotaAddress)),  // todo: use user's address
+    }
 
     const mintCotaInfo: MintCotaInfo = {
-      cotaId: currentRunner?.nft,
-      withdrawals,
+      cotaId,
+      withdrawals: [withdrawalInfo],
     }
+    console.log('mintCotaInfo: ', mintCotaInfo)
+
     let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo)
 
     const tx: any = paramsFormatter.toRawTransaction({
@@ -102,9 +130,9 @@ export default function ReportingPage() {
         typeof witness === 'string' ? witness : serializeWitnessArgs(witness)
       )
     })
-
+    console.log('asPath: ', asPath)
     signMessageWithRedirect(
-      'http://localhost:3000/report?sig=',
+      `${asPath}?sig=`,
       {
         isRaw: false,
         message: transactionToMessage(tx as any),
@@ -133,9 +161,10 @@ export default function ReportingPage() {
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
             console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
-            window.location.replace('/report')
           } catch (error) {
             console.log('error: ', error)
+          } finally {
+            window.location.replace(asPath.split('?')[0])
           }
         }
       }
@@ -148,7 +177,7 @@ export default function ReportingPage() {
         Commits
       </Heading>
       {
-        runnerResultList?.map((result: any) => {
+        commits?.map((result: any) => {
           return (
             <Box key={result.sha} my={8}>
               <Box>{result.author}</Box>
@@ -156,6 +185,15 @@ export default function ReportingPage() {
               <Box>{result.email}</Box>
               <Box>{result.message}</Box>
               <Box>{result.sha}</Box>
+              {/* <Link href={`repo/${username}/${reponame}/commit/${result.sha}`}> */}
+              <Button
+                mt={4}
+                colorScheme="teal"
+                onClick={() => mintNFT(result)}
+              >
+                Send NFT
+              </Button>
+
             </Box>
           )
         })
