@@ -18,6 +18,7 @@ export default function MyNFTsPage() {
   const { t } = useTranslation()
   const { account } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
+  const [mintedNFTs, setMintedNFTs] = useState([])
   const [holdingNFTs, setHoldingNFTs] = useState([])
   const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
   const lockScript = serializeScript(addressToScript(cotaAddress))
@@ -27,22 +28,32 @@ export default function MyNFTsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const holds = await cotaService.aggregator.getMintCotaNft({
+      const mints = await cotaService.aggregator.getMintCotaNft({
+        lockScript,
+        page: pageOffset,
+        pageSize: itemsPerPage,
+      })
+      console.log('aaa mints: ', mints)
+      setMintedNFTs(mints.nfts as any)
+
+      const holds = await cotaService.aggregator.getHoldCotaNft({
         lockScript,
         page: pageOffset,
         pageSize: itemsPerPage,
       })
       console.log('aaa holds: ', holds)
       setHoldingNFTs(holds.nfts as any)
+
       const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
         lockScript,
         page: pageOffset,
         pageSize: itemsPerPage,
       })
       console.log('aaa withdraws: ', withdraws)
-
       setWithdrawableNFTs(withdraws.nfts as any)
-      const newPageCount = holds.total + withdraws.total
+
+      const newPageCount = mints.total
+      // const newPageCount = mints.total + holds.total + withdraws.total
       console.log('newPageCount: ', newPageCount)
       setPageCount(Math.ceil(newPageCount / itemsPerPage))
     }
@@ -85,6 +96,9 @@ export default function MyNFTsPage() {
     <Box>
       <Heading py={5}>{t("nft.myNFTs")}</Heading>
       {PaginatedItems}
+      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+        {mintedNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
+      </Flex>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
       </Flex>
