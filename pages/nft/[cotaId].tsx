@@ -109,7 +109,6 @@ export default function NFTDetails() {
       <Box>
         <Image
           height={230}
-          width={282}
           objectFit={'cover'}
           src={image}
           alt={name}

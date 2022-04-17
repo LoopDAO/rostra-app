@@ -35,7 +35,6 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
         <Box onClick={() => handleClick(nft)} cursor="pointer">
           <Image
             height={230}
-            width={282}
             objectFit={'cover'}
             src={nft.image}
             alt={nft.name}
