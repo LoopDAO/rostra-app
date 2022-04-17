@@ -14,25 +14,20 @@ Config.setChainType(chainType as ChainType)
 
 export default function NFTDetails() {
   const { query } = useRouter()
-  const { account, isLoggedIn } = useAccountFlashsigner()
-  const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [nftInfo, setNFTInfo] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
-      if (isLoggedIn) {
-        const nft = await cotaService.aggregator.getDefineInfo({
-          cotaId: query.id || '',
-        })
-        setNFTInfo(nft)
-      }
+      const nft = await cotaService.aggregator.getDefineInfo({
+        cotaId: query.id || '',
+      })
+      setNFTInfo(nft)
     };
     fetchData();
-  }, [cotaAddress, isLoggedIn, query.id]);
-
-  if (!isLoggedIn) return <Loading />
+  }, [query.id]);
 
   const { name, description, issued, total, image } = nftInfo
+  console.log('nftInfo: ', nftInfo)
 
   let guildInfoElem
 
@@ -50,12 +45,15 @@ export default function NFTDetails() {
       <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
         {name}
       </Heading>
-      <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
+      <Text color={'gray.500'}>
         {description}
       </Text>
-      <Stack direction={'row'} align={'center'}>
-        <Text fontSize={'xl'}>
+      <Stack direction={'column'} align={'center'}>
+        <Text>
           {issued} issued / {total} total
+        </Text>
+        <Text>
+          {query.id}
         </Text>
       </Stack>
     </Stack>

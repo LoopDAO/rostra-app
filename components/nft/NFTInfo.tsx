@@ -16,7 +16,7 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
   const router = useRouter()
   const handleClick = (nft: NFTType) => {
     router.push({
-      pathname: `/mynfts/${nft.cotaId}`,
+      pathname: `/nft/${nft.cotaId}`,
     })
   }
 
@@ -45,14 +45,12 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
           <Heading fontSize={'lg'} fontFamily={'body'} fontWeight={500}>
             {nft.name}
           </Heading>
-          <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
+          <Text color={'gray.500'} fontSize={'sm'}>
             {nft.description}
           </Text>
-          <Stack color={'gray.500'} direction={'row'} align={'center'}>
-            <Text fontSize={'sm'}>
-              {nft.tokenIndex}
-            </Text>
-          </Stack>
+          <Text fontSize={'sm'}>
+            {nft.tokenIndex}
+          </Text>
         </Stack>
       </Box>
     </Center>
