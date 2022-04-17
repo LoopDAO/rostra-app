@@ -113,8 +113,6 @@ export default function ReportingPage() {
     await httpPost(url, data)
   }
   const deleteResult = async (address: string) => {
-
-       
     const timestamp = cookie.load('timestamp')
     const signature = cookie.load('signature')
     if (signature?.length&&timestamp&&isOnTime(timestamp)) {
@@ -231,13 +229,13 @@ export default function ReportingPage() {
     const timestamp = cookie.load('timestamp')
     const signature = cookie.load('signature')
     postDelete2Rostra(ruleId, addr, signature, timestamp)
-    
+
     window.location.replace('/report')
   }
 
   if (router.query.action === 'post-delete-rostra') {
     console.log('router.query.action: ', router.query.action)
-   
+
   }
 
   const trElems = addressList?.length&&addressList?.map((address, index) => {
