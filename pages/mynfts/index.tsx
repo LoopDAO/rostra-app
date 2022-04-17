@@ -34,14 +34,15 @@ export default function MyNFTsPage() {
       })
       console.log('aaa holds: ', holds)
       setHoldingNFTs(holds.nfts as any)
+
       const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
         lockScript,
         page: pageOffset,
         pageSize: itemsPerPage,
       })
       console.log('aaa withdraws: ', withdraws)
-
       setWithdrawableNFTs(withdraws.nfts as any)
+
       const newPageCount = holds.total + withdraws.total
       console.log('newPageCount: ', newPageCount)
       setPageCount(Math.ceil(newPageCount / itemsPerPage))
