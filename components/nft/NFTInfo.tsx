@@ -31,7 +31,7 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
         boxShadow={'xl'}
         rounded={'sm'}
         pos={'relative'}
-        zIndex={1}>
+      >
         <Box onClick={() => handleClick(nft)} cursor="pointer">
           <Image
             height={230}
