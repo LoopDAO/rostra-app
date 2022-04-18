@@ -1,7 +1,6 @@
 import { ControlGroup } from "@components/common/ControllGroup"
 import { Flex } from "@components/common/Flex"
 import { Text } from "@components/common/Text"
-import { Tooltip } from "@components/common/Tooltip"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { useDisclosure } from "@lib/hooks/useDisclosure"
 import shortenHex from "@lib/utils/shortenHex"
@@ -11,13 +10,17 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import Image from "next/image"
 import { FC, useContext } from "react"
 import AccountButton from "./AccountButton"
-import AccountCard from "./AccountCard"
 import AccountModal from "./AccountModal"
 import {
   generateFlashsignerAddress,
   ChainType,
   Config
 } from '@nervina-labs/flashsigner'
+import dynamic from 'next/dynamic'
+import { Tooltip } from "@components/common/Tooltip"
+const AccountCard = dynamic(import('./AccountCard'), {
+  ssr: false
+})
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -59,7 +62,8 @@ const AccountFlashsigner: FC = () => {
   return (
     <AccountCard>
       <ControlGroup>
-        <AccountButton
+        {/* FIXME: warning if uncomment */}
+        {/* <AccountButton
           css={{ border: "1px solid $colors$slate7" }}
           onClick={openNetworkModal}
         >
@@ -72,7 +76,7 @@ const AccountFlashsigner: FC = () => {
             />
           </Tooltip>
         </AccountButton>
-        <Separator orientation="vertical" />
+        <Separator orientation="vertical" /> */}
         <AccountButton
           css={{ border: "1px solid $colors$slate7" }}
           onClick={onAccountModalOpen}
