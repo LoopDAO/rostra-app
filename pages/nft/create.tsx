@@ -211,7 +211,6 @@ export default function CreateNFT() {
 
   return (
     <>
-    <Box>CotaId: {router.query?.cotaId}</Box>
     <Formik
       initialValues={{ name: "", description: "", totalSupply: 10000 }}
       onSubmit={onSubmit}
