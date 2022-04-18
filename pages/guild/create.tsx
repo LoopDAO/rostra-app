@@ -18,6 +18,7 @@ import { getNftManagerContract } from "@lib/utils/contracts"
 import { saveToIpfs } from "@components/IPFS/saveToIpfs"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { getResultFromURL, signMessageWithRedirect } from "@nervina-labs/flashsigner"
+import { RouteState } from "pages/Flashsigner"
 import router from "next/router"
 import Loading from "@components/Loading"
 
@@ -101,7 +102,7 @@ export default function CreateGuild() {
   }
   useEffect(() => {
     try {
-      getResultFromURL({
+      getResultFromURL<RouteState>({
         onLogin(res) {
           console.log("onLogin: ", res)
         },

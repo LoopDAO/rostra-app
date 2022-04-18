@@ -28,6 +28,7 @@ import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 import { useRouter } from "next/router"
 import Loading from "@components/Loading"
+import { RouteState } from "pages/Flashsigner"
 import cookie from "react-cookies"
 
 const chainType = process.env.CHAIN_TYPE || "testnet"
@@ -75,7 +76,7 @@ export default function SettingPage() {
   useEffect(() => {
     console.log("registered: ", registered)
     try {
-      getResultFromURL({
+      getResultFromURL<RouteState>({
         onLogin(res) {
           console.log("onLogin: ", res)
         },
