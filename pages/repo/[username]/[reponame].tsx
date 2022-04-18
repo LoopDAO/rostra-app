@@ -194,6 +194,14 @@ export default function ReportingPage() {
                 Send NFT
               </Button>
 
+              <Button
+                mt={4}
+                colorScheme="teal"
+                onClick={() => mintNFT(result)}
+              >
+                Tip DAI
+              </Button>
+
             </Box>
           )
         })
