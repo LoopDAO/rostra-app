@@ -222,9 +222,9 @@ export default function ReportingPage() {
   }
   if (router.query.action === 'post-delete-rostra') {
     console.log('router.query.action: ', router.query.action)
-      const addr = router.query.address
+      const addr = router.query.address as string
       console.log(' ====== action: ', router.query)
-    const ruleId = router.query.ruleId
+    const ruleId = router.query.ruleId as string
 
     const timestamp = cookie.load('timestamp')
     const signature = cookie.load('signature')

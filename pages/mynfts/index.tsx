@@ -51,7 +51,7 @@ export default function MyNFTsPage() {
 
   }, [pageOffset]);
 
-  const handlePageChange = (event) => {
+  const handlePageChange = (event: any) => {
     console.log(event);
     // when its content is loaded in useEffect.
     setPageOffset(event.selected);

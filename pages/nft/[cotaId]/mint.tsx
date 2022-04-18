@@ -7,20 +7,12 @@ import {
   FormErrorMessage,
   Input,
   Button,
-  Icon,
   InputGroup,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Box
 } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
-import { FiFile } from "react-icons/fi"
-import { NFTStorage, File } from "nft.storage"
-import { GetStaticProps } from "next"
+import { GetStaticProps, GetStaticPaths } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import { addressToScript, serializeWitnessArgs, scriptToHash, serializeScript } from '@nervosnetwork/ckb-sdk-utils'
@@ -34,7 +26,7 @@ import {
   getResultFromURL
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
-import { generateDefineCotaTx, CotaInfo, generateMintCotaTx, MintCotaInfo } from '@nervina-labs/cota-sdk'
+import { generateMintCotaTx, MintCotaInfo } from '@nervina-labs/cota-sdk'
 import { padStr, cotaService, ckb } from "@lib/utils/ckb"
 import Link from "next/link"
 
@@ -89,7 +81,7 @@ export default function CreateNFT() {
   const [issued, setIssued] = React.useState(0)
   const [registered, setRegistered] = useState(false)
   const { query, asPath } = router
-  const cotaId = query.cotaId || ''
+  const cotaId = query.cotaId as string || ''
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,8 +126,7 @@ export default function CreateNFT() {
     return error
   }
 
-  // const mintNFT = async (commit: Commit) => {
-  const onSubmit = async (values, actions) => {
+  const onSubmit = async (values: any, actions: any) => {
     console.log("values...", values)
     const { toAddress } = values
     let startIndex = issued

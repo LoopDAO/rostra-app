@@ -18,7 +18,7 @@ const RuleAction: React.FunctionComponent<{ rule: RuleType; setTabIndex: any; se
   const ruleInfo = rule
 
   const [typeValue, setTypeValue] = React.useState("discussion")
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(event)
     setTypeValue(event.target.value)
     switch (event.target.value) {

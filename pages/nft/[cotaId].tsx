@@ -25,8 +25,8 @@ export default function NFTDetails() {
   const itemsPerPage = 10
   const { isLoggedIn, account } = useAccountFlashsigner()
 
-  const cotaId = query.cotaId || ''
-  const { name, description, issued, total, image } = nftInfo
+  const cotaId: string = query.cotaId as string || ''
+  const { name, description, issued, total, image } = nftInfo as any
   console.log('nftInfo: ', nftInfo)
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function NFTDetails() {
 
   }, [pageOffset]);
 
-  const handlePageChange = (event) => {
+  const handlePageChange = (event: any) => {
     console.log(event);
     // when its content is loaded in useEffect.
     setPageOffset(event.selected);
