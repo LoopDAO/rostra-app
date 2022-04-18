@@ -7,6 +7,7 @@ import router from 'next/router'
 export interface RouteState {
   uuid: string
   toAddress: string
+  ruleInfo?: string
 }
 
 export const Flashsigner: React.FC = () => {
@@ -25,7 +26,7 @@ export const Flashsigner: React.FC = () => {
           }
         })
         router.push({
-          pathname: '/', 
+          pathname: '/',
         })
       },
       onError(err) {

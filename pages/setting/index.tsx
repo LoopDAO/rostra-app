@@ -83,7 +83,7 @@ export default function SettingPage() {
         onSignRawMessage(res) {
           const { address, pubkey, message, signature } = res
 
-          const info = res.extra?.ruleInfo
+          const info = res.extra?.ruleInfo || {} as any
           info.signature = signature
 
           console.log("onSignMessage ruleInfo: ", info)
