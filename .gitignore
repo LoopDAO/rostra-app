@@ -28,3 +28,7 @@ yarn-error.log*
 .idea
 
 .env
+.env.development
+.env.production
+
+out/
