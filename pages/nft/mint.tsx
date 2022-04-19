@@ -239,10 +239,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  }
-}
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   return {
+//     paths: [],
+//     fallback: "blocking",
+//   }
+// }
 

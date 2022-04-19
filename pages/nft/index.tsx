@@ -123,7 +123,7 @@ export default function NFTDetails() {
           {issued} issued / {total} total
         </Text>
         <Text>{cotaId}</Text>
-        <Link href={`/nft/${cotaId}/mint`} passHref>
+        <Link href={`/nft/mint?cotaId=${cotaId}`} passHref>
           <Button
             colorScheme={"green"}
             bg={"green.400"}
