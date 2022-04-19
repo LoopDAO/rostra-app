@@ -199,7 +199,12 @@ export default function CreateNFT() {
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            router.push(`/nft/${result.extra?.cotaId}`)
+            router.push({
+              pathname: `/nft`,
+              query: {
+                cotaId: result.extra?.cotaId,
+              },
+            })
           } catch (error) {
             console.log('error: ', error)
             router.push('/nft/create')
