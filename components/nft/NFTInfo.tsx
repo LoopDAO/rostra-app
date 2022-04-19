@@ -16,7 +16,10 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
   const router = useRouter()
   const handleClick = (nft: NFTType) => {
     router.push({
-      pathname: `/nft/${nft.cotaId}`,
+      pathname: `/nft`,
+      query: {
+        cotaId: nft.cotaId
+      }
     })
   }
 

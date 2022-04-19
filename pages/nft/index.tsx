@@ -5,12 +5,12 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
 import React, { useState, useEffect } from "react"
-import { generateFlashsignerAddress, ChainType, Config } from '@nervina-labs/flashsigner'
+import { generateFlashsignerAddress, ChainType, Config } from "@nervina-labs/flashsigner"
 import { cotaService } from "@lib/utils/ckb"
-import { addressToScript, serializeScript, } from '@nervosnetwork/ckb-sdk-utils'
+import { addressToScript, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
 import NFTInfo from "@components/nft/NFTInfo"
 import { NFTType } from "api/nft"
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate"
 import { useTranslation } from "next-i18next"
 import Link from "next/link"
 
@@ -25,9 +25,9 @@ export default function NFTDetails() {
   const itemsPerPage = 10
   const { isLoggedIn, account } = useAccountFlashsigner()
 
-  const cotaId: string = query.cotaId as string || ''
+  const cotaId: string = (query.cotaId as string) || ""
   const { name, description, issued, total, image } = nftInfo as any
-  console.log('nftInfo: ', nftInfo)
+  console.log("nftInfo: ", nftInfo)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,9 +36,9 @@ export default function NFTDetails() {
         cotaId,
       })
       if (nft) setNFTInfo(nft)
-    };
-    fetchData();
-  }, [cotaId]);
+    }
+    fetchData()
+  }, [cotaId])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,37 +52,35 @@ export default function NFTDetails() {
           page: pageOffset,
           pageSize: itemsPerPage,
         })
-        console.log('aaa holds: ', holds)
+        console.log("aaa holds: ", holds)
 
-        const thisHoldings = holds.nfts.filter(nft => nft.cotaId === cotaId)
+        const thisHoldings = holds.nfts.filter((nft) => nft.cotaId === cotaId)
         setHoldingNFTs(thisHoldings as any)
-
 
         const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
           lockScript,
           page: pageOffset,
           pageSize: itemsPerPage,
         })
-        console.log('aaa withdraws: ', withdraws)
-        const thisWithdrawss = withdraws.nfts.filter(nft => nft.cotaId === cotaId)
+        console.log("aaa withdraws: ", withdraws)
+        const thisWithdrawss = withdraws.nfts.filter((nft) => nft.cotaId === cotaId)
         setWithdrawnNFTs(thisWithdrawss as any)
 
         const newPageCount = thisHoldings.length + thisWithdrawss.length
-        console.log('newPageCount: ', newPageCount)
+        console.log("newPageCount: ", newPageCount)
         setPageCount(Math.ceil(newPageCount / itemsPerPage))
       } catch (error) {
-        console.log('error: ', error)
+        console.log("error: ", error)
       }
     }
-    fetchData();
-
-  }, [pageOffset]);
+    fetchData()
+  }, [pageOffset])
 
   const handlePageChange = (event: any) => {
-    console.log(event);
+    console.log(event)
     // when its content is loaded in useEffect.
-    setPageOffset(event.selected);
-  };
+    setPageOffset(event.selected)
+  }
 
   const PaginatedItems = (
     <>
@@ -107,55 +105,51 @@ export default function NFTDetails() {
         forcePage={pageOffset}
       />
     </>
-  );
+  )
 
   if (!cotaId) return <Loading />
 
   return (
-    <Stack pt={10} align={'center'}>
+    <Stack pt={10} align={"center"}>
       <Box>
-        <Image
-          height={230}
-          objectFit={'cover'}
-          src={image}
-          alt={name}
-        />
+        <Image height={230} objectFit={"cover"} src={image} alt={name} />
       </Box>
-      <Heading fontSize={'2xl'} fontWeight={500}>
+      <Heading fontSize={"2xl"} fontWeight={500}>
         {name}
       </Heading>
-      <Text color={'gray.500'}>
-        {description}
-      </Text>
-      <Stack direction={'column'} align={'center'}>
+      <Text color={"gray.500"}>{description}</Text>
+      <Stack direction={"column"} align={"center"}>
         <Text>
           {issued} issued / {total} total
         </Text>
-        <Text>
-          {cotaId}
-        </Text>
+        <Text>{cotaId}</Text>
         <Link href={`/nft/${cotaId}/mint`} passHref>
           <Button
-            colorScheme={'green'}
-            bg={'green.400'}
-            rounded={'full'}
+            colorScheme={"green"}
+            bg={"green.400"}
+            rounded={"full"}
             px={6}
             _hover={{
-              bg: 'green.500',
-            }}>
-            {t('nft.mint')}
+              bg: "green.500",
+            }}
+          >
+            {t("nft.mint")}
           </Button>
         </Link>
       </Stack>
-      <Stack direction={'column'} align={'center'} py={12}>
-        <Heading fontSize={'2xl'} fontWeight={500}>
-          {t('nft.myNFTs')}
+      <Stack direction={"column"} align={"center"} py={12}>
+        <Heading fontSize={"2xl"} fontWeight={500}>
+          {t("nft.myNFTs")}
         </Heading>
         <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-          {holdingNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />)}
+          {holdingNFTs.map((nft: NFTType) => (
+            <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />
+          ))}
         </Flex>
         <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-          {withdrawnNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />)}
+          {withdrawnNFTs.map((nft: NFTType) => (
+            <NFTInfo nft={nft} key={cotaId + nft.tokenIndex} />
+          ))}
         </Flex>
         {PaginatedItems}
       </Stack>
@@ -171,9 +165,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: true,
-  }
-}
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   return {
+//     paths: [],
+//     fallback: true,
+//   }
+// }
