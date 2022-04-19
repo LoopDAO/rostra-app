@@ -31,10 +31,11 @@ export default function NFTDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!cotaId) return
       const nft = await cotaService.aggregator.getDefineInfo({
         cotaId,
       })
-      setNFTInfo(nft)
+      if (nft) setNFTInfo(nft)
     };
     fetchData();
   }, [cotaId]);
@@ -103,6 +104,8 @@ export default function NFTDetails() {
       />
     </>
   );
+
+  if (!cotaId) return <Loading />
 
   return (
     <Stack pt={10} align={'center'}>
