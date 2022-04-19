@@ -46,29 +46,33 @@ export default function NFTDetails() {
       const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
       const lockScript = serializeScript(addressToScript(cotaAddress))
 
-      const holds = await cotaService.aggregator.getHoldCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
-      console.log('aaa holds: ', holds)
+      try {
+        const holds = await cotaService.aggregator.getHoldCotaNft({
+          lockScript,
+          page: pageOffset,
+          pageSize: itemsPerPage,
+        })
+        console.log('aaa holds: ', holds)
 
-      const thisHoldings = holds.nfts.filter(nft => nft.cotaId === cotaId)
-      setHoldingNFTs(thisHoldings as any)
+        const thisHoldings = holds.nfts.filter(nft => nft.cotaId === cotaId)
+        setHoldingNFTs(thisHoldings as any)
 
 
-      const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
-      console.log('aaa withdraws: ', withdraws)
-      const thisWithdrawss = withdraws.nfts.filter(nft => nft.cotaId === cotaId)
-      setWithdrawnNFTs(thisWithdrawss as any)
+        const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
+          lockScript,
+          page: pageOffset,
+          pageSize: itemsPerPage,
+        })
+        console.log('aaa withdraws: ', withdraws)
+        const thisWithdrawss = withdraws.nfts.filter(nft => nft.cotaId === cotaId)
+        setWithdrawnNFTs(thisWithdrawss as any)
 
-      const newPageCount = thisHoldings.length + thisWithdrawss.length
-      console.log('newPageCount: ', newPageCount)
-      setPageCount(Math.ceil(newPageCount / itemsPerPage))
+        const newPageCount = thisHoldings.length + thisWithdrawss.length
+        console.log('newPageCount: ', newPageCount)
+        setPageCount(Math.ceil(newPageCount / itemsPerPage))
+      } catch (error) {
+        console.log('error: ', error)
+      }
     }
     fetchData();
 
