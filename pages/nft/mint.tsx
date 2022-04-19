@@ -187,7 +187,13 @@ export default function CreateNFT() {
           } catch (error) {
             console.log('error: ', error)
           } finally {
-            router.push(`/nft/${cotaId}`)
+            router.push({
+              pathname: `/nft`,
+              query: {
+                cotaId,
+              },
+            })
+
           }
         }
       }
