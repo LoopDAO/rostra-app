@@ -10,6 +10,8 @@ import { generateFlashsignerAddress, ChainType, Config } from '@nervina-labs/fla
 import { cotaService } from "@lib/utils/ckb"
 import { addressToScript, serializeScript, } from '@nervosnetwork/ckb-sdk-utils'
 import ReactPaginate from 'react-paginate';
+import fetchers, { http } from "api/fetchers"
+import useSWR from "swr"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -20,12 +22,18 @@ export default function MyNFTsPage() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [holdingNFTs, setHoldingNFTs] = useState([])
   const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
+  const [serverApiNFTs, setServerApiNFTs] = useState([])
   const lockScript = serializeScript(addressToScript(cotaAddress))
   const [pageOffset, setPageOffset] = useState(0);
   const [pageCount, setPageCount] = useState(10);
   const itemsPerPage = 10
+  const { data :apiNFTs, error } = useSWR(
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/mint-nft/account/${account.address}`,
+    fetchers.http
+  )
 
   useEffect(() => {
+  
     const fetchData = async () => {
       const holds = await cotaService.aggregator.getHoldCotaNft({
         lockScript,
@@ -42,6 +50,11 @@ export default function MyNFTsPage() {
       })
       console.log('aaa withdraws: ', withdraws)
       setWithdrawableNFTs(withdraws.nfts as any)
+
+      console.log('aaa apiNFTs: ', apiNFTs)
+      const serverApiNFTs = apiNFTs?.result
+      console.log('aaa serverApiNfts: ', serverApiNFTs)
+      setServerApiNFTs(serverApiNFTs as any)
 
       const newPageCount = holds.total + withdraws.total
       console.log('newPageCount: ', newPageCount)
@@ -91,6 +104,10 @@ export default function MyNFTsPage() {
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         {withdrawableNFTs.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
       </Flex>
+      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+        {serverApiNFTs?.map((nft: NFTType) => <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />)}
+      </Flex>
+      
       {PaginatedItems}
     </Box>
   )

@@ -37,6 +37,7 @@ import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
 import { cotaService, ckb } from "@lib/utils/ckb"
 import Link from "next/link"
+import httpPost from 'api/post'
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -86,19 +87,19 @@ export default function CreateNFT() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
-  const [registered, setRegistered] = useState(false);
+  const [registered, setRegistered] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
         const res = await cotaService.aggregator.checkReisteredLockHashes([
           scriptToHash(addressToScript(cotaAddress)),
         ])
-        setRegistered(res?.registered);
+        setRegistered(res?.registered)
         console.log('res: ', res)
       }
-    };
-    fetchData();
-  }, [cotaAddress, isLoggedIn]);
+    }
+    fetchData()
+  }, [cotaAddress, isLoggedIn])
 
   if (!registered) {
     return (
@@ -179,14 +180,16 @@ export default function CreateNFT() {
         extra: {
           txToSign: tx,
           action: 'create-nft',
-          cotaId
+          cotaId,
+          totalSupply,
+          cotaInfo
         },
       }
     )
   }
 
   if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
-    console.log('router.query.action: ', router.query.action);
+    console.log('router.query.action: ', router.query.action)
     getResultFromURL(router.asPath, {
       onLogin(res) {
         console.log('onLogin res: ', res)
@@ -199,6 +202,16 @@ export default function CreateNFT() {
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
+            const data = {
+              account: account.address,
+              name: result.extra?.cotaInfo.name,
+              desc: result.extra?.cotaInfo.description,
+              image:result.extra?.cotaInfo.image,
+              total: result.extra?.totalSupply,
+              cotaId: result.extra?.cotaId,
+              txHash
+            }
+            await postMintNFTInfo2Rostra(data)
             router.push({
               pathname: `/nft`,
               query: {
@@ -213,7 +226,10 @@ export default function CreateNFT() {
       }
     })
   }
-
+  async function postMintNFTInfo2Rostra(data_: { account: string; name: any; desc: any; image: any; total: any; cotaId: any;  txHash: string }) {
+    const url = `/mint-nft/add`
+    await httpPost(url, data_)
+  }
   return (
     <>
     <Formik
