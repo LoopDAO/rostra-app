@@ -20,8 +20,7 @@ export default function MyNFTsPage() {
   const { t } = useTranslation()
   const { account } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
-  const [holdingNFTs, setHoldingNFTs] = useState([])
-  const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
+  const [serverApiNFTs, setServerApiNFTs] = useState([])
   const lockScript = serializeScript(addressToScript(cotaAddress))
   const [pageOffset, setPageOffset] = useState(0)
   const [pageCount, setPageCount] = useState(10)
@@ -33,21 +32,10 @@ export default function MyNFTsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const holds = await cotaService.aggregator.getHoldCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
-      if (holds?.nfts) setHoldingNFTs(holds?.nfts as any)
+      const serverApiNFTs = apiNFTs?.result || []
+      setServerApiNFTs(serverApiNFTs as any)
 
-      const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
-      if (withdraws?.nfts) setWithdrawableNFTs(withdraws.nfts as any)
-
-      const newPageCount = holds.total + withdraws.total
+      const newPageCount = serverApiNFTs.length
       setPageCount(Math.ceil(newPageCount / itemsPerPage))
     }
     fetchData()
@@ -86,14 +74,9 @@ export default function MyNFTsPage() {
 
   return (
     <Box>
-      <Heading py={5}>{t("nft.myNFTs")}</Heading>
+      <Heading py={5}>{t("nft.manageNFTs")}</Heading>
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {holdingNFTs.map((nft: NFTType) => (
-          <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
-        ))}
-      </Flex>
-      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {withdrawableNFTs.map((nft: NFTType) => (
+        {serverApiNFTs?.map((nft: NFTType) => (
           <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
         ))}
       </Flex>

@@ -55,11 +55,12 @@
   },
   "nft": {
     "distribute": "发 NFT",
+    "myNFTs": "我的 NFT",
     "claim": "领 NFT",
-    "myNFTs": "我的NFT",
+    "mint": "铸造 NFT",
     "create": "创建 NFT",
     "resitryWarning": "请先在 Dashboard 中注册账户信息(需要至少持有 150 个 CKB)",
-    "mint": "铸造 NFT"
+    "manageNFTs": "管理 NFT"
   },
   "redpacket": {
     "create": "发红包",

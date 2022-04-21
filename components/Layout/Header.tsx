@@ -11,6 +11,7 @@ import AccountFlashsigner from "./Account/AccountFlashsigner"
 const Links = [
   // "guild.guilds",
   "nft.myNFTs",
+  "nft.manageNFTs",
   "nft.create",
   // "setting.airdropNFT",
   "dashboard.title"
@@ -20,6 +21,7 @@ const hrefs = {
   // "guild.guilds": "/guild",
   "guild.create": "/guild/create",
   "nft.myNFTs": "/mynfts",
+  "nft.manageNFTs": "/manage-nfts",
   "nft.create": "/nft/create",
   "setting.airdropNFT": "/setting",
   "dashboard.title": "/dashboard",

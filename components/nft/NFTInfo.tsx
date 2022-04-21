@@ -28,7 +28,7 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
       <Box
         role={'group'}
         p={6}
-        maxW={'330px'}
+        maxW={'280px'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.800')}
         boxShadow={'xl'}
