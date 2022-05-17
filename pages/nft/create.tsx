@@ -36,8 +36,8 @@ import {
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
 import { cotaService, ckb } from "@lib/utils/ckb"
-import Link from "next/link"
 import httpPost from 'api/post'
+import RegisterWarning from "@components/Warning/Register"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -102,11 +102,7 @@ export default function CreateNFT() {
   }, [cotaAddress, isLoggedIn])
 
   if (!registered) {
-    return (
-      <>
-        <Link href={'/dashboard'}>{t('nft.resitryWarning')}</Link>
-      </>
-    )
+    return <RegisterWarning address={cotaAddress} warning={t("nft.resitryWarning")} />
   }
 
   const validateFiles = (value: FileList) => {

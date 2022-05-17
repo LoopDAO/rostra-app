@@ -30,6 +30,7 @@ import { useRouter } from "next/router"
 import Loading from "@components/Loading"
 import { RouteState } from "pages/Flashsigner"
 import cookie from "react-cookies"
+import RegisterWarning from "@components/Warning/Register"
 
 const chainType = process.env.CHAIN_TYPE || "testnet"
 Config.setChainType(chainType as ChainType)
@@ -101,11 +102,7 @@ export default function SettingPage() {
   }
 
   if (!registered) {
-    return (
-      <>
-        <Link href={"/dashboard"}>{t("nft.resitryWarning")}</Link>
-      </>
-    )
+    return <RegisterWarning address={cotaAddress} warning={t("nft.resitryWarning")} />
   }
 
   let errorMessageElem, successMessageElem

@@ -49,6 +49,7 @@
     "next-plausible": "^3.1.4",
     "next-themes": "^0.0.15",
     "nft.storage": "^5.2.2",
+    "qrcode.react": "^3.0.2",
     "react": "17.0.2",
     "react-cookies": "^0.1.1",
     "react-datepicker": "^4.7.0",
