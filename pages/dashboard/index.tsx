@@ -30,7 +30,10 @@ import {
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
-import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+import { getSecp256k1CellDep, padStr, cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
+import useSWR from "swr"
+import fetchers from "api/fetchers"
+import { hexToBalance } from '@lib/utils/ckb'
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -88,18 +91,19 @@ export default function DashboardPage() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
 
   const [status, setStatus] = useState(false);
+  const script = addressToScript(cotaAddress)
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
-        const res = await cotaService.aggregator.checkReisteredLockHashes([
-          scriptToHash(addressToScript(cotaAddress)),
-        ])
+        const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
         setStatus(res?.registered);
         console.log('res: ', res)
       }
     };
     fetchData();
   }, [cotaAddress, isLoggedIn]);
+
+  const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
 
   const router = useRouter()
   console.log('router.query: ', router);
@@ -135,13 +139,16 @@ export default function DashboardPage() {
     registryBtn = <Button onClick={() => { registerCota(cotaAddress) }}>Register</Button>
   }
 
+  const balance = hexToBalance(data?.result?.capacity)
+
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("dashboard.title")}</Heading>
 
       <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         <Container>Address: {cotaAddress}</Container>
-        <Container>CKB CoTA Registry: {status.toString()} {registryBtn}</Container>
+        <Container>CKB CoTA Registry: {status?.toString()} {registryBtn}</Container>
+        <Container>Balance: {balance}</Container>
       </Flex>
 
       {/* <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
