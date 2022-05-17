@@ -1,8 +1,7 @@
-import React, { useRef, ReactNode, useState, useEffect } from "react"
-import { useTranslation } from "next-i18next"
+import React from "react"
 import Link from "next/link"
 import { QRCodeSVG } from "qrcode.react"
-import { Stack, Box, VStack, Text } from "@chakra-ui/react"
+import { Box, Text } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 
 export default function RegisterWarning({ address, warning }: { address: string; warning: string }) {

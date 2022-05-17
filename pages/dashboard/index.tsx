@@ -3,17 +3,14 @@ import { useTranslation } from "next-i18next"
 import { GetStaticProps } from "next"
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Flex, Heading, Stack, Container, Button } from "@chakra-ui/react"
+import { Flex, Heading, Stack, Box, Button, VStack, Container } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../../components/Layout/Account/AccountFlashsigner"
-import Account from "../../components/Layout/Account"
 import {
   addressToScript,
-  serializeScript,
   scriptToHash,
   rawTransactionToHash,
   serializeWitnessArgs,
-  serializeWitnesses
 } from '@nervosnetwork/ckb-sdk-utils'
 import {
   generateRegisterCotaTx,
@@ -21,7 +18,6 @@ import {
 } from '@nervina-labs/cota-sdk'
 import {
   signMessageWithRedirect,
-  signTransactionWithRedirect,
   appendSignatureToTransaction,
   Config,
   transactionToMessage,
@@ -29,11 +25,12 @@ import {
   ChainType
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
-import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
-import { getSecp256k1CellDep, padStr, cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
+import { getResultFromURL } from '@nervina-labs/flashsigner'
+import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
 import useSWR from "swr"
 import fetchers from "api/fetchers"
 import { hexToBalance } from '@lib/utils/ckb'
+import { QRCodeSVG } from "qrcode.react"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -135,8 +132,15 @@ export default function DashboardPage() {
   if (!isLoggedIn) return <AccountFlashsigner />
 
   let registryBtn
+  let registryElem
   if(!status) {
     registryBtn = <Button onClick={() => { registerCota(cotaAddress) }}>Register</Button>
+  } else {
+    registryElem = (
+      <Box>
+        CKB CoTA Registry: {status?.toString()} {registryBtn}
+      </Box>
+    )
   }
 
   const balance = hexToBalance(data?.result?.capacity)
@@ -144,12 +148,11 @@ export default function DashboardPage() {
   return (
     <Stack spacing={2} p={4}>
       <Heading>{t("dashboard.title")}</Heading>
+      <Box>Address</Box>
+      <QRCodeSVG value={cotaAddress} />
+      <Box>{cotaAddress}</Box>
+      <Box>Balance: {balance}</Box>
 
-      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        <Container>Address: {cotaAddress}</Container>
-        <Container>CKB CoTA Registry: {status?.toString()} {registryBtn}</Container>
-        <Container>Balance: {balance}</Container>
-      </Flex>
 
       {/* <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
         <Container>ETH Address <Account /></Container>
