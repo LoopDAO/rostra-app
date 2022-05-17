@@ -20,7 +20,7 @@ export const CopyableAddress = ({
     <Tooltip side="right" label={copied ? "Copied" : "Click to copy address"}>
       <Button
         size="3"
-        css={{ backgroundColor: "transparent", px: "$1" }}
+        css={{ backgroundColor: "transparent", px: "$0" }}
         onClick={() => copy(address)}
         {...rest}
       >

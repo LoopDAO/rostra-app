@@ -17,7 +17,7 @@ import {
   Config
 } from '@nervina-labs/flashsigner'
 import dynamic from 'next/dynamic'
-import { Tooltip } from "@components/common/Tooltip"
+
 const AccountCard = dynamic(import('./AccountCard'), {
   ssr: false
 })
@@ -77,10 +77,7 @@ const AccountFlashsigner: FC = () => {
           </Tooltip>
         </AccountButton>
         <Separator orientation="vertical" /> */}
-        <AccountButton
-          css={{ border: "1px solid $colors$slate7" }}
-          onClick={onAccountModalOpen}
-        >
+        <AccountButton css={{ border: "1px solid $colors$slate7" }} onClick={onAccountModalOpen}>
           <Flex css={{ gap: "$3" }}>
             <Flex css={{ gap: 0, fd: "column", ai: "flex-end" }}>
               <Text as="span" css={{ fontSize: "$2", fontWeight: "500" }}>

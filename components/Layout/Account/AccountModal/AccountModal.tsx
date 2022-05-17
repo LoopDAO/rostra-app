@@ -18,6 +18,7 @@ import {
   ChainType,
   Config
 } from '@nervina-labs/flashsigner'
+import Balance from "@components/Balance"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -46,22 +47,24 @@ const AccountModal = ({
       <DialogContent>
         <DialogTitle>Account</DialogTitle>
         <DialogClose onClick={onClose} />
-        <Flex css={{ my: "$6", gap: "$4", ai: "center" }}>
+        <Flex css={{ my: "$2", gap: "$4", ai: "center" }}>
           <CopyableAddress address={isLoggedIn ? cotaAddress : account!} decimals={5} />
+        </Flex>
+        <Flex css={{ mb: "$4" }}>
+          <Balance address={cotaAddress} /> CKB
         </Flex>
         <Flex css={{ ai: "center", jc: "space-between", mb: "-$1" }}>
           <Text color="$gray">
-            Connected with{" "}
-            {isLoggedIn ? "Flashsigner" : connector === injected ? "MetaMask" : "WalletConnect"}
+            Connected with {isLoggedIn ? "Flashsigner" : connector === injected ? "MetaMask" : "WalletConnect"}
           </Text>
           {isLoggedIn ? (
             <Button size="1" onClick={logoutFlashsigner}>
               Logout
-            </Button>) : null}
+            </Button>
+          ) : null}
           {/* <Button size="1" onClick={handleWalletProviderSwitch}>
             Switch
           </Button> */}
-
         </Flex>
       </DialogContent>
     </Dialog>
