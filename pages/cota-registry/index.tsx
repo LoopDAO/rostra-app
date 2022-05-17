@@ -35,48 +35,6 @@ import { QRCodeSVG } from "qrcode.react"
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
 
-const registerCota = async (address: string) => {
-  const provideCKBLock = addressToScript(address)
-  const unregisteredCotaLock = addressToScript(address)
-  const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
-  const flashsingerDep = Config.getCellDep()
-  rawTx.cellDeps.push(flashsingerDep)
-
-  const registryLock = getAlwaysSuccessLock(false)
-
-  const cells = rawTx.inputs.map((input, index) => ({
-    outPoint: input.previousOutput,
-    lock: index === 0 ? registryLock : provideCKBLock,
-  }))
-
-  const transactionHash = rawTransactionToHash(rawTx)
-
-  const witnesses = {
-    transactionHash,
-    witnesses: rawTx.witnesses,
-    inputCells: cells,
-    skipMissingKeys: true,
-  }
-
-  const tx: any = paramsFormatter.toRawTransaction({
-    ...rawTx,
-    witnesses: witnesses.witnesses.map((witness) =>
-      typeof witness === 'string' ? witness : serializeWitnessArgs(witness)
-    )
-  })
-
-  signMessageWithRedirect(
-    '/dashboard?sig=',
-      {
-      isRaw: false,
-      message: transactionToMessage(tx, 1),
-      extra: {
-        txToSign: tx,
-        action: 'cota-registry'
-      },
-    }
-  )
-}
 
 export default function CotaRegistryPage() {
   const { t } = useTranslation()
@@ -99,6 +57,7 @@ export default function CotaRegistryPage() {
   const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
 
   const router = useRouter()
+
   if (!status && router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
     getResultFromURL(router.asPath, {
       onLogin(res) {
@@ -110,8 +69,9 @@ export default function CotaRegistryPage() {
           const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
-            const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            window.location.replace('/dashboard') // todo
+            await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
+            console.log('result.extra?.redirect: ', result.extra?.redirect)
+            window.location.replace(result.extra?.redirect)
           } catch (error) {
             console.log('error: ', error)
           }
@@ -122,23 +82,11 @@ export default function CotaRegistryPage() {
 
   if (!isLoggedIn) return <AccountFlashsigner />
 
-  let registryBtn
-  let registryElem
-  if(!status) {
-    registryBtn = <Button onClick={() => { registerCota(cotaAddress) }}>Register</Button>
-  } else {
-    registryElem = (
-      <Box>
-        CKB CoTA Registry: {status?.toString()} {registryBtn}
-      </Box>
-    )
-  }
-
   const balance = hexToBalance(data?.result?.capacity)
 
   return (
     <Stack spacing={2} p={4}>
-      <Heading>{t("dashboard.title")}</Heading>
+      <Box fontWeight='600'>CoTA Registry Status: {status ? "Registered" : "Not register"}</Box>
       <Box>Address</Box>
       <QRCodeSVG value={cotaAddress} />
       <Box>{cotaAddress}</Box>

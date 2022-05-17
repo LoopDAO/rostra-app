@@ -88,6 +88,7 @@ export default function CreateNFT() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
+  console.log("router", router)
   const [registered, setRegistered] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
@@ -103,12 +104,7 @@ export default function CreateNFT() {
   }, [cotaAddress, isLoggedIn])
 
   if (!registered) {
-    return (
-      <>
-        {/* {t("nft.resitryWarning")} */}
-        <CotaRegistry />
-      </>
-    )
+    return <CotaRegistry />
   }
 
   const validateFiles = (value: FileList) => {

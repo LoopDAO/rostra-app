@@ -19,11 +19,12 @@ import fetchers from "api/fetchers"
 import { hexToBalance } from "@lib/utils/ckb"
 import { QRCodeSVG } from "qrcode.react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { useRouter } from "next/router"
 
 const chainType = process.env.CHAIN_TYPE || "testnet"
 Config.setChainType(chainType as ChainType)
 
-const registerCota = async (address: string) => {
+const registerCota = async (address: string, redirectPath: string) => {
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
   const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
@@ -53,13 +54,13 @@ const registerCota = async (address: string) => {
     ),
   })
 
-  signMessageWithRedirect("/dashboard?sig=", {  // todo
+  signMessageWithRedirect("/cota-registry?sig=", {
     isRaw: false,
     message: transactionToMessage(tx, 1),
     extra: {
       txToSign: tx,
       action: "cota-registry",
-      redirect: "/dashboard", // todo
+      redirect: redirectPath,
     },
   })
 }
@@ -68,6 +69,8 @@ export default function CotaRegistry() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
+  const router = useRouter()
+  console.log("router", router)
 
   const [status, setStatus] = useState(false)
   const script = addressToScript(cotaAddress)
@@ -95,7 +98,7 @@ export default function CotaRegistry() {
         size="sm"
         ml={4}
         onClick={() => {
-          registerCota(cotaAddress)
+          registerCota(cotaAddress, router.pathname)
         }}
       >
         Go
