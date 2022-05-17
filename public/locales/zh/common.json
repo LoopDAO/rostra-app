@@ -59,7 +59,8 @@
     "claim": "领 NFT",
     "mint": "铸造 NFT",
     "create": "创建 NFT",
-    "resitryWarning": "点击进入控制面板注册账户信息(需要至少持有 150 个 CKB)",
+    "resitryWarning": "此操作需要注册你的账户",
+    "balanceWarning": "此操作需要至少持有 150 个 CKB",
     "manageNFTs": "管理 NFT"
   },
   "redpacket": {

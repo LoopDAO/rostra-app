@@ -59,7 +59,8 @@
     "claim": "Claim NFT",
     "mint": "Mint NFT",
     "create": "Create NFT",
-    "resitryWarning": "Please register yor account on Dashboard page(Need to hold at least 150 CKB)",
+    "resitryWarning": "This operation requires registering your account",
+    "balanceWarning": "This operation requires at least 150 CKB",
     "manageNFTs": "Manage NFTs"
   },
   "redpacket": {

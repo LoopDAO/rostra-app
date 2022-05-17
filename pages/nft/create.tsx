@@ -38,6 +38,7 @@ import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
 import { cotaService, ckb } from "@lib/utils/ckb"
 import httpPost from 'api/post'
 import RegisterWarning from "@components/Warning/Register"
+import CotaRegistry from "@components/CoTARegistry"
 
 const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
@@ -102,7 +103,12 @@ export default function CreateNFT() {
   }, [cotaAddress, isLoggedIn])
 
   if (!registered) {
-    return <RegisterWarning address={cotaAddress} warning={t("nft.resitryWarning")} />
+    return (
+      <>
+        {/* {t("nft.resitryWarning")} */}
+        <CotaRegistry />
+      </>
+    )
   }
 
   const validateFiles = (value: FileList) => {
@@ -228,6 +234,7 @@ export default function CreateNFT() {
   }
   return (
     <>
+    <CotaRegistry />
     <Formik
       initialValues={{ name: "", description: "", totalSupply: 10000 }}
       onSubmit={onSubmit}
