@@ -36,12 +36,10 @@ const chainType = process.env.CHAIN_TYPE || 'testnet'
 Config.setChainType(chainType as ChainType)
 
 const registerCota = async (address: string) => {
-  console.log('address: ', address)
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
   const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
   const flashsingerDep = Config.getCellDep()
-  console.log('celldep: ', flashsingerDep)
   rawTx.cellDeps.push(flashsingerDep)
 
   const registryLock = getAlwaysSuccessLock(false)
@@ -59,8 +57,6 @@ const registerCota = async (address: string) => {
     inputCells: cells,
     skipMissingKeys: true,
   }
-
-  console.log('witnesses', JSON.stringify(witnesses, null, 2))
 
   const tx: any = paramsFormatter.toRawTransaction({
     ...rawTx,
@@ -103,23 +99,18 @@ export default function DashboardPage() {
   const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
 
   const router = useRouter()
-  console.log('router.query: ', router);
   if (!status && router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
-    console.log('router.query.action: ', router.query.action);
     getResultFromURL(router.asPath, {
       onLogin(res) {
         console.log('onLogin res: ', res)
       },
       async onSignMessage(result) {
         const action = result.extra?.action
-        console.log(' ====== action: ', action);
         if (action === 'cota-registry') {
           const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
-          console.log('signedTx: ', signedTx)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
             const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            console.log(`Register cota cell tx has been sent with tx hash ${txHash}`)
             window.location.replace('/dashboard')
           } catch (error) {
             console.log('error: ', error)
@@ -152,12 +143,6 @@ export default function DashboardPage() {
       <QRCodeSVG value={cotaAddress} />
       <Box>{cotaAddress}</Box>
       <Box>Balance: {balance}</Box>
-
-
-      {/* <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        <Container>ETH Address <Account /></Container>
-        <Container>Balance: {'todo'}</Container>
-      </Flex> */}
     </Stack>
   )
 }
