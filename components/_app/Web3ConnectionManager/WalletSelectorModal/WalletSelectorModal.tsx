@@ -79,7 +79,7 @@ const WalletSelectorModal = ({
   return (
     <Dialog open={isModalOpen}>
       <DialogContent>
-        <DialogTitle>Connect to a wallet</DialogTitle>
+        <DialogTitle>Connect wallet</DialogTitle>
         <DialogClose onClick={closeModal} />
         {/* <Error error={error} processError={processConnectionError} /> */}
         <Flex css={{ gap: "$4", fd: "column" }}>

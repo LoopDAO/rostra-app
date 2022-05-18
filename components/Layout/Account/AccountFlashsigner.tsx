@@ -41,7 +41,7 @@ const AccountFlashsigner: FC = () => {
   if (typeof window === "undefined") {
     return (
       <AccountCard>
-        <AccountButton isLoading>Connect to a wallet</AccountButton>
+        <AccountButton isLoading>Connect wallet</AccountButton>
       </AccountCard>
     )
   }
@@ -54,7 +54,7 @@ const AccountFlashsigner: FC = () => {
           isLoading={!triedEager}
           onClick={openWalletSelectorModal}
         >
-          Connect to a wallet
+          Connect wallet
         </AccountButton>
       </AccountCard>
     )

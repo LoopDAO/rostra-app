@@ -55,7 +55,7 @@ const Account: FC = () => {
           isLoading={!triedEager}
           onClick={openWalletSelectorModal}
         >
-          Connect to a wallet
+          Connect wallet
         </AccountButton>
       </AccountCard>
     )
