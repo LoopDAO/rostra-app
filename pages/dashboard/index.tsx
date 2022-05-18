@@ -30,6 +30,7 @@ import useSWR from "swr"
 import fetchers from "api/fetchers"
 import { hexToBalance } from '@lib/utils/ckb'
 import { QRCodeSVG } from "qrcode.react"
+import { chainType, isMainnet } from "@lib/utils/ckb"
 
 const registerCota = async (address: string) => {
   const provideCKBLock = addressToScript(address)
@@ -38,7 +39,7 @@ const registerCota = async (address: string) => {
   const flashsingerDep = Config.getCellDep()
   rawTx.cellDeps.push(flashsingerDep)
 
-  const registryLock = getAlwaysSuccessLock(false)
+  const registryLock = getAlwaysSuccessLock(isMainnet)
 
   const cells = rawTx.inputs.map((input, index) => ({
     outPoint: input.previousOutput,

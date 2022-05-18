@@ -20,7 +20,7 @@ import { hexToBalance } from "@lib/utils/ckb"
 import { QRCodeSVG } from "qrcode.react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { useRouter } from "next/router"
-import { chainType } from "@lib/utils/ckb"
+import { chainType, isMainnet } from "@lib/utils/ckb"
 
 const registerCota = async (address: string, redirectPath: string) => {
   const provideCKBLock = addressToScript(address)
@@ -28,8 +28,7 @@ const registerCota = async (address: string, redirectPath: string) => {
   const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
   const flashsingerDep = Config.getCellDep()
   rawTx.cellDeps.push(flashsingerDep)
-
-  const registryLock = getAlwaysSuccessLock(false)
+  const registryLock = getAlwaysSuccessLock(isMainnet)
 
   const cells = rawTx.inputs.map((input, index) => ({
     outPoint: input.previousOutput,
