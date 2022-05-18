@@ -22,7 +22,6 @@ import {
   Config,
   transactionToMessage,
   generateFlashsignerAddress,
-  ChainType
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
@@ -31,9 +30,6 @@ import useSWR from "swr"
 import fetchers from "api/fetchers"
 import { hexToBalance } from '@lib/utils/ckb'
 import { QRCodeSVG } from "qrcode.react"
-
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
 
 const registerCota = async (address: string) => {
   const provideCKBLock = addressToScript(address)

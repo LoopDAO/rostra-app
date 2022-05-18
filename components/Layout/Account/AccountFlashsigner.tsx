@@ -22,9 +22,6 @@ const AccountCard = dynamic(import('./AccountCard'), {
   ssr: false
 })
 
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
-
 const AccountFlashsigner: FC = () => {
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)

@@ -32,9 +32,6 @@ import { RouteState } from "pages/Flashsigner"
 import cookie from "react-cookies"
 import RegisterWarning from "@components/Warning/Register"
 
-const chainType = process.env.CHAIN_TYPE || "testnet"
-Config.setChainType(chainType as ChainType)
-
 const initRuleInfo = {
   name: "",
   desc: "",

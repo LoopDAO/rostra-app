@@ -20,9 +20,6 @@ import {
 } from '@nervina-labs/flashsigner'
 import Balance from "@components/Balance"
 
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
-
 const AccountModal = ({
   isOpen,
   onClose,

@@ -12,6 +12,11 @@ import type {
   JsonRpcFetchFunc,
 } from "@ethersproject/providers"
 import { ChakraProvider } from '@chakra-ui/react'
+import {
+  Config,
+  ChainType,
+} from "@nervina-labs/flashsigner"
+import { chainType } from "@lib/utils/ckb"
 
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
@@ -21,6 +26,8 @@ import { darkTheme } from "stitches.config"
 import { globalStyles } from "@styles/global"
 import { Web3ConnectionManager } from "@components/_app/Web3ConnectionManager"
 import { Layout } from "@components/Layout"
+
+Config.setChainType(chainType as ChainType)
 
 const Plausible = ({ children }: { children: ReactNode }) => {
   const isProd = process.env.NEXT_PUBLIC_BUILD_ENV === "production"

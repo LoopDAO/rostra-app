@@ -12,13 +12,11 @@ import { addressToScript, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
 import ReactPaginate from "react-paginate"
 import fetchers, { http } from "api/fetchers"
 import useSWR from "swr"
-
-const chainType = process.env.CHAIN_TYPE || "testnet"
-Config.setChainType(chainType as ChainType)
+import AccountFlashsigner from "@components/Layout/Account/AccountFlashsigner"
 
 export default function MyNFTsPage() {
   const { t } = useTranslation()
-  const { account } = useAccountFlashsigner()
+  const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [holdingNFTs, setHoldingNFTs] = useState([])
   const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
@@ -33,11 +31,12 @@ export default function MyNFTsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const holds = await cotaService.aggregator.getHoldCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
+      if (!isLoggedIn) return
+        const holds = await cotaService.aggregator.getHoldCotaNft({
+          lockScript,
+          page: pageOffset,
+          pageSize: itemsPerPage,
+        })
       if (holds?.nfts) setHoldingNFTs(holds?.nfts as any)
 
       const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
@@ -52,6 +51,8 @@ export default function MyNFTsPage() {
     }
     fetchData()
   }, [pageOffset])
+
+  if (!isLoggedIn) return <AccountFlashsigner />
 
   const handlePageChange = (event: any) => {
     console.log(event)

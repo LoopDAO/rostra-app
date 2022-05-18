@@ -44,9 +44,6 @@ import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
 import cookie from 'react-cookies'
 
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
-
 export default function ReportingPage() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()

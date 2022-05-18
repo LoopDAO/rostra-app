@@ -42,3 +42,5 @@ export const cotaService: Service = {
 export const ckb = cotaService.collector.getCkb()
 
 export const hexToBalance = (hex: string) => (parseInt(hex || '0', 16) / 10 ** 8)
+
+export const chainType = process.env.NEXT_PUBLIC_CHAIN_TYPE || "mainnet"

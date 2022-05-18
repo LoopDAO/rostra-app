@@ -31,9 +31,6 @@ import { padStr, cotaService, ckb } from "@lib/utils/ckb"
 import RegisterWarning from "@components/Warning/Register"
 import CotaRegistry from "@components/CoTARegistry"
 
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
-
 type FileUploadProps = {
   register: UseFormRegisterReturn
   accept?: string

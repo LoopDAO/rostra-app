@@ -32,10 +32,6 @@ import fetchers from "api/fetchers"
 import { hexToBalance } from '@lib/utils/ckb'
 import { QRCodeSVG } from "qrcode.react"
 
-const chainType = process.env.CHAIN_TYPE || 'testnet'
-Config.setChainType(chainType as ChainType)
-
-
 export default function CotaRegistryPage() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()

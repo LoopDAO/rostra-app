@@ -13,9 +13,6 @@ import ReactPaginate from "react-paginate"
 import fetchers, { http } from "api/fetchers"
 import useSWR from "swr"
 
-const chainType = process.env.CHAIN_TYPE || "testnet"
-Config.setChainType(chainType as ChainType)
-
 export default function MyNFTsPage() {
   const { t } = useTranslation()
   const { account } = useAccountFlashsigner()

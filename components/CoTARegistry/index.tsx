@@ -20,9 +20,7 @@ import { hexToBalance } from "@lib/utils/ckb"
 import { QRCodeSVG } from "qrcode.react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { useRouter } from "next/router"
-
-const chainType = process.env.CHAIN_TYPE || "testnet"
-Config.setChainType(chainType as ChainType)
+import { chainType } from "@lib/utils/ckb"
 
 const registerCota = async (address: string, redirectPath: string) => {
   const provideCKBLock = addressToScript(address)
