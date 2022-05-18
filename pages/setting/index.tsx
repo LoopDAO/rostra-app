@@ -24,7 +24,7 @@ import {
 import paramsFormatter from "@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter"
 import { generateDefineCotaTx, CotaInfo } from "@nervina-labs/cota-sdk"
 import Link from "next/link"
-import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+import { padStr, cotaService, ckb } from "@lib/utils/ckb"
 
 import { useRouter } from "next/router"
 import Loading from "@components/Loading"

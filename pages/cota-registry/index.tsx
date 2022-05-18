@@ -3,28 +3,17 @@ import { useTranslation } from "next-i18next"
 import { GetStaticProps } from "next"
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Flex, Heading, Stack, Box, Button, VStack, Container } from "@chakra-ui/react"
+import { Stack, Box } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../../components/Layout/Account/AccountFlashsigner"
 import {
   addressToScript,
   scriptToHash,
-  rawTransactionToHash,
-  serializeWitnessArgs,
 } from '@nervosnetwork/ckb-sdk-utils'
 import {
-  generateRegisterCotaTx,
-  getAlwaysSuccessLock,
-} from '@nervina-labs/cota-sdk'
-import {
-  signMessageWithRedirect,
   appendSignatureToTransaction,
-  Config,
-  transactionToMessage,
   generateFlashsignerAddress,
-  ChainType
 } from '@nervina-labs/flashsigner'
-import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
 import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
 import useSWR from "swr"

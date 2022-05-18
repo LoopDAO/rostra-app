@@ -14,12 +14,11 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  Box
 } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
 import { FiFile } from "react-icons/fi"
-import { NFTStorage, File } from "nft.storage"
+import { NFTStorage } from "nft.storage"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
@@ -27,17 +26,14 @@ import { addressToScript, serializeWitnessArgs, scriptToHash } from '@nervosnetw
 import {
   signMessageWithRedirect,
   appendSignatureToTransaction,
-  Config,
   transactionToMessage,
   generateFlashsignerAddress,
-  ChainType,
   getResultFromURL
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
 import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
 import { cotaService, ckb } from "@lib/utils/ckb"
 import httpPost from 'api/post'
-import RegisterWarning from "@components/Warning/Register"
 import CotaRegistry from "@components/CoTARegistry"
 
 type FileUploadProps = {
@@ -79,8 +75,7 @@ const FileUpload = (props: FileUploadProps) => {
 }
 
 export default function CreateNFT() {
-  const { t } = useTranslation()
-  const { register, handleSubmit, formState: { errors }, } = useForm()
+  const { register, formState: { errors }, } = useForm()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [fileObj, setFileObj] = useState<File>()

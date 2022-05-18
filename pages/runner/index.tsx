@@ -21,7 +21,7 @@ import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import Sidebar from "@components/Layout/Sidebar"
 import { generateMintCotaTx, MintCotaInfo, } from '@nervina-labs/cota-sdk'
-import { getSecp256k1CellDep, padStr, cotaService, ckb } from "@lib/utils/ckb"
+import { padStr, cotaService, ckb } from "@lib/utils/ckb"
 import fetchers from "api/fetchers"
 import httpPost from 'api/post'
 import useSWR from 'swr'
