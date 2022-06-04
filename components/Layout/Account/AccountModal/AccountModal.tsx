@@ -45,7 +45,7 @@ const AccountModal = ({
         <DialogTitle>Account</DialogTitle>
         <DialogClose onClick={onClose} />
         <Flex css={{ my: "$2", gap: "$4", ai: "center" }}>
-          <CopyableAddress address={isLoggedIn ? cotaAddress : account!} decimals={5} />
+          <CopyableAddress address={isLoggedIn ? cotaAddress : account!} decimals={4} />
         </Flex>
         <Flex css={{ mb: "$4" }}>
           <Balance address={cotaAddress} /> CKB

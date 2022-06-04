@@ -11,7 +11,7 @@ type Props = ButtonProps & {
 
 export const CopyableAddress = ({
   address,
-  decimals = 3,
+  decimals = 4,
   ...rest
 }: Props): JSX.Element => {
   const { copied, copy } = useClipboard()

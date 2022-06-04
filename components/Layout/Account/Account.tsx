@@ -82,7 +82,7 @@ const Account: FC = () => {
           <Flex css={{ gap: "$3" }}>
             <Flex css={{ gap: 0, fd: "column", ai: "flex-end" }}>
               <Text as="span" sx={{ fontSize: "$2", fontWeight: "500" }}>
-                {ENSName || `${shortenHex(account, 3)}`}
+                {ENSName || `${shortenHex(account)}`}
               </Text>
             </Flex>
           </Flex>

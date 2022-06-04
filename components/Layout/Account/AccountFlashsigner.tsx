@@ -78,7 +78,7 @@ const AccountFlashsigner: FC = () => {
           <Flex css={{ gap: "$3" }}>
             <Flex css={{ gap: 0, fd: "column", ai: "flex-end" }}>
               <Text as="span" css={{ fontSize: "$2", fontWeight: "500" }}>
-                {`${shortenHex(cotaAddress, 3)}`}
+                {`${shortenHex(cotaAddress)}`}
               </Text>
             </Flex>
           </Flex>
