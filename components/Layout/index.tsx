@@ -9,7 +9,7 @@ export const Layout: FC = ({ children }) => {
       <Header />
       <Container
         style={{
-          height: "calc(100vh - 128px)",
+          minHeight: "calc(100vh - 128px)",
           overflow: "auto",
           maxWidth: "1080px",
           paddingTop: "2vh",
