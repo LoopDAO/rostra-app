@@ -15,6 +15,7 @@ import {
 import {
   generateRegisterCotaTx,
   getAlwaysSuccessLock,
+  FEE
 } from '@nervina-labs/cota-sdk'
 import {
   signMessageWithRedirect,
@@ -22,20 +23,24 @@ import {
   Config,
   transactionToMessage,
   generateFlashsignerAddress,
-} from '@nervina-labs/flashsigner'
+  getResultFromURL,
+} from "@nervina-labs/flashsigner"
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
-import { getResultFromURL } from '@nervina-labs/flashsigner'
-import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
+import { cotaService, ckb, ckbIndexerUrl, isMainnet, hexToBalance } from "@lib/utils/ckb"
 import useSWR from "swr"
 import fetchers from "api/fetchers"
-import { hexToBalance } from '@lib/utils/ckb'
 import { QRCodeSVG } from "qrcode.react"
-import { chainType, isMainnet } from "@lib/utils/ckb"
 
 const registerCota = async (address: string) => {
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
-  const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
+  const rawTx = await generateRegisterCotaTx(
+    cotaService,
+    [unregisteredCotaLock],
+    provideCKBLock,
+    FEE,
+    isMainnet
+  )
   const flashsingerDep = Config.getCellDep()
   rawTx.cellDeps.push(flashsingerDep)
 
@@ -123,13 +128,12 @@ export default function DashboardPage() {
   let registryElem
   if(!status) {
     registryBtn = <Button onClick={() => { registerCota(cotaAddress) }}>Register</Button>
-  } else {
-    registryElem = (
-      <Box>
-        CKB CoTA Registry: {status?.toString()} {registryBtn}
-      </Box>
-    )
   }
+  registryElem = (
+    <Box>
+      CKB CoTA Registry: {status?.toString()} {registryBtn}
+    </Box>
+  )
 
   const balance = hexToBalance(data?.result?.capacity)
 
@@ -140,6 +144,7 @@ export default function DashboardPage() {
       <QRCodeSVG value={cotaAddress} />
       <Box>{cotaAddress}</Box>
       <Box>Balance: {balance}</Box>
+      {registryElem}
     </Stack>
   )
 }

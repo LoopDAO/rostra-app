@@ -4,28 +4,31 @@ import { Stack, Link, Button, Alert, AlertIcon, AlertTitle, AlertDescription } f
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../Layout/Account/AccountFlashsigner"
 import { addressToScript, scriptToHash, rawTransactionToHash, serializeWitnessArgs } from "@nervosnetwork/ckb-sdk-utils"
-import { generateRegisterCotaTx, getAlwaysSuccessLock } from "@nervina-labs/cota-sdk"
+import { generateRegisterCotaTx, getAlwaysSuccessLock, FEE } from "@nervina-labs/cota-sdk"
 import {
   signMessageWithRedirect,
   Config,
   transactionToMessage,
   generateFlashsignerAddress,
-  ChainType,
 } from "@nervina-labs/flashsigner"
 import paramsFormatter from "@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter"
-import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
+import { cotaService, hexToBalance, ckbIndexerUrl, chainType, isMainnet } from "@lib/utils/ckb"
 import useSWR from "swr"
 import fetchers from "api/fetchers"
-import { hexToBalance } from "@lib/utils/ckb"
 import { QRCodeSVG } from "qrcode.react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { useRouter } from "next/router"
-import { chainType, isMainnet } from "@lib/utils/ckb"
 
 const registerCota = async (address: string, redirectPath: string) => {
   const provideCKBLock = addressToScript(address)
   const unregisteredCotaLock = addressToScript(address)
-  const rawTx = await generateRegisterCotaTx(cotaService, [unregisteredCotaLock], provideCKBLock)
+  const rawTx = await generateRegisterCotaTx(
+    cotaService,
+    [unregisteredCotaLock],
+    provideCKBLock,
+    FEE,
+    isMainnet
+  )
   const flashsingerDep = Config.getCellDep()
   rawTx.cellDeps.push(flashsingerDep)
   const registryLock = getAlwaysSuccessLock(isMainnet)
