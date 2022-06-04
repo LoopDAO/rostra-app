@@ -41,7 +41,7 @@ export default function Header() {
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <Link href="/" passHref>
-              <Image boxSize="60px" objectFit="cover" src="/logo192.png" alt="Logo" />
+              <Image boxSize="60px" objectFit="cover" src="/logo192.png" alt="Logo" cursor={"pointer"} />
             </Link>
             <HStack as={"nav"} spacing={4}>
               {Links.map((link) => (
