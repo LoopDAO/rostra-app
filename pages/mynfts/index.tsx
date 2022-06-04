@@ -6,12 +6,10 @@ import { Flex, Heading, Box } from "@chakra-ui/react"
 import NFTInfo from "@components/nft/NFTInfo"
 import { NFTType } from "api/nft"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { generateFlashsignerAddress, ChainType, Config } from "@nervina-labs/flashsigner"
+import { generateFlashsignerAddress } from "@nervina-labs/flashsigner"
 import { cotaService } from "@lib/utils/ckb"
 import { addressToScript, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
 import ReactPaginate from "react-paginate"
-import fetchers, { http } from "api/fetchers"
-import useSWR from "swr"
 import AccountFlashsigner from "@components/Layout/Account/AccountFlashsigner"
 
 export default function MyNFTsPage() {
@@ -22,32 +20,37 @@ export default function MyNFTsPage() {
   const [withdrawableNFTs, setWithdrawableNFTs] = useState([])
   const lockScript = serializeScript(addressToScript(cotaAddress))
   const [pageOffset, setPageOffset] = useState(0)
+  const [nftCount, setNFTCount] = useState(0)
   const [pageCount, setPageCount] = useState(10)
+  const [loading, setLoading] = useState(false)
   const itemsPerPage = 10
-  const { data: apiNFTs, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/mint-nft/account/${account.address}`,
-    fetchers.http
-  )
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isLoggedIn) return
+      try {
+        if (!isLoggedIn) return
+        setLoading(true)
         const holds = await cotaService.aggregator.getHoldCotaNft({
           lockScript,
           page: pageOffset,
           pageSize: itemsPerPage,
         })
-      if (holds?.nfts) setHoldingNFTs(holds?.nfts as any)
+        if (holds?.nfts) setHoldingNFTs(holds?.nfts as any)
 
-      const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
-        lockScript,
-        page: pageOffset,
-        pageSize: itemsPerPage,
-      })
-      if (withdraws?.nfts) setWithdrawableNFTs(withdraws.nfts as any)
+        const withdraws = await cotaService.aggregator.getWithdrawCotaNft({
+          lockScript,
+          page: pageOffset,
+          pageSize: itemsPerPage,
+        })
+        if (withdraws?.nfts) setWithdrawableNFTs(withdraws.nfts as any)
 
-      const newPageCount = holds.total + withdraws.total
-      setPageCount(Math.ceil(newPageCount / itemsPerPage))
+        const newPageCount = holds.total + withdraws.total
+        setNFTCount(newPageCount)
+        setPageCount(Math.ceil(newPageCount / itemsPerPage))
+      } catch (error) {
+        console.error(error)
+      }
+      setLoading(false)
     }
     fetchData()
   }, [pageOffset])
@@ -55,13 +58,13 @@ export default function MyNFTsPage() {
   if (!isLoggedIn) return <AccountFlashsigner />
 
   const handlePageChange = (event: any) => {
-    console.log(event)
-    // when its content is loaded in useEffect.
     setPageOffset(event.selected)
   }
 
-  const PaginatedItems = (
-    <>
+  let PaginatedItems = null
+
+  if (pageCount) {
+    PaginatedItems = (
       <ReactPaginate
         previousLabel="Previous"
         nextLabel="Next"
@@ -82,23 +85,39 @@ export default function MyNFTsPage() {
         activeClassName="active"
         forcePage={pageOffset}
       />
-    </>
-  )
+    )
+  }
+  let content
+  if (loading) {
+    content = 'Loading...'
+  }
 
+  if (!loading && nftCount === 0) {
+    content = 'No NFT found'
+  }
+
+  if (!loading && nftCount) {
+    content = (
+      <Box>
+        <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+          {holdingNFTs.map((nft: NFTType) => (
+            <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
+          ))}
+        </Flex>
+        <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
+          {withdrawableNFTs.map((nft: NFTType) => (
+            <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
+          ))}
+        </Flex>
+      </Box>
+    )
+  }
   return (
     <Box>
-      <Heading py={5}>{t("nft.myNFTs")}</Heading>
-      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {holdingNFTs.map((nft: NFTType) => (
-          <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
-        ))}
-      </Flex>
-      <Flex marginTop={4} flexWrap="wrap" gap={4} p={0}>
-        {withdrawableNFTs.map((nft: NFTType) => (
-          <NFTInfo nft={nft} key={nft.cotaId + nft.tokenIndex} />
-        ))}
-      </Flex>
-
+      <Heading py={5} size="lg">
+        {t("nft.myNFTs")}
+      </Heading>
+      {content}
       {PaginatedItems}
     </Box>
   )
