@@ -28,7 +28,7 @@ export default function DashboardPage() {
       <Box>Address</Box>
       <QRCodeSVG value={cotaAddress} />
       <Box>{cotaAddress}</Box>
-      <Box>Balance: {balance}</Box>
+      <Box>Balance: {balance} CKB</Box>
     </Stack>
   )
 }
