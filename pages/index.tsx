@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import Hero from './Hero'
+import Hero from '../components/Home/Hero'
 
 export default function IndexPage() {
   return (
