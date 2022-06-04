@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Box, Flex, HStack, Button, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, HStack, Image, useColorModeValue } from "@chakra-ui/react"
 import { AddIcon } from "@chakra-ui/icons"
 import { useTranslation } from "next-i18next"
 import Link from "next/link"
@@ -41,7 +41,7 @@ export default function Header() {
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <Link href="/" passHref>
-              Rostra
+              <Image boxSize="60px" objectFit="cover" src="/logo192.png" alt="Logo" />
             </Link>
             <HStack as={"nav"} spacing={4}>
               {Links.map((link) => (
