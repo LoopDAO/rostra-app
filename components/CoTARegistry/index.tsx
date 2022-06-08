@@ -70,7 +70,6 @@ export default function CotaRegistry() {
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const router = useRouter()
-  console.log("router", router)
 
   const [status, setStatus] = useState(false)
   const script = addressToScript(cotaAddress)
@@ -83,7 +82,7 @@ export default function CotaRegistry() {
       }
     }
     fetchData()
-  }, [cotaAddress, isLoggedIn])
+  }, [script, isLoggedIn])
 
   const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
 
