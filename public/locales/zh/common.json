@@ -61,7 +61,8 @@
     "create": "创建 NFT",
     "resitryWarning": "此操作需要注册你的账户",
     "balanceWarning": "此操作需要至少持有 150 个 CKB",
-    "manageNFTs": "管理 NFT"
+    "manageNFTs": "管理 NFT",
+    "nftAddress": "NFT 地址"
   },
   "redpacket": {
     "create": "发红包",

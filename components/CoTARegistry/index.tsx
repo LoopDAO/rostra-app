@@ -131,7 +131,7 @@ export default function CotaRegistry() {
           {t("nft.balanceWarning")}
           {chainType === "testnet" && (
             <Link isExternal href="https://faucet.nervos.org/">
-              (Get from Faucet <ExternalLinkIcon mx="2px" />)
+              (Faucet <ExternalLinkIcon mx="2px" />)
             </Link>
           )}
         </AlertTitle>

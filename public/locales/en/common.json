@@ -61,7 +61,8 @@
     "create": "Create NFT",
     "resitryWarning": "This operation requires registering your account",
     "balanceWarning": "This operation requires at least 150 CKB",
-    "manageNFTs": "Manage NFTs"
+    "manageNFTs": "Manage NFTs",
+    "nftAddress": "NFT Address"
   },
   "redpacket": {
     "create": "Create Redpacket",

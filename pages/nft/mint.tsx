@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useTranslation } from "next-i18next"
 import { useRouter } from 'next/router'
 import { FormControl, FormLabel, FormErrorMessage, Input, Button, Box, useToast } from "@chakra-ui/react"
@@ -125,7 +125,9 @@ export default function CreateNFT() {
   return (
     <Box>
       <CotaRegistry />
-      <Box my={10}>NFT Address: {router.query?.cotaId}</Box>
+      <Box my={10}>
+        {t("nft.nftAddress")}: {router.query?.cotaId}
+      </Box>
       <Formik initialValues={{ toAddress: "" }} onSubmit={onSubmit}>
         {(props) => (
           <Form>
