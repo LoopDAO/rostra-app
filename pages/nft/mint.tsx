@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useTranslation } from "next-i18next"
 import { useRouter } from 'next/router'
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Input,
-  Button,
-  Box
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, FormErrorMessage, Input, Button, Box, useToast } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
@@ -32,23 +25,13 @@ export default function CreateNFT() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const router = useRouter()
   const [issued, setIssued] = React.useState(0)
-  const [registered, setRegistered] = useState(false)
   const { query, asPath } = router
   const cotaId = (query.cotaId as string) || ""
+  const toast = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
-      if (isLoggedIn) {
-        const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(addressToScript(cotaAddress))])
-        setRegistered(res?.registered)
-      }
-    }
-    fetchData()
-  }, [cotaAddress, isLoggedIn])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (isLoggedIn) {
+      if (isLoggedIn && cotaId.length === 42) {
         const aggregator = cotaService.aggregator
         const nftInfo = await aggregator.getDefineInfo({
           cotaId,
@@ -57,16 +40,7 @@ export default function CreateNFT() {
       }
     }
     fetchData()
-  }, [cotaAddress, isLoggedIn])
-
-  if (!registered) {
-    return (
-      <>
-        {t("nft.resitryWarning")}
-        <CotaRegistry />
-      </>
-    )
-  }
+  }, [cotaId, isLoggedIn])
 
   function validateAddress(value: string) {
     let error
@@ -77,7 +51,6 @@ export default function CreateNFT() {
   }
 
   const onSubmit = async (values: any, actions: any) => {
-    console.log("values...", values)
     const { toAddress } = values
     let startIndex = issued
     const mintLock = addressToScript(cotaAddress)
@@ -114,37 +87,45 @@ export default function CreateNFT() {
     })
   }
 
-  if (router.query.action === "sign-transaction" || router.query.action === "sign-message") {
-    getResultFromURL(asPath, {
-      onLogin(res) {
-        console.log("onLogin res: ", res)
-      },
-      async onSignMessage(result) {
-        if (!result.extra) return
-        const { action, txToSign, cotaId } = result.extra
-        if (action === "mint-nft") {
-          const signedTx = appendSignatureToTransaction(txToSign, result.signature)
-          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
-          try {
-            const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
-          } catch (error) {
-            console.log("error: ", error)
-          } finally {
-            router.push({
-              pathname: `/nft`,
-              query: {
-                cotaId,
-              },
-            })
+  useEffect(() => {
+    if (router.query.action === "sign-message") {
+      getResultFromURL(asPath, {
+        onLogin(res) {
+          console.log("onLogin res: ", res)
+        },
+        async onSignMessage(result) {
+          if (!result.extra) return
+          const { action, txToSign, cotaId } = result.extra
+          if (action === "mint-nft") {
+            const signedTx = appendSignatureToTransaction(txToSign, result.signature)
+            const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+            try {
+              await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
+              router.push({
+                pathname: `/nft`,
+                query: {
+                  cotaId,
+                },
+              })
+            } catch (error) {
+              toast({
+                title: "Error happened.",
+                description: error?.message?.message,
+                status: "error",
+                duration: 10000,
+                isClosable: true,
+              })
+            }
           }
-        }
-      },
-    })
-  }
+        },
+      })
+    }
+  }, [router.query.action, asPath, router, toast])
 
   return (
-    <>
-      <Box my={10}>CotaId: {router.query?.cotaId}</Box>
+    <Box>
+      <CotaRegistry />
+      <Box my={10}>NFT Address: {router.query?.cotaId}</Box>
       <Formik initialValues={{ toAddress: "" }} onSubmit={onSubmit}>
         {(props) => (
           <Form>
@@ -164,7 +145,7 @@ export default function CreateNFT() {
           </Form>
         )}
       </Formik>
-    </>
+    </Box>
   )
 }
 
