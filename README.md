@@ -23,7 +23,7 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Roadmap
+## Roadmap(Simple yet powerful)
 - Unipass support
 - Support to update NFT info
 	- name
