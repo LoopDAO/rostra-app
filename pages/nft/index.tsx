@@ -1,4 +1,4 @@
-import { Box, Heading, Image, Text, Stack, Flex, Button } from "@chakra-ui/react"
+import { Box, Heading, Image, Text, Stack, Flex, Button, useInterval } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import Loading from "components/Loading/index"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -37,7 +37,7 @@ export default function NFTDetails() {
       })
       if (nft) setNFTInfo(nft)
     }
-    fetchData()
+    setInterval(fetchData, 5000)
   }, [cotaId])
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function NFTDetails() {
         console.log("error: ", error)
       }
     }
-    fetchData()
+    setInterval(fetchData, 5000)
   }, [pageOffset])
 
   const handlePageChange = (event: any) => {
