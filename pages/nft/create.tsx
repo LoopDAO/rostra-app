@@ -31,8 +31,8 @@ import {
   getResultFromURL
 } from '@nervina-labs/flashsigner'
 import paramsFormatter from '@nervosnetwork/ckb-sdk-rpc/lib/paramsFormatter'
-import { generateDefineCotaTx, CotaInfo, } from '@nervina-labs/cota-sdk'
-import { cotaService, ckb } from "@lib/utils/ckb"
+import { generateDefineCotaTx, CotaInfo, FEE } from "@nervina-labs/cota-sdk"
+import { cotaService, ckb, isMainnet } from "@lib/utils/ckb"
 import httpPost from 'api/post'
 import CotaRegistry from "@components/CoTARegistry"
 
@@ -152,7 +152,15 @@ export default function CreateNFT() {
       image: `https://ipfs.io/ipfs/${metadata}`,
     }
     const totalSupply = values.totalSupply
-    let { rawTx, cotaId } = await generateDefineCotaTx(cotaService, defineLock, totalSupply, '0x00', cotaInfo)
+    let { rawTx, cotaId } = await generateDefineCotaTx(
+      cotaService,
+      defineLock,
+      totalSupply,
+      "0x00",
+      cotaInfo,
+      FEE,
+      isMainnet
+    )
     console.log(` ======> cotaId: ${cotaId}`)
 
     const tx: any = paramsFormatter.toRawTransaction({
