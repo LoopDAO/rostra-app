@@ -23,6 +23,22 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## What you can do with Rostra
+As a community manager, you can:
+- Create NFT as many as you want
+- Reward your community members with NFTs
+- See how many NFTs have been created
+
+As a community user, you can:
+- Login with phone number
+- See what NFTs you held
+- Use NFTs to unlock more benefits
+
+## Why use rostra
+- Create NFT with extreme low price
+- Support to login with phone number without compromise the safety
+- Free mint, you can create NFT as many as you want
+
 ## Roadmap(Simple yet powerful)
 - Unipass support
 - Support to update NFT info
