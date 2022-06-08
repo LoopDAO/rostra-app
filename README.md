@@ -9,19 +9,39 @@ Rostra is built on top of [Nervos Network](https://www.nervos.org/), which is an
 ## Tech stack
 - React: Frontend library
 - Nextjs: React framework
+- [nft.storage](https://nft.storage/): IPFS service provider to store NFT images
 - [Cota SDK](https://github.com/nervina-labs/cota-sdk-js): Use to issue, mint and management NFTs.
 - [Flashsigner](https://github.com/nervina-labs/flashsigner-sdk-js): User can login with phone number and generate private key with browser's SubtleCrypto interface.
 - [Nervos Network](https://www.nervos.org/): Blockchain
 
 ## Getting Started
 
-First, run the development server:
+1. Setup env
+
+```bash
+cp .env.example .env.development
+```
+
+Get api key from [nft.storage](https://nft.storage/) and change the variable value:
+`NEXT_PUBLIC_NFT_STORAGE_API_KEY=xxx`, replace `xxx` with your api key.
+
+2. Install packages
+
+```bash
+yarn
+```
+
+3. Run the development server:
 
 ```bash
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+4. Run backend service
+
+Refer to https://github.com/LoopDAO/rostra-backend
 
 ## What you can do with Rostra
 As a community manager, you can:
