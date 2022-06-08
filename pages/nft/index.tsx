@@ -26,7 +26,7 @@ export default function NFTDetails() {
   const { isLoggedIn, account } = useAccountFlashsigner()
 
   const cotaId: string = (query.cotaId as string) || ""
-  const { name, description, issued, total, image } = nftInfo as any
+  const { name, description, issued = 0, total = 0, image } = nftInfo as any
   console.log("nftInfo: ", nftInfo)
 
   useEffect(() => {
