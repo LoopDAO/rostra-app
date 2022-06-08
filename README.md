@@ -44,13 +44,11 @@ As a community user, you can:
 - Support to update NFT info
 	- name
 	- description
-	- total supply allowed
+	- total supply
 - Support more media type
 	- audio
 	- video
-- Support to custom NFT
-	- characteristics
+- Support to custom NFT characteristics
 - Support NFT templates
 	- common
 	- mystery box
-	- soul bound
