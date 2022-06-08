@@ -1,3 +1,18 @@
+## Rostra app
+
+This repo is the frontend code of Rostra.
+
+Rostra is a web3 community building platform. Help build belonging into communities by providing a complete set of NFT and identity solutions.
+
+Rostra is built on top of [Nervos Network](https://www.nervos.org/), which is an open source public blockchain ecosystem and collection of protocols creating the foundation for a universal internet-like public network.
+
+## Tech stack
+- React: Frontend library
+- Nextjs: React framework
+- [Cota SDK](https://github.com/nervina-labs/cota-sdk-js): Use to issue, mint and management NFTs.
+- [Flashsigner](https://github.com/nervina-labs/flashsigner-sdk-js): User can login with phone number and generate private key with browser's SubtleCrypto interface.
+- [Nervos Network](https://www.nervos.org/): Blockchain
+
 ## Getting Started
 
 First, run the development server:
@@ -8,23 +23,18 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_source=github.com&utm_medium=referral&utm_campaign=turborepo-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Roadmap
+- Unipass support
+- Support to update NFT info
+	- name
+	- description
+	- total supply allowed
+- Support more media type
+	- audio
+	- video
+- Support to custom NFT
+	- characteristics
+- Support NFT templates
+	- common
+	- mystery box
+	- soul bound
