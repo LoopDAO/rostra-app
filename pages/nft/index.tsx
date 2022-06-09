@@ -1,16 +1,10 @@
-import { Box, Heading, Image, Text, Stack, Flex, Button, useInterval } from "@chakra-ui/react"
-import { useAccountFlashsigner } from "@lib/hooks/useAccount"
+import { Box, Heading, Image, Text, Stack, Button } from "@chakra-ui/react"
 import Loading from "components/Loading/index"
-import { GetStaticPaths, GetStaticProps } from "next"
+import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
 import React, { useState, useEffect } from "react"
-import { generateFlashsignerAddress, ChainType, Config } from "@nervina-labs/flashsigner"
 import { cotaService } from "@lib/utils/ckb"
-import { addressToScript, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
-import NFTInfo from "@components/nft/NFTInfo"
-import { NFTType } from "api/nft"
-import ReactPaginate from "react-paginate"
 import { useTranslation } from "next-i18next"
 import Link from "next/link"
 
@@ -18,21 +12,16 @@ export default function NFTDetails() {
   const { t } = useTranslation()
   const { query } = useRouter()
   const [nftInfo, setNFTInfo] = useState({})
-  const { isLoggedIn, account } = useAccountFlashsigner()
-  const [loading, setLoading] = useState(false)
-
   const cotaId: string = (query.cotaId as string) || ""
   const { name, description, issued = 0, total = 0, image } = nftInfo as any
 
   useEffect(() => {
     const fetchData = async () => {
       if (!cotaId) return
-      setLoading(true)
       const nft = await cotaService.aggregator.getDefineInfo({
         cotaId,
       })
       if (nft) setNFTInfo(nft)
-      setLoading(false)
     }
     fetchData()
   }, [cotaId])
@@ -78,10 +67,3 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
   }
 }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   return {
-//     paths: [],
-//     fallback: true,
-//   }
-// }

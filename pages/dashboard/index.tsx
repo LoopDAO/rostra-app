@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const balance = hexToBalance(data?.result?.capacity)
 
   if (!isLoggedIn) return <AccountFlashsigner />
-  console.log("cotaAddress", cotaAddress)
+
   return (
     <Stack spacing={2} p={4}>
       <Center py={12}>
