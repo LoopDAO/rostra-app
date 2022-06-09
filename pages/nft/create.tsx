@@ -14,6 +14,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  useToast,
 } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
@@ -81,6 +82,8 @@ export default function CreateNFT() {
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
   const [registered, setRegistered] = useState(false)
+  const toast = useToast()
+
   useEffect(() => {
     const fetchData = async () => {
       if (!isLoggedIn) return
@@ -93,39 +96,43 @@ export default function CreateNFT() {
   }, [cotaAddress, isLoggedIn])
 
   useEffect(() => {
-    if (router.query.action === "sign-message") {
-      getResultFromURL(router.asPath, {
-        onLogin(res) {
-          console.log("onLogin res: ", res)
-        },
-        async onSignMessage(result) {
-          const action = result.extra?.action
-          if (action === "create-nft") {
-            const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
-            const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
-            try {
-              const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-              const data = {
-                account: account.address,
-                name: result.extra?.cotaInfo.name,
-                desc: result.extra?.cotaInfo.description,
-                image: result.extra?.cotaInfo.image,
-                total: result.extra?.totalSupply,
-                cotaId: result.extra?.cotaId,
-                txHash,
-              }
-              await postMintNFTInfo2Rostra(data)
-              router.push({
-                pathname: `/manage-nfts`,
-              })
-            } catch (error) {
-              console.log("error: ", error)
-              router.push("/nft/create")
+    if (router.query.action !== "sign-message") return
+    getResultFromURL(router.asPath, {
+      onLogin(res) {
+        console.log("onLogin res: ", res)
+      },
+      async onSignMessage(result) {
+        const action = result.extra?.action
+        if (action === "create-nft") {
+          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
+          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+          try {
+            const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
+            const data = {
+              account: account.address,
+              name: result.extra?.cotaInfo.name,
+              desc: result.extra?.cotaInfo.description,
+              image: result.extra?.cotaInfo.image,
+              total: result.extra?.totalSupply,
+              cotaId: result.extra?.cotaId,
+              txHash,
             }
+            await postMintNFTInfo2Rostra(data)
+            router.push({
+              pathname: `/manage-nfts`,
+            })
+          } catch (error) {
+            toast({
+              title: "Error happened.",
+              description: error?.message?.message,
+              status: "error",
+              duration: 10000,
+              isClosable: true,
+            })
           }
-        },
-      })
-    }
+        }
+      },
+    })
   }, [router.query.action, router, account.address])
 
   if (!registered) {
@@ -163,10 +170,8 @@ export default function CreateNFT() {
   }
 
   async function onFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.files)
     const file = e.target.files?.[0]
     if (!file) return
-    console.log(file.name, file.type)
     setFileObj(file)
   }
 
@@ -193,7 +198,7 @@ export default function CreateNFT() {
       FEE,
       isMainnet
     )
-    console.log(` ======> cotaId: ${cotaId}`)
+    console.log(`cotaId: ${cotaId}`)
 
     const tx: any = paramsFormatter.toRawTransaction({
       ...rawTx,
