@@ -83,5 +83,11 @@
     "airdropNFT": "空投 NFT",
     "RuleBase": "基本信息",
     "RuleNFT": "NFT设定"
+  },
+  "cota": {
+    "registry": {
+      "confirming": "交易确认中...",
+      "confirmed": "交易已确认，页面跳转中..."
+    }
   }
 }

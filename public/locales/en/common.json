@@ -83,6 +83,12 @@
     "RuleAction": "Rule",
     "RuleBase": "Basic",
     "RuleNFT": "NFT setting"
+  },
+  "cota": {
+    "registry": {
+      "confirming": "Transaction is confirming...",
+      "confirmed": "Transaction is confirmed, redirecting..."
+    }
   }
 
 }

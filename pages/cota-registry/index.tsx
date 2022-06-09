@@ -3,17 +3,11 @@ import { useTranslation } from "next-i18next"
 import { GetStaticProps } from "next"
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Stack, Box } from "@chakra-ui/react"
+import { Stack, Box, Spinner, Center } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../../components/Layout/Account/AccountFlashsigner"
-import {
-  addressToScript,
-  scriptToHash,
-} from '@nervosnetwork/ckb-sdk-utils'
-import {
-  appendSignatureToTransaction,
-  generateFlashsignerAddress,
-} from '@nervina-labs/flashsigner'
+import { addressToScript, scriptToHash, } from '@nervosnetwork/ckb-sdk-utils'
+import { appendSignatureToTransaction, generateFlashsignerAddress, } from '@nervina-labs/flashsigner'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
 import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
 import useSWR from "swr"
@@ -25,58 +19,65 @@ export default function CotaRegistryPage() {
   const { t } = useTranslation()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
-
-  const [status, setStatus] = useState(false);
+  const [registered, setRegistered] = useState(false)
+  const [redirectUrl, setRedirectUrl] = useState('/')
   const script = addressToScript(cotaAddress)
-  useEffect(() => {
-    const fetchData = async () => {
-      if (isLoggedIn) {
-        const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
-        setStatus(res?.registered);
-        console.log('res: ', res)
-      }
-    };
-    fetchData();
-  }, [cotaAddress, isLoggedIn]);
-
-  const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
-
   const router = useRouter()
 
-  if (!status && router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
-    getResultFromURL(router.asPath, {
-      onLogin(res) {
-        console.log('onLogin res: ', res)
-      },
-      async onSignMessage(result) {
-        const action = result.extra?.action
-        if (action === 'cota-registry') {
-          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
-          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
-          try {
-            await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            console.log('result.extra?.redirect: ', result.extra?.redirect)
-            window.location.replace(result.extra?.redirect)
-          } catch (error) {
-            console.log('error: ', error)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isLoggedIn) return
+
+      const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
+      setRegistered(res?.registered)
+    }
+    const intervalId = setInterval(fetchData, 3000)
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [cotaAddress, isLoggedIn, script]);
+
+  useEffect(() => {
+    if (!registered && router.query.action === "sign-message") {
+      getResultFromURL(router.asPath, {
+        onLogin(res) {
+          console.log("onLogin res: ", res)
+        },
+        async onSignMessage(result) {
+          const action = result.extra?.action
+          if (action === "cota-registry") {
+            const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature, 1)
+            const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+            try {
+              await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
+              setRedirectUrl(result.extra?.redirect)
+            } catch (error) {
+              console.log("error: ", error)
+            }
           }
-        }
-      }
-    })
-  }
+        },
+      })
+    }
+  }, [cotaAddress, isLoggedIn, router.asPath, router.query.action, registered])
 
   if (!isLoggedIn) return <AccountFlashsigner />
 
-  const balance = hexToBalance(data?.result?.capacity)
+  let content
+
+  if (registered) {
+    content = <Box fontWeight="600">{t("cota.registry.confirmed")}</Box>
+    router.push(redirectUrl)
+  } else {
+    content = <Box fontWeight="600">{t("cota.registry.confirming")}</Box>
+  }
 
   return (
-    <Stack spacing={2} p={4}>
-      <Box fontWeight='600'>CoTA Registry Status: {status ? "Registered" : "Not register"}</Box>
-      <Box>Address</Box>
-      <QRCodeSVG value={cotaAddress} />
-      <Box>{cotaAddress}</Box>
-      <Box>Balance: {balance}</Box>
-    </Stack>
+    <Center mt={10}>
+      <Stack align="center">
+        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+        {content}
+      </Stack>
+    </Center>
   )
 }
 
