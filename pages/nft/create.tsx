@@ -80,20 +80,53 @@ export default function CreateNFT() {
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
-  console.log("router", router)
   const [registered, setRegistered] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
-      if (isLoggedIn) {
-        const res = await cotaService.aggregator.checkReisteredLockHashes([
-          scriptToHash(addressToScript(cotaAddress)),
-        ])
-        setRegistered(res?.registered)
-        console.log('res: ', res)
-      }
+      if (!isLoggedIn) return
+      const res = await cotaService.aggregator.checkReisteredLockHashes([
+        scriptToHash(addressToScript(cotaAddress)),
+      ])
+      setRegistered(res?.registered)
     }
     fetchData()
   }, [cotaAddress, isLoggedIn])
+
+  useEffect(() => {
+    if (router.query.action === "sign-message") {
+      getResultFromURL(router.asPath, {
+        onLogin(res) {
+          console.log("onLogin res: ", res)
+        },
+        async onSignMessage(result) {
+          const action = result.extra?.action
+          if (action === "create-nft") {
+            const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
+            const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+            try {
+              const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
+              const data = {
+                account: account.address,
+                name: result.extra?.cotaInfo.name,
+                desc: result.extra?.cotaInfo.description,
+                image: result.extra?.cotaInfo.image,
+                total: result.extra?.totalSupply,
+                cotaId: result.extra?.cotaId,
+                txHash,
+              }
+              await postMintNFTInfo2Rostra(data)
+              router.push({
+                pathname: `/manage-nfts`,
+              })
+            } catch (error) {
+              console.log("error: ", error)
+              router.push("/nft/create")
+            }
+          }
+        },
+      })
+    }
+  }, [router.query.action, router, account.address])
 
   if (!registered) {
     return <CotaRegistry />
@@ -139,7 +172,6 @@ export default function CreateNFT() {
 
   // @ts-expect-error TODO: Add typings
   const onSubmit = async (values, actions) => {
-    console.log("values...", values)
     const apiKey: string = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || ""
     if (!apiKey) return
     const client = new NFTStorage({ token: apiKey })
@@ -186,48 +218,11 @@ export default function CreateNFT() {
     )
   }
 
-  if (router.query.action === 'sign-transaction' || router.query.action === 'sign-message') {
-    console.log('router.query.action: ', router.query.action)
-    getResultFromURL(router.asPath, {
-      onLogin(res) {
-        console.log('onLogin res: ', res)
-      },
-      async onSignMessage(result) {
-        const action = result.extra?.action
-        console.log("onSignMessage result: ", result)
-        if (action === 'create-nft') {
-          const signedTx = appendSignatureToTransaction(result.extra?.txToSign, result.signature)
-          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
-          try {
-            const txHash = await ckb.rpc.sendTransaction(signedTxFormatted as any, 'passthrough')
-            const data = {
-              account: account.address,
-              name: result.extra?.cotaInfo.name,
-              desc: result.extra?.cotaInfo.description,
-              image:result.extra?.cotaInfo.image,
-              total: result.extra?.totalSupply,
-              cotaId: result.extra?.cotaId,
-              txHash
-            }
-            await postMintNFTInfo2Rostra(data)
-            router.push({
-              pathname: `/nft`,
-              query: {
-                cotaId: result.extra?.cotaId,
-              },
-            })
-          } catch (error) {
-            console.log('error: ', error)
-            router.push('/nft/create')
-          }
-        }
-      }
-    })
-  }
   async function postMintNFTInfo2Rostra(data_: { account: string; name: any; desc: any; image: any; total: any; cotaId: any;  txHash: string }) {
     const url = `/mint-nft/add`
     await httpPost(url, data_)
   }
+
   return (
     <>
     <CotaRegistry />
