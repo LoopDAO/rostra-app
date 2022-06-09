@@ -261,14 +261,14 @@ export default function CreateNFT() {
   return (
     <>
       <CotaRegistry />
-      <Formik initialValues={{ name: "", description: "", totalSupply: 10000 }} onSubmit={onSubmit}>
+      <Formik initialValues={{ name: "", description: "", totalSupply: "" }} onSubmit={onSubmit}>
         {(props) => (
           <Form>
             <Field name="name" validate={validateName}>
               {({ field, form }: FieldProps) => (
                 <FormControl isRequired isInvalid={!!(form.errors.name && form.touched.name)}>
                   <FormLabel htmlFor="name">{t("nft.name")}</FormLabel>
-                  <Input {...field} id="name" placeholder="Name" />
+                  <Input {...field} id="name" />
                   <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                 </FormControl>
               )}
@@ -277,7 +277,7 @@ export default function CreateNFT() {
               {({ field, form }: FieldProps) => (
                 <FormControl isRequired isInvalid={!!(form.errors.name && form.touched.name)}>
                   <FormLabel htmlFor="description">{t("nft.description")}</FormLabel>
-                  <Input {...field} id="description" placeholder="Description" />
+                  <Input {...field} id="description" />
                   <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                 </FormControl>
               )}
