@@ -75,10 +75,9 @@ export default function CotaRegistry() {
   const script = addressToScript(cotaAddress)
   useEffect(() => {
     const fetchData = async () => {
-      if (isLoggedIn) {
-        const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
-        setStatus(res?.registered)
-      }
+      if (!isLoggedIn) return
+      const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
+      setStatus(res?.registered)
     }
     fetchData()
   }, [script, isLoggedIn])
