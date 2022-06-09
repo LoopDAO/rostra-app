@@ -62,7 +62,7 @@
     "resitryWarning": "This operation requires registering your account",
     "accessWarning": {
       "title": "Access Denied",
-      "description": "This feature is only accessible to early birds who hold Rostra Early Access NFT",
+      "description": "Currently this feature is only accessible to early birds who hold Rostra Early Access NFT",
       "learnMore": "Learn more: "
     },
     "balanceWarning": "This operation requires at least 150 CKB",

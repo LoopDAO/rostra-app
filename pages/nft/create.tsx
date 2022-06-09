@@ -184,9 +184,9 @@ export default function CreateNFT() {
         height="300px"
       >
         <AlertIcon boxSize="40px" mr={0} />
-        <AlertTitle mt={4} mb={1} fontSize="lg">
+        {/* <AlertTitle mt={4} mb={1} fontSize="lg">
           {t("nft.accessWarning.title")}
-        </AlertTitle>
+        </AlertTitle> */}
         <AlertDescription maxWidth="sm">
           {t("nft.accessWarning.description")}
         </AlertDescription>
