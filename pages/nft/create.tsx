@@ -23,7 +23,7 @@ import { NFTStorage } from "nft.storage"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { addressToScript, serializeWitnessArgs, scriptToHash } from '@nervosnetwork/ckb-sdk-utils'
+import { addressToScript, serializeWitnessArgs, scriptToHash, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
 import {
   signMessageWithRedirect,
   appendSignatureToTransaction,
@@ -82,7 +82,9 @@ export default function CreateNFT() {
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
   const [registered, setRegistered] = useState(false)
+  const [isEarlyBird, setIsEarlyBird] = useState(false)
   const toast = useToast()
+  const earlyAccessNFTAddress = process.env.NEXT_PUBLIC_EARLY_ACCESS_NFT_ADDRESS || ""
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +96,29 @@ export default function CreateNFT() {
     }
     fetchData()
   }, [cotaAddress, isLoggedIn])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isLoggedIn) return
+      const lockScript = serializeScript(addressToScript(cotaAddress))
+      try {
+        const result = await cotaService.aggregator.getCotaCount({
+          lockScript,
+          cotaId: earlyAccessNFTAddress,
+        })
+        setIsEarlyBird(result.count > 0)
+      } catch (error) {
+        toast({
+          title: "Error happened.",
+          description: error?.message?.message,
+          status: "error",
+          duration: 10000,
+          isClosable: true,
+        })
+      }
+    }
+    fetchData()
+  }, [cotaAddress, earlyAccessNFTAddress, isLoggedIn, toast])
 
   useEffect(() => {
     if (router.query.action !== "sign-message") return
@@ -133,10 +158,14 @@ export default function CreateNFT() {
         }
       },
     })
-  }, [router.query.action, router, account.address])
+  }, [router.query.action, router, account.address, toast])
 
   if (!registered) {
     return <CotaRegistry />
+  }
+
+  if (process.env.NEXT_PUBLIC_TOKEN_GATE_ENABLED === 'true' && !isEarlyBird) {
+    return 'You need to hold Rostra Early Access NFT'
   }
 
   const validateFiles = (value: FileList) => {
