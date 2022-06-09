@@ -76,6 +76,7 @@ const FileUpload = (props: FileUploadProps) => {
 }
 
 export default function CreateNFT() {
+  const { t } = useTranslation()
   const { register, formState: { errors }, } = useForm()
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
@@ -259,86 +260,64 @@ export default function CreateNFT() {
 
   return (
     <>
-    <CotaRegistry />
-    <Formik
-      initialValues={{ name: "", description: "", totalSupply: 10000 }}
-      onSubmit={onSubmit}
-    >
-      {(props) => (
-        <Form>
-          <Field name="name" validate={validateName}>
-            {({ field, form }: FieldProps) => (
-              <FormControl
-                isRequired
-                isInvalid={!!(form.errors.name && form.touched.name)}
+      <CotaRegistry />
+      <Formik initialValues={{ name: "", description: "", totalSupply: 10000 }} onSubmit={onSubmit}>
+        {(props) => (
+          <Form>
+            <Field name="name" validate={validateName}>
+              {({ field, form }: FieldProps) => (
+                <FormControl isRequired isInvalid={!!(form.errors.name && form.touched.name)}>
+                  <FormLabel htmlFor="name">{t("nft.name")}</FormLabel>
+                  <Input {...field} id="name" placeholder="Name" />
+                  <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <Field name="description" validate={validateDescription}>
+              {({ field, form }: FieldProps) => (
+                <FormControl isRequired isInvalid={!!(form.errors.name && form.touched.name)}>
+                  <FormLabel htmlFor="description">{t("nft.description")}</FormLabel>
+                  <Input {...field} id="description" placeholder="Description" />
+                  <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <Field name="totalSupply">
+              {({ field, form }: FieldProps) => (
+                <FormControl isRequired isInvalid={!!(form.errors.totalSupply && form.touched.totalSupply)}>
+                  <FormLabel htmlFor="totalSupply">{t("nft.totalSupply")}</FormLabel>
+                  <NumberInput {...field} onChange={(val) => form.setFieldValue(field.name, val)}>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  <FormErrorMessage>{form.errors.totalSupply}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <FormControl isInvalid={!!errors.file_} isRequired>
+              <FormLabel>{"Image"}</FormLabel>
+              <FileUpload
+                accept={"image/*"}
+                multiple
+                register={register("file_", { validate: validateFiles })}
+                onChange={(e) => {
+                  onFileChanged(e)
+                }}
               >
-                <FormLabel htmlFor="name">Name</FormLabel>
-                <Input {...field} id="name" placeholder="Name" />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <Field name="description" validate={validateDescription}>
-            {({ field, form }: FieldProps) => (
-              <FormControl
-                isRequired
-                isInvalid={!!(form.errors.name && form.touched.name)}
-              >
-                <FormLabel htmlFor="description">Description</FormLabel>
-                <Input {...field} id="description" placeholder="Description" />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <Field name="totalSupply">
-            {({ field, form }: FieldProps) => (
-              <FormControl
-                isRequired
-                isInvalid={!!(form.errors.totalSupply && form.touched.totalSupply)}
-              >
-                <FormLabel htmlFor="totalSupply">Total Supply</FormLabel>
-                <NumberInput
-                  {...field}
-                  onChange={(val) => form.setFieldValue(field.name, val)}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                <FormErrorMessage>{form.errors.totalSupply}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <FormControl isInvalid={!!errors.file_} isRequired>
-            <FormLabel>{"Image"}</FormLabel>
-            <FileUpload
-              accept={"image/*"}
-              multiple
-              register={register("file_", { validate: validateFiles })}
-              onChange={(e) => {
-                onFileChanged(e)
-              }}
-            >
-              <Button leftIcon={<Icon as={FiFile} />}>Upload {fileObj?.name}</Button>
-            </FileUpload>
+                <Button leftIcon={<Icon as={FiFile} />}>{fileObj?.name}</Button>
+              </FileUpload>
 
-            <FormErrorMessage>
-              {errors.file_ && errors?.file_.message}
-            </FormErrorMessage>
-          </FormControl>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={props.isSubmitting}
-            type="submit"
-          >
-            Confirm
-          </Button>
-        </Form>
-      )}
-    </Formik>
+              <FormErrorMessage>{errors.file_ && errors?.file_.message}</FormErrorMessage>
+            </FormControl>
+            <Button mt={4} colorScheme="teal" isLoading={props.isSubmitting} type="submit">
+              {t("nft.confirm")}
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   )
 }

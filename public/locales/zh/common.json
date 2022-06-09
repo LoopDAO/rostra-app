@@ -62,7 +62,11 @@
     "resitryWarning": "此操作需要注册你的账户",
     "balanceWarning": "此操作需要至少持有 150 个 CKB",
     "manageNFTs": "管理 NFT",
-    "nftAddress": "NFT 地址"
+    "nftAddress": "NFT 地址",
+    "name": "名称",
+    "description": "描述",
+    "totalSupply": "可发行数量",
+    "confirm": "确定"
   },
   "redpacket": {
     "create": "发红包",

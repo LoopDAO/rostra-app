@@ -62,7 +62,11 @@
     "resitryWarning": "This operation requires registering your account",
     "balanceWarning": "This operation requires at least 150 CKB",
     "manageNFTs": "Manage NFTs",
-    "nftAddress": "NFT Address"
+    "nftAddress": "NFT Address",
+    "name": "Name",
+    "description": "Description",
+    "totalSupply": "Total Supply",
+    "confirm": "Confirm"
   },
   "redpacket": {
     "create": "Create Redpacket",
