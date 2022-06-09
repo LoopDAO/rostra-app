@@ -298,7 +298,7 @@ export default function CreateNFT() {
               )}
             </Field>
             <FormControl isInvalid={!!errors.file_} isRequired>
-              <FormLabel>{"Image"}</FormLabel>
+              <FormLabel>{t("nft.image")}</FormLabel>
               <FileUpload
                 accept={"image/*"}
                 multiple

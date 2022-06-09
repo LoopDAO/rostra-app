@@ -66,7 +66,8 @@
     "name": "名称",
     "description": "描述",
     "totalSupply": "可发行数量",
-    "confirm": "确定"
+    "confirm": "确定",
+    "image": "图片"
   },
   "redpacket": {
     "create": "发红包",
