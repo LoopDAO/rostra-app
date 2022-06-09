@@ -88,38 +88,37 @@ export default function CreateNFT() {
   }
 
   useEffect(() => {
-    if (router.query.action === "sign-message") {
-      getResultFromURL(asPath, {
-        onLogin(res) {
-          console.log("onLogin res: ", res)
-        },
-        async onSignMessage(result) {
-          if (!result.extra) return
-          const { action, txToSign, cotaId } = result.extra
-          if (action === "mint-nft") {
-            const signedTx = appendSignatureToTransaction(txToSign, result.signature)
-            const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
-            try {
-              await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
-              router.push({
-                pathname: `/nft`,
-                query: {
-                  cotaId,
-                },
-              })
-            } catch (error) {
-              toast({
-                title: "Error happened.",
-                description: error?.message?.message,
-                status: "error",
-                duration: 10000,
-                isClosable: true,
-              })
-            }
+    if (router.query.action !== "sign-message") return
+    getResultFromURL(asPath, {
+      onLogin(res) {
+        console.log("onLogin res: ", res)
+      },
+      async onSignMessage(result) {
+        if (!result.extra) return
+        const { action, txToSign, cotaId } = result.extra
+        if (action === "mint-nft") {
+          const signedTx = appendSignatureToTransaction(txToSign, result.signature)
+          const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
+          try {
+            await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
+            router.push({
+              pathname: `/nft`,
+              query: {
+                cotaId,
+              },
+            })
+          } catch (error) {
+            toast({
+              title: "Error happened.",
+              description: error?.message?.message,
+              status: "error",
+              duration: 10000,
+              isClosable: true,
+            })
           }
-        },
-      })
-    }
+        }
+      },
+    })
   }, [router.query.action, asPath, router, toast])
 
   return (
