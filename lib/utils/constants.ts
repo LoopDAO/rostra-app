@@ -6,4 +6,8 @@ export function canUseDOM(): boolean {
   )
 }
 
+export const links = {
+  twitter: "https://twitter.com/loop_dao"
+}
+
 export const isBrowser = canUseDOM()

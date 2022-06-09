@@ -60,6 +60,11 @@
     "mint": "铸造 NFT",
     "create": "创建 NFT",
     "resitryWarning": "此操作需要注册你的账户",
+    "accessWarning": {
+      "title": "Access Denied",
+      "description": "This feature is only accessible to early birds who hold Rostra Early Access NFT",
+      "learnMore": "Learn more: "
+    },
     "balanceWarning": "此操作需要至少持有 150 个 CKB",
     "manageNFTs": "管理 NFT",
     "nftAddress": "NFT 地址",

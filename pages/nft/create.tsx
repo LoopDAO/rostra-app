@@ -15,6 +15,11 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Link,
 } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
@@ -36,6 +41,8 @@ import { generateDefineCotaTx, CotaInfo, FEE } from "@nervina-labs/cota-sdk"
 import { cotaService, ckb, isMainnet } from "@lib/utils/ckb"
 import httpPost from 'api/post'
 import CotaRegistry from "@components/CoTARegistry"
+import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { links } from "@lib/utils/constants"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -166,7 +173,31 @@ export default function CreateNFT() {
   }
 
   if (process.env.NEXT_PUBLIC_TOKEN_GATE_ENABLED === 'true' && !isEarlyBird) {
-    return 'You need to hold Rostra Early Access NFT'
+    return (
+      <Alert
+        status="warning"
+        variant="subtle"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="300px"
+      >
+        <AlertIcon boxSize="40px" mr={0} />
+        <AlertTitle mt={4} mb={1} fontSize="lg">
+          {t("nft.accessWarning.title")}
+        </AlertTitle>
+        <AlertDescription maxWidth="sm">
+          {t("nft.accessWarning.description")}
+        </AlertDescription>
+        <AlertDescription maxWidth="sm">
+          {t("nft.accessWarning.learnMore")}
+          <Link isExternal href={links.twitter}>
+            <ExternalLinkIcon mx="2px" />
+          </Link>
+        </AlertDescription>
+      </Alert>
+    )
   }
 
   const validateFiles = (value: FileList) => {
