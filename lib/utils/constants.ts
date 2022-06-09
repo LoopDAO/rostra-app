@@ -7,5 +7,3 @@ export function canUseDOM(): boolean {
 }
 
 export const isBrowser = canUseDOM()
-
-export const ZERO_GUILD_ID = '0x0000000000000000000000000000000000000000000000000000000000000000'
