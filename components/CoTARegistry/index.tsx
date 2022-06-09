@@ -78,7 +78,6 @@ export default function CotaRegistry() {
       if (isLoggedIn) {
         const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
         setStatus(res?.registered)
-        console.log("res: ", res)
       }
     }
     fetchData()
