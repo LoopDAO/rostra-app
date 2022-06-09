@@ -224,7 +224,7 @@ export default function CreateNFT() {
   }
 
   async function postMintNFTInfo2Rostra(data_: { account: string; name: any; desc: any; image: any; total: any; cotaId: any;  txHash: string }) {
-    const url = `/mint-nft/add`
+    const url = `/nft/add`
     await httpPost(url, data_)
   }
 

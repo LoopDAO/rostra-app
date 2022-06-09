@@ -17,7 +17,7 @@ export default function MyNFTsPage() {
   const [pageCount, setPageCount] = useState(10)
   const itemsPerPage = 20
   const { data: apiNFTs, error } = useSWR(
-    () => `${process.env.NEXT_PUBLIC_API_BASE}/mint-nft/account/${account.address}`,
+    () => `${process.env.NEXT_PUBLIC_API_BASE}/nft/account/${account.address}`,
     fetchers.http
   )
 
