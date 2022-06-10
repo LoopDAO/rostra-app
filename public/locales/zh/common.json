@@ -13,31 +13,12 @@
   "dashboard": {
     "title": "控制面板"
   },
-  "contribute": {
-    "title": "How to contribute？",
-    "detail": {
-      "title": "项目的推进计划采用开源项目+DAO治理的方式进行，成立「Rostra 贡献者公会」:",
-      "period": "按照两周一个 Sprint 为周期",
-      "task": "每个 Sprint 开放报名和认领任务",
-      "evaluation": "每周进行贡献互评，获取积分，用于未来的奖励分发"
-    },
-    "discord": "加入 discord 获取申请方式:",
-    "notion": "Rostra 信息集散地:"
-  },
-  "members": "DAO 成员",
   "media": {
     "about": "About",
     "docs": "Docs",
     "twitter": "Twitter",
     "discord": "Discord",
     "github": "GitHub"
-  },
-  "link": {
-    "discord": "https://discord.gg/c6BfH8JQn6",
-    "github": "https://github.com/rebase-network/rostra-app",
-    "mirror": "https://mirror.xyz/0x22Acb9bb4A79b462B55049ba972608545C50e6fC/5vWc8a1eLCPXLqHILz9YCesNUmn89z0T5r19eOAsuMs",
-    "notion": "https://rostra.notion.site",
-    "twitter": "https://twitter.com/rostra_xyz"
   },
   "guild": {
     "create": "创建公会",

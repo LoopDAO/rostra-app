@@ -13,31 +13,12 @@
   "dashboard": {
     "title": "Dashboard"
   },
-  "contribute": {
-    "title": "How to contribute?",
-    "detail": {
-      "title": "Create \"Rostra Contributor Guild\". Using Open Source and Dao governance to advance the project:",
-      "period": "Two weeks Sprint",
-      "task": "Each Sprint opens for signing up and task assignments",
-      "evaluation": "Peer assessment of contribution every week, to obtain points, for future rewards distribution"
-    },
-    "discord": "Join discord. Get the apply way:",
-    "notion": "Rostra Information Distribution Center:"
-  },
-  "members": "Members of DAO",
   "media": {
     "about": "About",
     "docs": "Docs",
     "twitter": "Twitter",
     "discord": "Discord",
     "github": "GitHub"
-  },
-  "link": {
-    "discord": "https://discord.gg/c6BfH8JQn6",
-    "github": "https://github.com/rebase-network/rostra-app",
-    "mirror": "https://mirror.xyz/0x22Acb9bb4A79b462B55049ba972608545C50e6fC/5vWc8a1eLCPXLqHILz9YCesNUmn89z0T5r19eOAsuMs",
-    "notion": "https://rostra.notion.site",
-    "twitter": "https://twitter.com/rostra_xyz"
   },
   "guild": {
     "create": "Create guild",

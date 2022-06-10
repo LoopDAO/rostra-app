@@ -11,6 +11,7 @@ import {
 import { FaGithubAlt, FaTwitter, FaDiscord, FaRegFileAlt } from 'react-icons/fa';
 import { ReactNode } from 'react';
 import { useTranslation } from "next-i18next"
+import { links } from "@lib/utils/constants";
 
 const SocialButton = ({
   children,
@@ -60,13 +61,16 @@ export default function Footer() {
         align={{ base: 'center', md: 'center' }}>
         <Text>© 2022 Rostra. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
-          <SocialButton label={t("link.notion")} href={t("link.notion")}>
+          {/* <SocialButton label={links.notion} href={links.notion}>
             <FaRegFileAlt />
-          </SocialButton>
-          <SocialButton label={t("link.discord")} href={t("link.discord")}>
+          </SocialButton> */}
+          {/* <SocialButton label={links.discord} href={links.discord}>
             <FaDiscord />
+          </SocialButton> */}
+          <SocialButton label={links.twitter} href={links.twitter}>
+            <FaTwitter />
           </SocialButton>
-          <SocialButton label={t("link.github")} href={t("link.github")}>
+          <SocialButton label={links.github} href={links.github}>
             <FaGithubAlt />
           </SocialButton>
         </Stack>
