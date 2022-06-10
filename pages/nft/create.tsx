@@ -115,7 +115,7 @@ export default function CreateNFT() {
           cotaId: earlyAccessNFTAddress,
         })
         setIsEarlyBird(result.count > 0)
-      } catch (error) {
+      } catch (error: any) {
         toast({
           title: "Error happened.",
           description: error?.message?.message,
@@ -154,7 +154,7 @@ export default function CreateNFT() {
             router.push({
               pathname: `/manage-nfts`,
             })
-          } catch (error) {
+          } catch (error: any) {
             toast({
               title: "Error happened.",
               description: error?.message?.message,

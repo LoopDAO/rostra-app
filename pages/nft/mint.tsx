@@ -107,7 +107,7 @@ export default function CreateNFT() {
                 cotaId,
               },
             })
-          } catch (error) {
+          } catch (error: any) {
             toast({
               title: "Error happened.",
               description: error?.message?.message,
