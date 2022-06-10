@@ -62,6 +62,8 @@ export default function MyNFTsPage() {
         />
       </>
     )
+  } else {
+    return  "No NFT found"
   }
 
   return (
