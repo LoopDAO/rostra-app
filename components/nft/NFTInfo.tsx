@@ -26,35 +26,25 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
   return (
     <Center py={2}>
       <Box
-        role={'group'}
+        role={"group"}
         p={6}
-        maxW={'280px'}
-        w={'full'}
-        bg={useColorModeValue('white', 'gray.800')}
-        boxShadow={'xl'}
-        rounded={'sm'}
-        pos={'relative'}
+        maxW={"280px"}
+        w={"full"}
+        bg={useColorModeValue("white", "gray.800")}
+        boxShadow={"xl"}
+        rounded={"sm"}
+        pos={"relative"}
       >
         <Box onClick={() => handleClick(nft)} cursor="pointer">
-          <Image
-            height={230}
-            objectFit={'cover'}
-            src={nft.image}
-            alt={nft.name}
-          />
+          <Image height={230} objectFit={"cover"} src={nft.image} alt={nft.name} />
         </Box>
-        <Stack pt={5} align={'center'}>
-          <Heading fontSize={'lg'} fontFamily={'body'} fontWeight={500}>
+        <Stack pt={5} align={"center"}>
+          <Heading fontSize={"lg"} fontFamily={"body"} fontWeight={500}>
             {nft.name}
           </Heading>
-          <Text color={'gray.500'} fontSize={'sm'}>
-            {nft.description}
-          </Text>
-          <Text fontSize={'sm'}>
-            {nft.tokenIndex}
-          </Text>
+          <Text fontSize={"md"}>#{parseInt(nft.tokenIndex)}</Text>
         </Stack>
       </Box>
     </Center>
-  );
+  )
 }
