@@ -74,3 +74,7 @@ Get the status of these features from https://github.com/orgs/LoopDAO/projects/1
 - Support NFT templates
 	- common
 	- mystery box
+
+## License
+
+MIT
