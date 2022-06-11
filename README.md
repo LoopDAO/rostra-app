@@ -60,6 +60,8 @@ As a community user, you can:
 - Free mint, you can create NFT as many as you want
 
 ## Roadmap(Simple yet powerful)
+Get the status of these features from https://github.com/orgs/LoopDAO/projects/1/views/1
+
 - Unipass support
 - Support to update NFT info
 	- name
