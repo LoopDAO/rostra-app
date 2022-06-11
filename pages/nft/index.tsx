@@ -7,26 +7,27 @@ import React, { useState, useEffect } from "react"
 import { cotaService } from "@lib/utils/ckb"
 import { useTranslation } from "next-i18next"
 import Link from "next/link"
+import { GetDefineInfoResp } from "@nervina-labs/cota-sdk"
 
 export default function NFTDetails() {
   const { t } = useTranslation()
   const { query } = useRouter()
-  const [nftInfo, setNFTInfo] = useState({})
-  const cotaId: string = (query.cotaId as string) || ""
+  const [nftInfo, setNFTInfo] = useState({} as GetDefineInfoResp)
+  const { cotaId } = query
   const { name, description, issued = 0, total = 0, image } = nftInfo as any
 
   useEffect(() => {
     const fetchData = async () => {
       if (!cotaId) return
       const nft = await cotaService.aggregator.getDefineInfo({
-        cotaId,
+        cotaId: String(cotaId),
       })
-      if (nft) setNFTInfo(nft)
+      if (nft?.name) setNFTInfo(nft)
     }
     fetchData()
   }, [cotaId])
 
-  if (!cotaId) return <Loading />
+  if (!cotaId || !nftInfo?.name) return <Loading />
 
   return (
     <Stack pt={10} align={"center"}>
