@@ -77,11 +77,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           defaultTheme="system"
         >
           <Web3ReactProvider getLibrary={getLibrary}>
-            <Web3ConnectionManager>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </Web3ConnectionManager>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </Web3ReactProvider>
         </ThemeProvider>
       </Plausible>
