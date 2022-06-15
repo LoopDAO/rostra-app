@@ -23,6 +23,7 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
     })
   }
 
+  const tokenIndexElem = nft.tokenIndex && <Text fontSize={"md"}>#{parseInt(nft.tokenIndex)}</Text>
   return (
     <Center py={2}>
       <Box
@@ -42,7 +43,7 @@ export default function NFTInfo({ nft }: { nft: NFTType }) {
           <Heading fontSize={"lg"} fontFamily={"body"} fontWeight={500}>
             {nft.name}
           </Heading>
-          <Text fontSize={"md"}>#{parseInt(nft.tokenIndex)}</Text>
+          {tokenIndexElem}
         </Stack>
       </Box>
     </Center>
