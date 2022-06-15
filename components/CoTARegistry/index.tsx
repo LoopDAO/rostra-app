@@ -70,7 +70,7 @@ export default function CotaRegistry() {
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const router = useRouter()
-
+  const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(false)
   const script = addressToScript(cotaAddress)
   useEffect(() => {
@@ -95,8 +95,10 @@ export default function CotaRegistry() {
         size="sm"
         ml={4}
         onClick={() => {
+          setIsLoading(true)
           registerCota(cotaAddress, router.pathname)
         }}
+        isLoading={isLoading}
       >
         Go
       </Button>
