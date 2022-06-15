@@ -74,7 +74,8 @@ const App = ({ Component, pageProps }: AppProps) => {
         <ThemeProvider
           attribute="class"
           value={{ light: "light-theme", dark: darkTheme.className }}
-          defaultTheme="system"
+          defaultTheme="light"
+          enableSystem={false}
         >
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ConnectionManager>
