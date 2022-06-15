@@ -115,7 +115,7 @@ export default function CotaRegistry() {
   const balance = hexToBalance(data?.result?.capacity)
 
   let balanceElem
-  if (balance < 150) {
+  if (balance < 212) {
     balanceElem = (
       <Alert
         status="warning"
