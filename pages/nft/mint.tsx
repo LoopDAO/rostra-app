@@ -100,7 +100,7 @@ export default function CreateNFT() {
           const signedTx = appendSignatureToTransaction(txToSign, result.signature)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
-            // await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
+            await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
             toast({
               title: "Transaction sent.",
               description: "Transaction has been sent to the network, please wait for about 1 minute.",
