@@ -53,7 +53,7 @@ export default function Header() {
           </HStack>
 
           <Flex alignItems={"center"}>
-            <LocaleToggle />
+            {/* <LocaleToggle /> */}
             {/* <Link href="/guild/create" passHref>
               <Button
                 variant={"solid"}
