@@ -100,13 +100,22 @@ export default function CreateNFT() {
           const signedTx = appendSignatureToTransaction(txToSign, result.signature)
           const signedTxFormatted = ckb.rpc.resultFormatter.toTransaction(signedTx as any)
           try {
-            await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
-            router.push({
-              pathname: `/nft`,
-              query: {
-                cotaId,
-              },
+            // await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
+            toast({
+              title: "Transaction sent.",
+              description: "Transaction has been sent to the network, please wait for about 1 minute.",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
             })
+            setTimeout(() => {
+              router.push({
+                pathname: `/nft`,
+                query: {
+                  cotaId,
+                },
+              })
+            }, 5000)
           } catch (error: any) {
             toast({
               title: "Error happened.",
