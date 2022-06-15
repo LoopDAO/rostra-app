@@ -78,9 +78,9 @@ const Web3ConnectionManager = ({
           openNetworkModal,
         }}
       />
-      <NetworkModal
+      {/* <NetworkModal
         {...{ isOpen: isNetworkModalOpen, onClose: closeNetworkModal }}
-      />
+      /> */}
     </Web3Connection.Provider>
   )
 }
