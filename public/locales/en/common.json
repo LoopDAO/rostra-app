@@ -47,7 +47,7 @@
       "description": "Currently this feature is only accessible to early birds who hold Rostra Early Access NFT",
       "learnMore": "Learn more: "
     },
-    "balanceWarning": "This operation requires at least 150 CKB",
+    "balanceWarning": "This operation requires at least 212 CKB",
     "manageNFTs": "Manage NFTs",
     "nftAddress": "NFT Address",
     "name": "Name",

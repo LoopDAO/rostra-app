@@ -47,7 +47,7 @@
       "description": "目前此功能仅开放给持有 Rostra Early Access NFT 的人",
       "learnMore": "了解更多: "
     },
-    "balanceWarning": "此操作需要至少持有 150 个 CKB",
+    "balanceWarning": "此操作需要至少持有 212 个 CKB",
     "manageNFTs": "管理 NFT",
     "nftAddress": "NFT 地址",
     "name": "名称",
