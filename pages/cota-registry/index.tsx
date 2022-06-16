@@ -3,17 +3,13 @@ import { useTranslation } from "next-i18next"
 import { GetStaticProps } from "next"
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { Stack, Box, Spinner, Center } from "@chakra-ui/react"
+import { Stack, Box, Spinner, Center, useToast } from "@chakra-ui/react"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
 import AccountFlashsigner from "../../components/Layout/Account/AccountFlashsigner"
 import { addressToScript, scriptToHash, } from '@nervosnetwork/ckb-sdk-utils'
 import { appendSignatureToTransaction, generateFlashsignerAddress, } from '@nervina-labs/flashsigner'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
-import { cotaService, ckb, ckbIndexerUrl } from "@lib/utils/ckb"
-import useSWR from "swr"
-import fetchers from "api/fetchers"
-import { hexToBalance } from '@lib/utils/ckb'
-import { QRCodeSVG } from "qrcode.react"
+import { cotaService, ckb } from "@lib/utils/ckb"
 
 export default function CotaRegistryPage() {
   const { t } = useTranslation()
@@ -23,6 +19,7 @@ export default function CotaRegistryPage() {
   const [redirectUrl, setRedirectUrl] = useState('/')
   const script = addressToScript(cotaAddress)
   const router = useRouter()
+  const toast = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,14 +48,20 @@ export default function CotaRegistryPage() {
             try {
               await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
               setRedirectUrl(result.extra?.redirect)
-            } catch (error) {
-              console.log("error: ", error)
+            } catch (error: any) {
+              toast({
+                title: "Error happened.",
+                description: error?.message?.message,
+                status: "error",
+                duration: 10000,
+                isClosable: true,
+              })
             }
           }
         },
       })
     }
-  }, [cotaAddress, isLoggedIn, router.asPath, router.query.action, registered])
+  }, [cotaAddress, isLoggedIn, router.asPath, router.query.action, registered, toast])
 
   if (!isLoggedIn) return <AccountFlashsigner />
 
