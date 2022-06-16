@@ -29,6 +29,13 @@ const registerCota = async (address: string, redirectPath: string) => {
     FEE,
     isMainnet
   )
+
+  rawTx.witnesses = rawTx.witnesses.filter((witness: any, i: number) => {
+    if (i <= 1) return true
+    if (witness === "0x" || witness === "") return false
+    return true
+  })
+
   const flashsingerDep = Config.getCellDep()
   rawTx.cellDeps.push(flashsingerDep)
   const registryLock = getAlwaysSuccessLock(isMainnet)
