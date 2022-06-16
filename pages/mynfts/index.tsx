@@ -47,7 +47,7 @@ export default function MyNFTsPage() {
         const newPageCount = holds.total + withdraws.total
         setNFTCount(newPageCount)
         setPageCount(Math.ceil(newPageCount / itemsPerPage))
-      } catch (error) {
+      } catch (error: any) {
         console.error(error)
       }
       setLoading(false)
