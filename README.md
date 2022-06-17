@@ -62,6 +62,7 @@ As a community user, you can:
 ## Roadmap(Simple yet powerful)
 Get the status of these features from https://github.com/orgs/LoopDAO/projects/1/views/1
 
+- Support to send nft to multiple addresses
 - Unipass support
 - Support to update NFT info
 	- name
