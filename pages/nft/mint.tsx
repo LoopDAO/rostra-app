@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useTranslation } from "next-i18next"
 import { useRouter } from 'next/router'
-import { FormControl, FormLabel, FormErrorMessage, Input, Button, Box, useToast } from "@chakra-ui/react"
+import { FormControl, FormLabel, FormErrorMessage, Textarea, Button, Box, useToast } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
@@ -52,19 +52,21 @@ export default function CreateNFT() {
 
   const onSubmit = async (values: any, actions: any) => {
     const { toAddress } = values
+    const addressArr = toAddress.split(",")
     let startIndex = issued
     const mintLock = addressToScript(cotaAddress)
-    const tokenIndex = padStr((startIndex++).toString(16))
-    const withdrawalInfo = {
-      tokenIndex,
-      state: "0x00",
-      characteristic: "0x0000000000000000000000000000000000000000",
-      toLockScript: serializeScript(addressToScript(toAddress)),
-    }
-
+    const withdrawals = addressArr.map((address: string) => {
+      const tokenIndex = padStr((startIndex++).toString(16))
+      return {
+        tokenIndex,
+        state: "0x00",
+        characteristic: "0x0000000000000000000000000000000000000000",
+        toLockScript: serializeScript(addressToScript(address.trim())),
+      }
+    })
     const mintCotaInfo: MintCotaInfo = {
       cotaId,
-      withdrawals: [withdrawalInfo],
+      withdrawals,
     }
 
     let rawTx = await generateMintCotaTx(cotaService, mintLock, mintCotaInfo, FEE, isMainnet)
@@ -143,7 +145,7 @@ export default function CreateNFT() {
               {({ field, form }: FieldProps) => (
                 <FormControl isRequired isInvalid={!!(form.errors.toAddress && form.touched.toAddress)}>
                   <FormLabel htmlFor="toAddress">To</FormLabel>
-                  <Input {...field} id="toAddress" placeholder="Address" />
+                  <Textarea {...field} id="toAddress" placeholder="Addresses, separate by comma" />
                   <FormErrorMessage>{form.errors.toAddress}</FormErrorMessage>
                 </FormControl>
               )}
