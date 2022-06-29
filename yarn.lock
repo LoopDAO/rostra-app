@@ -1425,10 +1425,10 @@
     multiformats "^9.5.4"
     murmurhash3js-revisited "^3.0.0"
 
-"@nervina-labs/cota-sdk@^0.5.6":
-  version "0.5.6"
-  resolved "https://registry.npmmirror.com/@nervina-labs/cota-sdk/-/cota-sdk-0.5.6.tgz#942d9e69b5f39dcdd23bf28e7d7ed7e0b345100a"
-  integrity sha512-xCTswdASpZWQ2lxZBl4IsQmA1m1RcA+kruCdZoi2zlEJwnG1Y4mV4BbDECbMKecwlBY02z2PEsF6HWDyjVhpnA==
+"@nervina-labs/cota-sdk@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.npmmirror.com/@nervina-labs/cota-sdk/-/cota-sdk-0.6.1.tgz#acd00d9529d36c1a9d4ff310864194f824dd160f"
+  integrity sha512-rKI7R4tIiO19n0sQS6z2SjiIP5cw1RUDQL1l66ETI1db0zOd8vq7qs/LXe7ycT7un4ayS2oNJllf3SrWCiNcGw==
   dependencies:
     "@nervosnetwork/ckb-sdk-core" "^0.103.0"
     "@nervosnetwork/ckb-sdk-utils" "^0.103.0"
