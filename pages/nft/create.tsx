@@ -17,7 +17,6 @@ import {
   useToast,
   Alert,
   AlertIcon,
-  AlertTitle,
   AlertDescription,
   Link,
 } from "@chakra-ui/react"
@@ -43,6 +42,7 @@ import httpPost from 'api/post'
 import CotaRegistry from "@components/CoTARegistry"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { links } from "@lib/utils/constants"
+import posthog from "posthog-js"
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -151,10 +151,12 @@ export default function CreateNFT() {
               txHash,
             }
             await postMintNFTInfo2Rostra(data)
+            posthog.capture("NFT creation success", { nftInfo: data })
             router.push({
               pathname: `/manage-nfts`,
             })
           } catch (error: any) {
+            posthog.capture("NFT creation error", { result, signedTxFormatted, error })
             toast({
               title: "Error happened.",
               description: error?.message?.message,

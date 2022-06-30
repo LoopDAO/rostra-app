@@ -10,6 +10,7 @@ import { addressToScript, scriptToHash, } from '@nervosnetwork/ckb-sdk-utils'
 import { appendSignatureToTransaction, generateFlashsignerAddress, } from '@nervina-labs/flashsigner'
 import { getResultFromURL } from '@nervina-labs/flashsigner'
 import { cotaService, ckb } from "@lib/utils/ckb"
+import posthog from "posthog-js"
 
 export default function CotaRegistryPage() {
   const { t } = useTranslation()
@@ -48,7 +49,9 @@ export default function CotaRegistryPage() {
             try {
               await ckb.rpc.sendTransaction(signedTxFormatted as any, "passthrough")
               setRedirectUrl(result.extra?.redirect)
+              posthog.capture("CoTA account register success", { cotaAddress })
             } catch (error: any) {
+              posthog.capture("CoTA register error", { signedTxFormatted, error })
               toast({
                 title: "Error happened.",
                 description: error?.message?.message,

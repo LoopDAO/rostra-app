@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React, { ReactNode, useEffect } from "react"
 import Head from "next/head"
 import { appWithTranslation } from "next-i18next"
 import { useTranslation } from "next-i18next"
@@ -7,17 +7,11 @@ import PlausibleProvider from "next-plausible"
 import { ThemeProvider } from "next-themes"
 import { Web3ReactProvider } from "@web3-react/core"
 import { Web3Provider } from "@ethersproject/providers"
-import type {
-  ExternalProvider,
-  JsonRpcFetchFunc,
-} from "@ethersproject/providers"
+import type { ExternalProvider, JsonRpcFetchFunc, } from "@ethersproject/providers"
 import { ChakraProvider } from '@chakra-ui/react'
-import {
-  Config,
-  ChainType,
-} from "@nervina-labs/flashsigner"
+import { Config, ChainType, } from "@nervina-labs/flashsigner"
 import { chainType } from "@lib/utils/ckb"
-
+import posthog from "posthog-js"
 import "@fontsource/inter/variable-full.css"
 import "@fontsource/source-code-pro/400.css"
 import "@fontsource/source-code-pro/600.css"
@@ -66,7 +60,9 @@ const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
 
 const App = ({ Component, pageProps }: AppProps) => {
   globalStyles()
-
+  useEffect(() => {
+    posthog.init("phc_ngHM4uTaDXfKlGEluBiQtMBWcsDMUNyq2iRVQ3shTOo", { api_host: "https://app.posthog.com" })
+  })
   return (
     <ChakraProvider>
       <SEO />
