@@ -18,6 +18,7 @@ import fetchers from "api/fetchers"
 import { QRCodeSVG } from "qrcode.react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { useRouter } from "next/router"
+import Loading from "components/Loading/index"
 
 const registerCota = async (address: string, redirectPath: string) => {
   const provideCKBLock = addressToScript(address)
@@ -77,13 +78,14 @@ export default function CotaRegistry() {
   const { account, isLoggedIn } = useAccountFlashsigner()
   const cotaAddress = generateFlashsignerAddress(account.auth.pubkey)
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [status, setStatus] = useState(false)
   const script = addressToScript(cotaAddress)
   useEffect(() => {
     const fetchData = async () => {
       if (!isLoggedIn) return
       const res = await cotaService.aggregator.checkReisteredLockHashes([scriptToHash(script)])
+      setIsLoading(false)
       setStatus(res?.registered)
     }
     fetchData()
@@ -92,6 +94,10 @@ export default function CotaRegistry() {
   const { data } = useSWR(() => [ckbIndexerUrl, script], fetchers.getCellsCapacity)
 
   if (!isLoggedIn) return <AccountFlashsigner />
+  console.log("isLoading", isLoading)
+  if ( data === undefined || isLoading) {
+    return <Loading />
+  }
 
   let registryBtn
   let registryElem
@@ -118,7 +124,6 @@ export default function CotaRegistry() {
       </Alert>
     )
   }
-
   const balance = hexToBalance(data?.result?.capacity)
 
   let balanceElem

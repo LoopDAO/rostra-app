@@ -11,6 +11,7 @@ import { cotaService } from "@lib/utils/ckb"
 import { addressToScript, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
 import ReactPaginate from "react-paginate"
 import AccountFlashsigner from "@components/Layout/Account/AccountFlashsigner"
+import Loading from "components/Loading/index"
 
 export default function MyNFTsPage() {
   const { t } = useTranslation()
@@ -89,7 +90,7 @@ export default function MyNFTsPage() {
   }
   let content
   if (loading) {
-    content = 'Loading...'
+    content = <Loading />
   }
 
   if (!loading && nftCount === 0) {

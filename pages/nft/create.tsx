@@ -15,10 +15,6 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   useToast,
-  Alert,
-  AlertIcon,
-  AlertDescription,
-  Link,
 } from "@chakra-ui/react"
 import { Formik, Form, Field, FieldProps } from "formik"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
@@ -27,7 +23,7 @@ import { NFTStorage } from "nft.storage"
 import { GetStaticProps } from "next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useAccountFlashsigner } from "@lib/hooks/useAccount"
-import { addressToScript, serializeWitnessArgs, scriptToHash, serializeScript } from "@nervosnetwork/ckb-sdk-utils"
+import { addressToScript, serializeWitnessArgs, scriptToHash } from "@nervosnetwork/ckb-sdk-utils"
 import {
   signMessageWithRedirect,
   appendSignatureToTransaction,
@@ -40,8 +36,6 @@ import { generateDefineCotaTx, CotaInfo, FEE } from "@nervina-labs/cota-sdk"
 import { cotaService, ckb, isMainnet } from "@lib/utils/ckb"
 import httpPost from 'api/post'
 import CotaRegistry from "@components/CoTARegistry"
-import { ExternalLinkIcon } from "@chakra-ui/icons"
-import { links } from "@lib/utils/constants"
 import posthog from "posthog-js"
 
 type FileUploadProps = {
@@ -90,9 +84,7 @@ export default function CreateNFT() {
   const [fileObj, setFileObj] = useState<File>()
   const router = useRouter()
   const [registered, setRegistered] = useState(false)
-  const [isEarlyBird, setIsEarlyBird] = useState(false)
   const toast = useToast()
-  const earlyAccessNFTAddress = process.env.NEXT_PUBLIC_EARLY_ACCESS_NFT_ADDRESS || ""
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,29 +96,6 @@ export default function CreateNFT() {
     }
     fetchData()
   }, [cotaAddress, isLoggedIn])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!isLoggedIn) return
-      const lockScript = serializeScript(addressToScript(cotaAddress))
-      try {
-        const result = await cotaService.aggregator.getCotaCount({
-          lockScript,
-          cotaId: earlyAccessNFTAddress,
-        })
-        setIsEarlyBird(result.count > 0)
-      } catch (error: any) {
-        toast({
-          title: "Error happened.",
-          description: error?.message?.message,
-          status: "error",
-          duration: 10000,
-          isClosable: true,
-        })
-      }
-    }
-    fetchData()
-  }, [cotaAddress, earlyAccessNFTAddress, isLoggedIn, toast])
 
   useEffect(() => {
     if (router.query.action !== "sign-message") return
@@ -172,34 +141,6 @@ export default function CreateNFT() {
 
   if (!registered) {
     return <CotaRegistry />
-  }
-
-  if (process.env.NEXT_PUBLIC_TOKEN_GATE_ENABLED === 'true' && !isEarlyBird) {
-    return (
-      <Alert
-        status="warning"
-        variant="subtle"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        height="300px"
-      >
-        <AlertIcon boxSize="40px" mr={0} />
-        {/* <AlertTitle mt={4} mb={1} fontSize="lg">
-          {t("nft.accessWarning.title")}
-        </AlertTitle> */}
-        <AlertDescription maxWidth="sm">
-          {t("nft.accessWarning.description")}
-        </AlertDescription>
-        <AlertDescription maxWidth="sm">
-          {t("nft.accessWarning.learnMore")}
-          <Link isExternal href={links.twitter}>
-            <ExternalLinkIcon mx="2px" />
-          </Link>
-        </AlertDescription>
-      </Alert>
-    )
   }
 
   const validateFiles = (value: FileList) => {
